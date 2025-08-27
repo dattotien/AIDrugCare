@@ -1,7 +1,7 @@
 from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
-
+from beanie import Document
 class PrescriptionItem(BaseModel):
     drug_id: str
     dosage: str
@@ -11,7 +11,7 @@ class PrescriptionItem(BaseModel):
     end_time: datetime
     note: Optional[str] = None
 
-class PrescriptionDetail(BaseModel):
+class PrescriptionDetail(Document):
     id: int
     visit_id: int
     start_time: datetime

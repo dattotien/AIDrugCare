@@ -3,7 +3,7 @@ from beanie import Document
 
 
 class Medical_History(Document):
-    _id: int
+    id: int
     patient_id: int
     visit_id: int
     condition_code: str
