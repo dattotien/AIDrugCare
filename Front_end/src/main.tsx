@@ -6,6 +6,6 @@ import IntroductionScene from './Components/IntroductionScene.tsx'
 import DoctorLoginScence from './Components/DoctorLoginScence.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <DoctorLoginScence/>
+    <IntroductionScene />
   </StrictMode>,
 )
