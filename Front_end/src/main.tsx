@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import IntroductionScene from './Components/IntroductionScene.tsx'
-import DoctorLoginScence from './Components/DoctorLoginScence.tsx'
+import DoctorLoginScence from './Components/DoctorLoginScene.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <IntroductionScene />
+    <App/>
   </StrictMode>,
 )

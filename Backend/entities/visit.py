@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 class Visit(Document):
-    _id: int = Field(..., alias="_id")
+    id: int = Field(..., alias="_id")
     doctor_id: int
     patient_id: int
     hospital: str
