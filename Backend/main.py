@@ -7,7 +7,7 @@ from entities.medical_history import Medical_History
 from entities.patient import Patient
 from entities.visit import Visit
 from entities.prescription_detail import PrescriptionDetail
-from api import drug_api
+from api import drug_api, patient_api
 from database import Database
 app = FastAPI(title="AI Drug Care API")
 
@@ -18,7 +18,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.include_router(drug_api.router, tags=["Database"])
+app.include_router(drug_api.router, tags=["Drug"])
+app.include_router(patient_api.router, tags=["Patient"])
 @app.on_event("startup")
 async def startup_db():
     await Database.connect_to_database()
