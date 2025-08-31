@@ -1,11 +1,12 @@
 import type React from "react";
 import { useState } from "react";
 import { Breadcrumb, Layout, Menu } from "antd";
-const { Header, Content, Footer } = Layout;
-import DrugInteractionChecker from "./DrugInteractionChecker";
-import Logo from "./assets/AIDrugCare.png";
+const { Content } = Layout;
+import DrugInteractionChecker from "./DrugInteractionChecker/DrugInteractionChecker";
+import Logo from "../assets/AIDrugCare.png";
 import Sider from "antd/es/layout/Sider";
 import DrugListScene from "./DrugListScene";
+import Back from "../assets/back.png";
 const items = [
   { key: "1", label: "Khám chữa bệnh và kê đơn" },
   { key: "2", label: "Hồ sơ" },
@@ -15,7 +16,7 @@ const items = [
 ];
 
 export default function DoctorScene() {
-      const [selectedLabel, setSelectedLabel] = useState("");
+  const [selectedLabel, setSelectedLabel] = useState("");
   const handleMenuSelect = ({ key }: { key: string }) => {
     const selectedItem = items.find((item) => item.key === key);
     if (selectedItem) {
@@ -25,9 +26,22 @@ export default function DoctorScene() {
   return (
     <Layout
       className="layout"
-      style={{ minHeight: "100vh", minWidth: "100vw" }}
+      style={{
+        minHeight: "100vh",
+        minWidth: "100vw",
+        backgroundImage: `url(${Back})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
     >
-      <Sider style={{ backgroundColor: "#FFFFFF" }}>
+      <Sider
+        style={{
+          backgroundColor: "#ffffffc6",
+          borderRadius: "0px 20px 20px 20px",
+          maxHeight: "90vh",
+        }}
+      >
         <div
           className="demo-logo"
           style={{ marginRight: "10px", padding: "2px" }}
@@ -43,18 +57,22 @@ export default function DoctorScene() {
           style={{ flex: 1, minWidth: 0 }}
         />
       </Sider>
-      <Layout>
-        <Content style={{ padding: "0 48px", backgroundColor:"#9ecaff" }}>
+      <Layout style={{ backgroundColor: "transparent" }}>
+        <Content
+          style={{
+            padding: "0 10vw",
+            backgroundColor: "transparent",
+          }}
+        >
           <Breadcrumb
             style={{ margin: "16px 0" }}
             items={[{ title: "Trang chủ" }, { title: selectedLabel }]}
           />
           <div
             style={{
-              background: "#fff",
-              minHeight: "70vh",
-              padding: "10vh",
-              borderRadius: 20,
+              background: "#ffffffce",
+              minHeight: "90vh",
+              padding: "5vh 5vw 5vh 5vw",
             }}
           >
             {
