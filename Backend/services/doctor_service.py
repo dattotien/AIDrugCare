@@ -51,7 +51,7 @@ async def search_patient_history(keyword: str):
                     "patient_id": p.id,
                     "name": p.name,
                     "cccd": p.cccd,
-                    "history": await p.get_patient_history()
+                    "history": await p.get_patient_history(p.id)
                 }
                 for p in results
             ]
@@ -74,15 +74,15 @@ async def get_recent_patients():
     recent = sorted(visits, key=lambda x: x.visit_date, reverse=True)
 
     data = []
-    for p in recent:
-        profile = await patient_service.get_profile_by_id(p.patient_id)
+    for v in recent:
+        profile = await patient_service.get_profile_by_id(v.patient_id)
         if(profile.diagnosis is not None):
             continue
         else:
             data.append({
-                "visit_id": p.id,
-                "visit_date": p.visit_date,
-                "symptoms": p.symptoms,
+                "visit_id": v.id,
+                "visit_date": v.visit_date,
+                "symptoms": v.symptoms,
                 "patient": profile["data"] if profile["success"] else None
         })
 
@@ -93,7 +93,7 @@ async def get_recent_patients():
     }
     
 async def update_diagnosis(patient_id: int, diagnosis: str):
-    visit = await Visit.find_one(Visit.patient_id == patient_id, Visit.diagnosis is None)
+    visit = await Visit.find_one((Visit.patient_id == patient_id) & (Visit.diagnosis == None))
     if not visit:
         return {
             "success": False, 
@@ -120,8 +120,8 @@ async def get_number_visited_today(doctor_id: int):
     count = await Visit.count(
         (Visit.doctor_id == doctor_id) &
         (Visit.diagnosis != None) &
-        (Visit.date >= datetime.combine(today, datetime.min.time())) &
-        (Visit.date <= datetime.combine(today, datetime.max.time()))
+        (Visit.visit_date >= datetime.combine(today, datetime.min.time())) &
+        (Visit.visit_date <= datetime.combine(today, datetime.max.time()))
     )
 
     return {
