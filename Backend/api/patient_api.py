@@ -14,5 +14,5 @@ async def get_profile(profile_id: int):
     return await get_profile_by_id(profile_id)
 
 @router.get("/visit-history/{patient_id}", response_model=ResponseModel)
-async def get_visit_history(patient_id: str):
+async def get_visit_history(patient_id: int):
     return await get_visit_history_by_patient_id(patient_id)
