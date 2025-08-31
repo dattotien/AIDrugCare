@@ -182,7 +182,7 @@ export default function DrugListScene() {
     },
   };
 
-  const pageSize = 5;
+  const pageSize = 8;
   const paginatedData = filteredList.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
