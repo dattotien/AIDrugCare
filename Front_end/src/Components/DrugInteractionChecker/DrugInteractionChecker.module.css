@@ -1,0 +1,62 @@
+.container {
+  padding-top: 0;
+}
+
+.header {
+  text-align: center;
+}
+
+.logo {
+  width: 7%;
+  background-color: #043bb3;
+  border-radius: 40px;
+  padding: 10px;
+}
+
+.title {
+  color: #043bb3 !important;
+  margin-top: 2vh;
+}
+
+.space {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card {
+  border-radius: 20px;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+}
+.searchRow {
+  display: flex;
+  gap: 2vw;
+  width: 100%;
+  justify-content: center;
+}
+
+.searchInput :global(.ant-input) {
+  min-width: 20vw !important;
+  min-height: 7vh !important;
+}
+
+.searchInput :global(.ant-input-search-button) {
+  min-height: 7vh !important;
+}
+
+.button {
+  width: 20vw;
+  border-radius: 40px;
+  background-color: #043bb3 !important;
+  color: white !important;
+}
+
+.resultCard {
+  margin-top: 2vh;
+  border-radius: 20px;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+  min-height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
