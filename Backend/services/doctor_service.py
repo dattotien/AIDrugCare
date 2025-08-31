@@ -1,7 +1,10 @@
+from datetime import datetime, date, timedelta
+from typing import List
 from entities.doctor import Doctor
 from entities.visit import Visit
 from entities.patient import Patient
 from services import patient_service
+from entities.prescription_detail import PrescriptionDetail, PrescriptionItem
 
 async def get_profile_by_id(profile_id: int):
     profile = await Doctor.find_one(Doctor.id == profile_id)
@@ -103,3 +106,58 @@ async def update_diagnosis(patient_id: int, diagnosis: str):
         "message": "Đã lưu chẩn đoán", 
         "data": visit
         }
+
+async def get_number_waiting():
+    count = await Visit.count(Visit.diagnosis == None)
+    return {
+        "success": True,
+        "message": "Lấy số bệnh nhân đang chờ khám thành công",
+        "data": count
+    }
+async def get_number_visited_today(doctor_id: int):
+    today = date.today()
+
+    count = await Visit.count(
+        (Visit.doctor_id == doctor_id) &
+        (Visit.diagnosis != None) &
+        (Visit.date >= datetime.combine(today, datetime.min.time())) &
+        (Visit.date <= datetime.combine(today, datetime.max.time()))
+    )
+
+    return {
+        "success": True,
+        "message": "Lấy số bệnh nhân đã khám hôm nay thành công",
+        "data": count
+    }
+
+async def create_prescription(visit_id: int, items: List[dict]):
+    prescription_items = []
+    now = datetime.now()
+
+    for item in items:
+        start_time = now
+        end_time = now + timedelta(days=item["duration_days"])
+        
+        prescription_items.append(PrescriptionItem(
+            drug_id=item["drug_id"],
+            dosage=item["dosage"],
+            frequency=item["frequency"],
+            duration_days=item["duration_days"],
+            start_time=start_time,
+            end_time=end_time,
+            note=item.get("note")
+        ))
+        
+    prescription_detail = PrescriptionDetail(
+        visit_id=visit_id,
+        start_time=now,
+        items=prescription_items
+    )
+
+    await prescription_detail.insert()
+
+    return {
+        "success": True,
+        "message": "Kê đơn thuốc thành công",
+        "data": prescription_detail.dict()
+    }
