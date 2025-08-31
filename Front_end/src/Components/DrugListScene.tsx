@@ -228,6 +228,7 @@ export default function DrugListScene() {
 
       {/* Table */}
       <Table
+        scroll={{ x: "max-content" }}
         rowKey="_id"
         columns={columns}
         dataSource={filteredList}
