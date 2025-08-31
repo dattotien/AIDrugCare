@@ -1,17 +1,22 @@
-import { Avatar, Button, Dropdown, Menu, Table, Badge, Input, Pagination, Modal, Form } from "antd";
+import { Avatar, Button, Dropdown, Table, Badge, Input, Modal, Form, Tabs, Pagination } from "antd";
 import { useState } from "react";
 import { MoreOutlined, FilterOutlined, PlusOutlined } from "@ant-design/icons";
+
+import DrugInfor from "./DrugInfor.tsx";
+
 import userAvatar from "../assets/user (4).png";
 import userMailNoti from "../assets/envelope.png";
 import userNoti from "../assets/active.png";
+import listDrug from "../assets/list.png";
 
 export default function DrugListScene() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showActionBar, setShowActionBar] = useState(false);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [showAddDrugModal, setShowAddDrugModal] = useState(false);
+  const [showDrugInfoModal, setShowDrugInfoModal] = useState(false);
+  const [selectedDrug, setSelectedDrug] = useState<any | null>(null);
 
   const [drugList, setDrugList] = useState<any[]>([
     {
@@ -129,12 +134,14 @@ export default function DrugListScene() {
   ]);
 
   const filteredList = drugList.filter((drug) =>
-    drug.generic_name.toLowerCase().includes(searchText.toLowerCase())
+    Object.values(drug).some((field) =>
+      String(field).toLowerCase().includes(searchText.toLowerCase())
+    )
   );
 
   const handleSearch = (value: string) => {
-    setSearchText(value);
-    setCurrentPage(1);
+    setSearchText(value); 
+    setCurrentPage(1);    
   };
 
   const handleDelete = (record: any) => {
@@ -142,32 +149,73 @@ export default function DrugListScene() {
   };
 
   const handleMore = (record: any) => {
-    console.log("More info", record);
+    setSelectedDrug(record);
+    setShowDrugInfoModal(true);
   };
 
-  const menu = (record: any) => (
-    <Menu>
-      <Menu.Item key="delete" onClick={() => handleDelete(record)}>
-        Delete
-      </Menu.Item>
-      <Menu.Item key="more" onClick={() => handleMore(record)}>
-        More
-      </Menu.Item>
-    </Menu>
-  );
+  const menuItems = (record: any) => [
+    {
+      key: "delete",
+      label: (
+        <div
+          style={{
+            color: "#1976d2",
+            fontWeight: "bold",
+            minWidth: 80,
+            textAlign: "center",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.background = "#1976d2";
+            (e.currentTarget as HTMLElement).style.color = "white";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.background = "white";
+            (e.currentTarget as HTMLElement).style.color = "#1976d2";
+          }}
+          onClick={() => handleDelete(record)}
+        >
+          Delete
+        </div>
+      ),
+    },
+    {
+      key: "more",
+      label: (
+        <div
+          style={{
+            color: "#1976d2",
+            fontWeight: "bold",
+            minWidth: 80,
+            textAlign: "center",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.background = "#1976d2";
+            (e.currentTarget as HTMLElement).style.color = "white";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.background = "white";
+            (e.currentTarget as HTMLElement).style.color = "#1976d2";
+          }}
+          onClick={() => handleMore(record)}
+        >
+          More
+        </div>
+      ),
+    },
+  ];
 
   const columns = [
-    { title: "ID", dataIndex: "_id", key: "_id" },
-    { title: "Tên thuốc", dataIndex: "generic_name", key: "generic_name" },
-    { title: "ATC - Code", dataIndex: "atc_code", key: "atc_code" },
-    { title: "Tên thị trường", dataIndex: "brand_names", key: "brand_names" },
-    { title: "Phân loại", dataIndex: "categories", key: "categories" },
-    { title: "Dạng liều", dataIndex: "dosage_forms", key: "dosage_forms" },
+    { title: <span style={{ color: "#1976d2", fontWeight: "bold" }}>ID</span>, dataIndex: "_id", key: "_id", width: 100, ellipsis: true },
+    { title: <span style={{ color: "#1976d2", fontWeight: "bold" }}>Tên thuốc</span>, dataIndex: "generic_name", key: "generic_name", width: 200, ellipsis: true },
+    { title: <span style={{ color: "#1976d2", fontWeight: "bold" }}>Tên thị trường</span>, dataIndex: "brand_names", key: "brand_names", width: 200, ellipsis: true },
+    { title: <span style={{ color: "#1976d2", fontWeight: "bold" }}>Phân loại</span>, dataIndex: "categories", key: "categories", width: 200, ellipsis: true },
+    { title: <span style={{ color: "#1976d2", fontWeight: "bold" }}>Dạng liều</span>, dataIndex: "dosage_forms", key: "dosage_forms", width: 200, ellipsis: true },
     {
       title: "",
       key: "actions",
+      width: 50,
       render: (_: any, record: any) => (
-        <Dropdown overlay={menu(record)} trigger={["click"]}>
+        <Dropdown menu={{ items: menuItems(record) }} trigger={["click"]}>
           <MoreOutlined style={{ fontSize: 18, cursor: "pointer" }} />
         </Dropdown>
       ),
@@ -182,7 +230,7 @@ export default function DrugListScene() {
     },
   };
 
-  const pageSize = 8;
+  const pageSize = 6;
   const paginatedData = filteredList.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
@@ -226,45 +274,78 @@ export default function DrugListScene() {
         </div>
       </div>
 
+      {/* Tabs */}
+      <Tabs
+        defaultActiveKey="1"
+        items={[
+          {
+            key: "1",
+            label: (
+              <span style={{ display: "flex", alignItems: "center", gap: 8, color: "#000" }}>
+                <img src={listDrug} alt="list" style={{ width: 20, height: 20 }} />
+                <b>All drugs</b>
+                <Badge
+                  count={drugList.length > 1000 ? "1000+" : drugList.length}
+                  style={{ backgroundColor: "#1890ff" }}
+                />
+              </span>
+            ),
+          },
+        ]}
+      />
+
       {/* Table */}
       <Table
+        style={{
+          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          borderRadius: 12,
+          overflow: "hidden",
+        }}
         scroll={{ x: "max-content" }}
         rowKey="_id"
         columns={columns}
-        dataSource={filteredList}
+        dataSource={paginatedData}
         rowSelection={{
           selectedRowKeys,
           onChange: (newSelectedRowKeys) => {
             setSelectedRowKeys(newSelectedRowKeys);
             setShowActionBar(newSelectedRowKeys.length > 0);
           },
-          preserveSelectedRowKeys: true, // ✅ giữ tick khi đổi trang
+          preserveSelectedRowKeys: true,
         }}
-        pagination={{
-          current: currentPage,
-          pageSize,
-          total: filteredList.length,
-          onChange: (page) => setCurrentPage(page),
-          showSizeChanger: false,
-        }}
+        pagination={false}
         title={() => (
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              flexWrap: "wrap",
+              gap: 10,
             }}
           >
             {/* Bên trái: Filter */}
             <Button icon={<FilterOutlined />}>Filter</Button>
 
+            {/* Giữa: Pagination */}
+            <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+              <Pagination
+                current={currentPage}
+                pageSize={pageSize}
+                total={filteredList.length}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger={false}
+              />
+            </div>
+
             {/* Bên phải: Search + Add */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <Input.Search
                 placeholder="Tìm thuốc tại đây"
-                style={{ width: 250 }}
-                onSearch={handleSearch}
+                style={{ width: 300 }}
                 allowClear
+                onSearch={handleSearch}
+                onPressEnter={(e) => handleSearch(e.currentTarget.value)}
               />
               <Button
                 type="primary"
@@ -304,6 +385,39 @@ export default function DrugListScene() {
         </Form>
       </Modal>
 
+      <Modal
+        open={showDrugInfoModal}
+        footer={null}
+        onCancel={() => {
+          setShowDrugInfoModal(false);
+          setSelectedDrug(null);
+        }}
+        width="60%"
+        style={{ top: 20 }}
+        title={null} 
+        closeIcon={
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              background: "#8b9aceff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 600,
+              fontSize: 16,
+              color: "#0a2855ff",
+              cursor: "pointer",
+            }}
+          >
+            X
+          </div>
+        }
+      >
+        {selectedDrug && <DrugInfor drug={selectedDrug} />}
+      </Modal>
+
       {/* Action Bar */}
       {showActionBar && (
         <div
@@ -321,13 +435,30 @@ export default function DrugListScene() {
             gap: 20,
           }}
         >
-          <span>{selectedRowKeys.length} items selected</span>
+          <span>
+            {selectedRowKeys.length} {selectedRowKeys.length > 1 ? "items" : "item"} selected
+          </span>
           <Button type="link" style={{ color: "#fff" }}>Print</Button>
           <Button type="link" style={{ color: "#fff" }}>Send</Button>
           <Button danger type="link">Delete</Button>
           <Button
             type="link"
-            style={{ color: "#fff" }}
+            style={{
+              color: "#fff",
+              borderRadius: "50%",
+              width: 30,
+              height: 30,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "background 0.3s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = "rgba(255,255,255,0.2)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = "transparent")
+            }
             onClick={() => {
               setSelectedRowKeys([]);
               setShowActionBar(false);
