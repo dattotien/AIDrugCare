@@ -6,6 +6,8 @@ import DrugInteractionChecker from "./Components/DrugInteractionChecker";
 import Logo from "./assets/AIDrugCare.png";
 import Sider from "antd/es/layout/Sider";
 import DrugListScene from "./Components/DrugListScene";
+import backgroundImage from "./assets/tải xuống.png";
+
 const items = [
   { key: "1", label: "Khám chữa bệnh và kê đơn" },
   { key: "2", label: "Hồ sơ" },
@@ -22,10 +24,18 @@ const App: React.FC = () => {
       setSelectedLabel(selectedItem.label);
     }
   };
+
   return (
     <Layout
       className="layout"
-      style={{ minHeight: "100vh", minWidth: "100vw" }}
+      style={{
+        minHeight: "100vh",
+        minWidth: "100vw",
+        backgroundImage: `url(${backgroundImage})`, 
+        backgroundSize: "cover", 
+        backgroundPosition: "center", 
+        backgroundRepeat: "no-repeat", 
+      }}
     >
       <Sider style={{ backgroundColor: "#FFFFFF" }}>
         <div
@@ -44,16 +54,18 @@ const App: React.FC = () => {
         />
       </Sider>
       <Layout>
-        <Content style={{ padding: "0 48px", backgroundColor:"#9ecaff" }}>
-          <Breadcrumb
-            style={{ margin: "16px 0" }}
-            items={[{ title: "Trang chủ" }, { title: selectedLabel }]}
-          />
+        <Content style={{ 
+          padding: "0 48px", 
+          backgroundImage: `url(${backgroundImage})`, 
+          backgroundSize: "cover", 
+          backgroundPosition: "center", 
+          backgroundRepeat: "no-repeat",  
+        }}>
           <div
             style={{
-              background: "#fff",
-              minHeight: "70vh",
-              padding: "10vh",
+              height: "100%",
+              width: "100%",
+              padding: "0",
               borderRadius: 20,
             }}
           >
