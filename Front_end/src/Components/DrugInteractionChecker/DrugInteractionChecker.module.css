@@ -1,13 +1,16 @@
 .container {
+  width: 80vw;
   padding-top: 0;
+  background-color: rgba(255, 255, 255, 0.501);
 }
 
 .header {
+  padding-top:2vh;
   text-align: center;
 }
 
 .logo {
-  width: 7%;
+  width: 5%;
   background-color: #043bb3;
   border-radius: 40px;
   padding: 10px;
@@ -26,7 +29,9 @@
 }
 .card {
   border-radius: 20px;
+  width: 70vw;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto; /* tự động căn giữa ngang */
 }
 .searchRow {
   display: flex;
@@ -59,4 +64,68 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.noteSection {
+  background-color: #C6E2FD;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.interactionCard {
+  background-color: #C6E2FD;
+}
+.noInteractionCard {
+  background-color: #fdc6c6;
+}
+.interactionBody  {
+  display: flex;
+  flex-direction: row;
+  gap: 2vw;
+}
+.interactionCard :global(.ant-card-body){
+  padding: 0px
+}
+.noInteractionCard :global(.ant-card-body){
+  padding: 0px
+}
+.interactionHeader {
+  padding-top: 2vh;
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  font-weight: 700;
+}
+
+.drugPara {
+  padding-left: 2.2vw;
+  font-weight: 500;
+  margin-top: 0px;
+}
+.drugPara1 {
+  padding-left: 2.2vw;
+  font-weight: 500;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.interDescription {
+  padding-left: 2.2vw;
+  padding-top: 0px;
+  margin-top: 0px;
+}
+.warningCard {
+  background-color: #C6E2FD;
+  border-radius: 5px;
+  border-color: transparent;
+  margin: 2vh;
+}
+
+.warningBody  {
+  display: flex;
+  flex-direction: row;
+  gap: 0.9vw;
+  width: 40vw;
+  height: 4vh;
+  padding-top: 1.5px;
 }

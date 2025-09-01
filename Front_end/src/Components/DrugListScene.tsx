@@ -1,12 +1,10 @@
-import { Avatar, Button, Dropdown, Table, Badge, Input, Modal, Form, Tabs, Pagination } from "antd";
+import { Button, Dropdown, Table, Badge, Input, Modal, Form, Tabs, Pagination } from "antd";
 import { useState } from "react";
 import { MoreOutlined, FilterOutlined, PlusOutlined } from "@ant-design/icons";
 
 import DrugInfor from "./DrugInfor.tsx";
 
-import userAvatar from "../assets/user.png";
-import userMailNoti from "../assets/envelope.png";
-import userNoti from "../assets/active.png";
+
 import listDrug from "../assets/list (1).png";
 
 export default function DrugListScene() {
@@ -236,44 +234,10 @@ export default function DrugListScene() {
     currentPage * pageSize
   );
 
-  const accountInfo = {
-    name: "Dr. N.T.N Yen",
-    email: "yennguyen@gmail.com",
-    avatar: userAvatar,
-  };
+  
 
   return (
-    <div style={{ padding: 20, position: "relative" }}>
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 20,
-        }}
-      >
-        <h2 style={{ color: "#1c5cb6ff", fontWeight: "bold", margin: 0 }}>
-          DRUGBANK
-        </h2>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <Badge size="small">
-            <img src={userMailNoti} alt="mail" style={{ width: 24, cursor: "pointer" }} />
-          </Badge>
-          <Badge size="small">
-            <img src={userNoti} alt="noti" style={{ width: 24, cursor: "pointer" }} />
-          </Badge>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Avatar src={accountInfo.avatar} size={40} style={{ marginRight: "10px" }} />
-            <div>
-              <div style={{ fontWeight: "bold", color: "#333" }}>{accountInfo.name}</div>
-              <div style={{ fontSize: "12px", color: "#666" }}>{accountInfo.email}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div>
       {/* Tabs */}
       <Tabs
         defaultActiveKey="1"
