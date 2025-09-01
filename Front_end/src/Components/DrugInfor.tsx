@@ -1,7 +1,7 @@
 import { Tabs, Card, Table, Alert, Tag } from "antd";
 import { MedicineBoxOutlined } from "@ant-design/icons";
 
-import avatarDrug from "../assets/drugs.png";
+import avatarDrug from "../assets/drugs_blue.png";
 
 interface DrugInforProps {
   drug: any;

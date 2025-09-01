@@ -7,7 +7,7 @@ import DrugInfor from "./DrugInfor.tsx";
 import userAvatar from "../assets/user.png";
 import userMailNoti from "../assets/envelope.png";
 import userNoti from "../assets/active.png";
-import listDrug from "../assets/list.png";
+import listDrug from "../assets/list (1).png";
 
 export default function DrugListScene() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -230,7 +230,7 @@ export default function DrugListScene() {
     },
   };
 
-  const pageSize = 6;
+  const pageSize = 7;
   const paginatedData = filteredList.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
@@ -253,7 +253,7 @@ export default function DrugListScene() {
           marginBottom: 20,
         }}
       >
-        <h2 style={{ color: "#1b76d1ff", fontWeight: "bold", margin: 0 }}>
+        <h2 style={{ color: "#1c5cb6ff", fontWeight: "bold", margin: 0 }}>
           DRUGBANK
         </h2>
 
@@ -281,12 +281,12 @@ export default function DrugListScene() {
           {
             key: "1",
             label: (
-              <span style={{ display: "flex", alignItems: "center", gap: 8, color: "#000" }}>
+              <span style={{ display: "flex", alignItems: "center", gap: 8, color: "#1c5cb6ff" }}>
                 <img src={listDrug} alt="list" style={{ width: 20, height: 20 }} />
                 <b>All drugs</b>
                 <Badge
                   count={drugList.length > 1000 ? "1000+" : drugList.length}
-                  style={{ backgroundColor: "#1890ff" }}
+                  style={{ backgroundColor: "#1c5cb6ff" }}
                 />
               </span>
             ),
@@ -351,7 +351,7 @@ export default function DrugListScene() {
                 type="primary"
                 shape="circle"
                 icon={<PlusOutlined />}
-                style={{ backgroundColor: "#1890ff" }}
+                style={{ backgroundColor: "#1c5cb6ff" }}
                 onClick={() => setShowAddDrugModal(true)}
               />
             </div>
