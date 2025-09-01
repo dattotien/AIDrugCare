@@ -1,12 +1,14 @@
 import type React from "react";
 import { useState } from "react";
 import { Breadcrumb, Layout, Menu } from "antd";
-const { Content } = Layout;
-import DrugInteractionChecker from "./DrugInteractionChecker/DrugInteractionChecker";
-import Logo from "../assets/AIDrugCare.png";
+const { Header, Content, Footer } = Layout;
+import DrugInteractionChecker from "./DrugInteractionChecker/DrugInteractionChecker.tsx";
 import Sider from "antd/es/layout/Sider";
-import DrugListScene from "./DrugListScene";
-import Back from "../assets/back.png";
+import DrugListScene from "./DrugListScene.tsx";
+
+import Logo from "../assets/AIDrugCare.png";
+import backgroundImage from "../assets/background.png";
+
 const items = [
   { key: "1", label: "Khám chữa bệnh và kê đơn" },
   { key: "2", label: "Hồ sơ" },
@@ -16,7 +18,7 @@ const items = [
 ];
 
 export default function DoctorScene() {
-  const [selectedLabel, setSelectedLabel] = useState("");
+      const [selectedLabel, setSelectedLabel] = useState("");
   const handleMenuSelect = ({ key }: { key: string }) => {
     const selectedItem = items.find((item) => item.key === key);
     if (selectedItem) {
@@ -29,19 +31,13 @@ export default function DoctorScene() {
       style={{
         minHeight: "100vh",
         minWidth: "100vw",
-        backgroundImage: `url(${Back})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
+        backgroundImage: `url(${backgroundImage})`, 
+        backgroundSize: "cover", 
+        backgroundPosition: "center", 
+        backgroundRepeat: "no-repeat", 
       }}
     >
-      <Sider
-        style={{
-          backgroundColor: "#ffffffc6",
-          borderRadius: "0px 20px 20px 20px",
-          maxHeight: "90vh",
-        }}
-      >
+      <Sider style={{ backgroundColor: "#FFFFFF" }}>
         <div
           className="demo-logo"
           style={{ marginRight: "10px", padding: "2px" }}
@@ -57,22 +53,20 @@ export default function DoctorScene() {
           style={{ flex: 1, minWidth: 0 }}
         />
       </Sider>
-      <Layout style={{ backgroundColor: "transparent" }}>
-        <Content
-          style={{
-            padding: "0 10vw",
-            backgroundColor: "transparent",
-          }}
-        >
-          <Breadcrumb
-            style={{ margin: "16px 0" }}
-            items={[{ title: "Trang chủ" }, { title: selectedLabel }]}
-          />
+      <Layout>
+        <Content style={{ 
+          padding: "0 48px", 
+          backgroundImage: `url(${backgroundImage})`, 
+          backgroundSize: "cover", 
+          backgroundPosition: "center", 
+          backgroundRepeat: "no-repeat",  
+        }}>
           <div
             style={{
-              background: "#ffffffce",
-              minHeight: "90vh",
-              padding: "5vh 5vw 5vh 5vw",
+              height: "100%",
+              width: "100%",
+              padding: "0",
+              borderRadius: 20,
             }}
           >
             {
@@ -88,4 +82,4 @@ export default function DoctorScene() {
       </Layout>
     </Layout>
   );
-}
+};
