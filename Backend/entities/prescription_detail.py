@@ -1,7 +1,7 @@
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
-from beanie import Document
+from beanie import Document, PydanticObjectId
 class PrescriptionItem(BaseModel):
     drug_id: str
     dosage: str
@@ -12,7 +12,7 @@ class PrescriptionItem(BaseModel):
     note: Optional[str] = None
 
 class PrescriptionDetail(Document):
-    id: int
+    id: Optional[PydanticObjectId] = Field(default_factory=PydanticObjectId, alias="_id")
     visit_id: int
     start_time: datetime
     items: List[PrescriptionItem]

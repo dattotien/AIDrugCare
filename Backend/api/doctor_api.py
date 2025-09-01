@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException 
 from pydantic import BaseModel
 from typing import Optional, Any, List
 from services.doctor_service import (
@@ -23,7 +23,7 @@ class ResponseModel(BaseModel):
 async def get_profile(profile_id: int):
     return await get_profile_by_id(profile_id)
 
-@router.get("/visit-history/{patient_id}", response_model=ResponseModel)
+@router.get("/doctor-visit-history/{patient_id}", response_model=ResponseModel)
 async def get_history(patient_id: int):
     return await get_patient_history(patient_id)
 

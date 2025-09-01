@@ -7,7 +7,7 @@ from datetime import datetime
 class Patient(Document):
     id: int = Field(..., alias="_id")
     name: str
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     password: str
     dob: Optional[datetime] = None
     phone: Optional[str] = None

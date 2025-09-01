@@ -19,7 +19,7 @@ async def get_profile_by_id(profile_id: int):
     }
 
 async def get_visit_history_by_patient_id(patient_id: int):
-    visits = await Visit.find_all(Visit.patient_id == patient_id).to_list()
+    visits = await Visit.find_one(Visit.patient_id == patient_id)
     if visits:
         return {
             "success": True,

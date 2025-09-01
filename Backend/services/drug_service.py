@@ -49,4 +49,30 @@ async def search_drugs_by_name(name: str):
         "data": None
     }
 
-# Hàm lấy thông tin cần của thuốc cho model
+# Hàm lấy đầu vào list các thuốc và trả về tương tác thuốc dự đoán
+async def predict_one_drug_interaction(drug_nameA: str, drug_nameB:str, hmgrl_service):
+    # Chuyển tên thuốc sang drugbank_id
+    if drug_nameA not in hmgrl_service.name_to_dbid or drug_nameB not in hmgrl_service.name_to_dbid:
+        return {
+            "success": False,
+            "message": "Không tìm thấy thuốc trong cơ sở dữ liệu",
+            "data": None
+        }
+    drug_idA = hmgrl_service.name_to_dbid[drug_nameA]
+    drug_idB = hmgrl_service.name_to_dbid[drug_nameB]
+    # Chuyển drugbank_id sang chỉ số trong mô hình
+    if drug_idA not in hmgrl_service.drugbankid2id or drug_idB not in hmgrl_service.drugbankid2id:
+        return {
+            "success": False,
+            "message": "Không tìm thấy thuốc trong mô hình",
+            "data": None
+        }
+    idxA = int(hmgrl_service.drugbankid2id[drug_idA][0])
+    idxB = int(hmgrl_service.drugbankid2id[drug_idB][0])
+    drug_ids = [[idxA, idxB]]
+    label = hmgrl_service.predict(drug_ids)
+    return {
+        "success": True,
+        "message": "Dự đoán thành công",
+        "data": int(label)
+    }

@@ -21,7 +21,7 @@ async def get_profile_by_id(profile_id: int):
     }
 
 async def get_patient_history(patient_id: int):
-    visits = await Visit.find_all(Visit.patient_id == patient_id).to_list()
+    visits = await Visit.find(Visit.patient_id == patient_id).to_list()
     if visits:
         return {
             "success": True,
@@ -33,6 +33,7 @@ async def get_patient_history(patient_id: int):
         "message": "Không tìm thấy lịch sử khám bệnh",
         "data": None
     }
+
 
 async def search_patient_history(keyword: str):
     patients = await Patient.find_all().to_list()
@@ -51,7 +52,7 @@ async def search_patient_history(keyword: str):
                     "patient_id": p.id,
                     "name": p.name,
                     "cccd": p.cccd,
-                    "history": await p.get_patient_history(p.id)
+                    "history": (await get_patient_history(p.id))["data"]
                 }
                 for p in results
             ]
@@ -76,7 +77,7 @@ async def get_recent_patients():
     data = []
     for v in recent:
         profile = await patient_service.get_profile_by_id(v.patient_id)
-        if(profile.diagnosis is not None):
+        if(v.diagnosis is not None):
             continue
         else:
             data.append({
@@ -93,7 +94,7 @@ async def get_recent_patients():
     }
     
 async def update_diagnosis(patient_id: int, diagnosis: str):
-    visit = await Visit.find_one((Visit.patient_id == patient_id) & (Visit.diagnosis == None))
+    visit = await Visit.find_one({"patient_id": patient_id, "diagnosis": None})
     if not visit:
         return {
             "success": False, 
@@ -108,7 +109,7 @@ async def update_diagnosis(patient_id: int, diagnosis: str):
         }
 
 async def get_number_waiting():
-    count = await Visit.count(Visit.diagnosis == None)
+    count = await Visit.find(Visit.diagnosis == None).count()
     return {
         "success": True,
         "message": "Lấy số bệnh nhân đang chờ khám thành công",
@@ -117,12 +118,16 @@ async def get_number_waiting():
 async def get_number_visited_today(doctor_id: int):
     today = date.today()
 
-    count = await Visit.count(
-        (Visit.doctor_id == doctor_id) &
-        (Visit.diagnosis != None) &
-        (Visit.visit_date >= datetime.combine(today, datetime.min.time())) &
-        (Visit.visit_date <= datetime.combine(today, datetime.max.time()))
-    )
+    count = await Visit.find({
+    "doctor_id": doctor_id,
+    "diagnosis": {"$ne": None},
+    "visit_date": {
+        "$gte": datetime.combine(today, datetime.min.time()),
+        "$lte": datetime.combine(today, datetime.max.time())
+        }
+    }).count()
+
+
 
     return {
         "success": True,
