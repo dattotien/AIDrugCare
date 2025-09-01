@@ -351,7 +351,7 @@ export default function DrugListScene() {
                 type="primary"
                 shape="circle"
                 icon={<PlusOutlined />}
-                style={{ backgroundColor: "#1890ff" }}
+                style={{ backgroundColor: "#1c5cb6ff" }}
                 onClick={() => setShowAddDrugModal(true)}
               />
             </div>
