@@ -230,7 +230,7 @@ export default function DrugListScene() {
     },
   };
 
-  const pageSize = 6;
+  const pageSize = 7;
   const paginatedData = filteredList.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
@@ -253,7 +253,7 @@ export default function DrugListScene() {
           marginBottom: 20,
         }}
       >
-        <h2 style={{ color: "#1b76d1ff", fontWeight: "bold", margin: 0 }}>
+        <h2 style={{ color: "#1c5cb6ff", fontWeight: "bold", margin: 0 }}>
           DRUGBANK
         </h2>
 
@@ -286,7 +286,7 @@ export default function DrugListScene() {
                 <b>All drugs</b>
                 <Badge
                   count={drugList.length > 1000 ? "1000+" : drugList.length}
-                  style={{ backgroundColor: "#1890ff" }}
+                  style={{ backgroundColor: "#1c5cb6ff" }}
                 />
               </span>
             ),
