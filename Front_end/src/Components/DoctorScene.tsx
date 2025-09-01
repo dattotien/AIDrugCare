@@ -1,7 +1,9 @@
 import type React from "react";
 import { useState } from "react";
-import { Layout, Menu } from "antd";
-
+import { Layout, Menu, Avatar, Badge, Dropdown } from "antd";
+import userAvatar from "../assets/user.png";
+import userMailNoti from "../assets/envelope.png";
+import userNoti from "../assets/active.png";
 import DrugInteractionChecker from "./DrugInteractionChecker/DrugInteractionChecker.tsx";
 import DrugListScene from "./DrugListScene.tsx";
 
@@ -32,19 +34,59 @@ import LogoutIconActive from "../assets/logout_white.png";
 const { Content, Sider } = Layout;
 
 const mainItems = [
-  { key: "1", label: "Dashboard", iconDefault: DashboardIconDefault, iconActive: DashboardIconActive },
-  { key: "2", label: "Drugbank", iconDefault: DrugbankIconDefault, iconActive: DrugbankIconActive },
-  { key: "3", label: "History", iconDefault: HistoryIconDefault, iconActive: HistoryIconActive },
-  { key: "4", label: "Patients", iconDefault: PatientsIconDefault, iconActive: PatientsIconActive },
-  { key: "5", label: "DDIs check", iconDefault: DDIscheckIconDefault, iconActive: DDIscheckIconActive },
+  {
+    key: "1",
+    label: "Dashboard",
+    iconDefault: DashboardIconDefault,
+    iconActive: DashboardIconActive,
+  },
+  {
+    key: "2",
+    label: "Drugbank",
+    iconDefault: DrugbankIconDefault,
+    iconActive: DrugbankIconActive,
+  },
+  {
+    key: "3",
+    label: "History",
+    iconDefault: HistoryIconDefault,
+    iconActive: HistoryIconActive,
+  },
+  {
+    key: "4",
+    label: "Patients",
+    iconDefault: PatientsIconDefault,
+    iconActive: PatientsIconActive,
+  },
+  {
+    key: "5",
+    label: "DDIs check",
+    iconDefault: DDIscheckIconDefault,
+    iconActive: DDIscheckIconActive,
+  },
 ];
 
 const extraItems = [
-  { key: "setting", label: "Setting", iconDefault: SettingIconDefault, iconActive: SettingIconActive },
-  { key: "logout", label: "Log out", iconDefault: LogoutIconDefault, iconActive: LogoutIconActive },
+  {
+    key: "setting",
+    label: "Setting",
+    iconDefault: SettingIconDefault,
+    iconActive: SettingIconActive,
+  },
+  {
+    key: "logout",
+    label: "Log out",
+    iconDefault: LogoutIconDefault,
+    iconActive: LogoutIconActive,
+  },
 ];
 
 export default function DoctorScene() {
+  const accountInfo = {
+    name: "Dr. N.T.N Yen",
+    email: "yennguyen@gmail.com",
+    avatar: userAvatar,
+  };
   const [selectedKey, setSelectedKey] = useState("1");
 
   const handleMenuSelect = ({ key }: { key: string }) => {
@@ -60,14 +102,15 @@ export default function DoctorScene() {
           margin: "0 auto",
           borderRadius: "50px",
           marginBottom: "10px",
-          backgroundColor: selectedKey === item.key ? "#1c5cb6ff" : "transparent",
+          backgroundColor:
+            selectedKey === item.key ? "#1c5cb6ff" : "transparent",
         }}
       >
         <div
           style={{
             display: "flex",
-            alignItems: "center",  
-            justifyContent: "flex-start", 
+            alignItems: "center",
+            justifyContent: "flex-start",
             paddingLeft: "20px",
           }}
         >
@@ -97,11 +140,12 @@ export default function DoctorScene() {
     <Layout
       style={{
         minHeight: "100vh",
-        minWidth: "100vw",
+        width: "100%",
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        backgroundColor: "transparent",
       }}
     >
       <Sider
@@ -112,6 +156,12 @@ export default function DoctorScene() {
           flexDirection: "column",
           padding: "16px 0",
           boxShadow: "2px 0 8px rgba(0, 0, 0, 0.08)",
+          position: "fixed", // giữ nguyên khi scroll
+          left: 0,
+          top: 0,
+          bottom: 0,
+          height: "100vh",
+          overflow: "auto", // riêng sider có scroll nếu menu dài
         }}
       >
         {/* Logo */}
@@ -120,7 +170,7 @@ export default function DoctorScene() {
         </div>
 
         {/* Menu chính */}
-        <div style={{ flex: 1}}>
+        <div style={{ flex: 1 }}>
           <Menu
             mode="inline"
             selectedKeys={[selectedKey]}
@@ -147,7 +197,7 @@ export default function DoctorScene() {
         </div>
       </Sider>
 
-      <Layout>
+      <Layout style={{ backgroundColor: "transparent", marginLeft: "14vw" }}>
         <Content
           style={{
             padding: "0 48px",
@@ -155,8 +205,60 @@ export default function DoctorScene() {
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
+            backgroundColor: "transparent",
           }}
         >
+          <div style={{ padding: 20, position: "relative" }}>
+            {/* Header */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 20,
+              }}
+            >
+              <h2 style={{ color: "#1c5cb6ff", fontWeight: "bold", margin: 0 }}>
+                {selectedKey === "1" && "Dashboard"}
+                {selectedKey === "2" && "Drugbank"}
+                {selectedKey === "3" && "History"}
+                {selectedKey === "4" && "Patients"}
+                {selectedKey === "5" && "DDIs check"}
+              </h2>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                <Badge size="small">
+                  <img
+                    src={userMailNoti}
+                    alt="mail"
+                    style={{ width: 24, cursor: "pointer" }}
+                  />
+                </Badge>
+                <Badge size="small">
+                  <img
+                    src={userNoti}
+                    alt="noti"
+                    style={{ width: 24, cursor: "pointer" }}
+                  />
+                </Badge>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Avatar
+                    src={accountInfo.avatar}
+                    size={40}
+                    style={{ marginRight: "10px" }}
+                  />
+                  <div>
+                    <div style={{ fontWeight: "bold", color: "#333" }}>
+                      {accountInfo.name}
+                    </div>
+                    <div style={{ fontSize: "12px", color: "#666" }}>
+                      {accountInfo.email}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             style={{
               height: "100%",
