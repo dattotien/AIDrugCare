@@ -1,88 +1,172 @@
 import type React from "react";
 import { useState } from "react";
-import { Breadcrumb, Layout, Menu } from "antd";
-const { Content } = Layout;
-import DrugInteractionChecker from "./DrugInteractionChecker/DrugInteractionChecker";
+import { Layout, Menu } from "antd";
+
+import DrugInteractionChecker from "./DrugInteractionChecker/DrugInteractionChecker.tsx";
+import DrugListScene from "./DrugListScene.tsx";
+
 import Logo from "../assets/AIDrugCare.png";
-import Sider from "antd/es/layout/Sider";
-import DrugListScene from "./DrugListScene";
-import Back from "../assets/back.png";
-const items = [
-  { key: "1", label: "Khám chữa bệnh và kê đơn" },
-  { key: "2", label: "Hồ sơ" },
-  { key: "3", label: "Lịch sử khám bệnh" },
-  { key: "4", label: "Danh mục thuốc" },
-  { key: "5", label: "Kiểm tra tương tác thuốc" },
+import backgroundImage from "../assets/background.png";
+
+import DashboardIconDefault from "../assets/dashboard_blue.png";
+import DashboardIconActive from "../assets/dashboard_white.png";
+
+import DrugbankIconDefault from "../assets/drugs_blue.png";
+import DrugbankIconActive from "../assets/drugs_white.png";
+
+import HistoryIconDefault from "../assets/file_blue.png";
+import HistoryIconActive from "../assets/file_white.png";
+
+import PatientsIconDefault from "../assets/patients_blue.png";
+import PatientsIconActive from "../assets/patients_white.png";
+
+import DDIscheckIconDefault from "../assets/DDIs_blue.png";
+import DDIscheckIconActive from "../assets/DDIs_white.png";
+
+import SettingIconDefault from "../assets/setting_blue.png";
+import SettingIconActive from "../assets/setting_white.png";
+
+import LogoutIconDefault from "../assets/logout_blue.png";
+import LogoutIconActive from "../assets/logout_white.png";
+
+const { Content, Sider } = Layout;
+
+const mainItems = [
+  { key: "1", label: "Dashboard", iconDefault: DashboardIconDefault, iconActive: DashboardIconActive },
+  { key: "2", label: "Drugbank", iconDefault: DrugbankIconDefault, iconActive: DrugbankIconActive },
+  { key: "3", label: "History", iconDefault: HistoryIconDefault, iconActive: HistoryIconActive },
+  { key: "4", label: "Patients", iconDefault: PatientsIconDefault, iconActive: PatientsIconActive },
+  { key: "5", label: "DDIs check", iconDefault: DDIscheckIconDefault, iconActive: DDIscheckIconActive },
+];
+
+const extraItems = [
+  { key: "setting", label: "Setting", iconDefault: SettingIconDefault, iconActive: SettingIconActive },
+  { key: "logout", label: "Log out", iconDefault: LogoutIconDefault, iconActive: LogoutIconActive },
 ];
 
 export default function DoctorScene() {
-  const [selectedLabel, setSelectedLabel] = useState("");
+  const [selectedKey, setSelectedKey] = useState("1");
+
   const handleMenuSelect = ({ key }: { key: string }) => {
-    const selectedItem = items.find((item) => item.key === key);
-    if (selectedItem) {
-      setSelectedLabel(selectedItem.label);
-    }
+    setSelectedKey(key);
   };
-  return (
-    <Layout
-      className="layout"
-      style={{
-        minHeight: "100vh",
-        minWidth: "100vw",
-        backgroundImage: `url(${Back})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-      }}
-    >
-      <Sider
+
+  const renderMenuItems = (items: typeof mainItems) =>
+    items.map((item) => (
+      <Menu.Item
+        key={item.key}
         style={{
-          backgroundColor: "#ffffffc6",
-          borderRadius: "0px 20px 20px 20px",
-          maxHeight: "90vh",
+          width: "90%",
+          margin: "0 auto",
+          borderRadius: "50px",
+          marginBottom: "10px",
+          backgroundColor: selectedKey === item.key ? "#1c5cb6ff" : "transparent",
         }}
       >
         <div
-          className="demo-logo"
-          style={{ marginRight: "10px", padding: "2px" }}
-        >
-          <img src={Logo} alt="Logo" style={{ width: "100%" }} />
-        </div>
-        <Menu
-          color="#FFFFFF"
-          mode="vertical"
-          defaultSelectedKeys={["1"]}
-          onSelect={handleMenuSelect}
-          items={items}
-          style={{ flex: 1, minWidth: 0 }}
-        />
-      </Sider>
-      <Layout style={{ backgroundColor: "transparent" }}>
-        <Content
           style={{
-            padding: "0 10vw",
-            backgroundColor: "transparent",
+            display: "flex",
+            alignItems: "center",  
+            justifyContent: "flex-start", 
+            paddingLeft: "20px",
           }}
         >
-          <Breadcrumb
-            style={{ margin: "16px 0" }}
-            items={[{ title: "Trang chủ" }, { title: selectedLabel }]}
-          />
-          <div
+          <img
+            src={selectedKey === item.key ? item.iconActive : item.iconDefault}
+            alt={item.label}
             style={{
-              background: "#ffffffce",
-              minHeight: "90vh",
-              padding: "5vh 5vw 5vh 5vw",
+              width: 20,
+              height: 20,
+              objectFit: "contain",
+              marginRight: 12,
+            }}
+          />
+          <span
+            style={{
+              color: selectedKey === item.key ? "#fff" : "#000",
+              fontSize: 14,
             }}
           >
-            {
-              <>
-                {selectedLabel === "Kiểm tra tương tác thuốc" && (
-                  <DrugInteractionChecker />
-                )}
-                {selectedLabel === "Danh mục thuốc" && <DrugListScene />}
-              </>
-            }
+            {item.label}
+          </span>
+        </div>
+      </Menu.Item>
+    ));
+
+  return (
+    <Layout
+      style={{
+        minHeight: "100vh",
+        minWidth: "100vw",
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <Sider
+        width={220}
+        style={{
+          backgroundColor: "#f5f8fbff",
+          display: "flex",
+          flexDirection: "column",
+          padding: "16px 0",
+          boxShadow: "2px 0 8px rgba(0, 0, 0, 0.08)",
+        }}
+      >
+        {/* Logo */}
+        <div style={{ paddingLeft: "30px", marginBottom: "150px" }}>
+          <img src={Logo} alt="Logo" style={{ width: "120px" }} />
+        </div>
+
+        {/* Menu chính */}
+        <div style={{ flex: 1}}>
+          <Menu
+            mode="inline"
+            selectedKeys={[selectedKey]}
+            onSelect={handleMenuSelect}
+            style={{ borderInlineEnd: "none", background: "transparent" }}
+          >
+            {renderMenuItems(mainItems)}
+          </Menu>
+        </div>
+
+        {/* Divider để cách biệt */}
+        <div style={{ margin: "50px 0", borderTop: "1px solid #ffffffff" }} />
+
+        {/* Menu phụ (Setting, Logout)*/}
+        <div>
+          <Menu
+            mode="inline"
+            selectedKeys={[selectedKey]}
+            onSelect={handleMenuSelect}
+            style={{ borderInlineEnd: "none", background: "transparent" }}
+          >
+            {renderMenuItems(extraItems)}
+          </Menu>
+        </div>
+      </Sider>
+
+      <Layout>
+        <Content
+          style={{
+            padding: "0 48px",
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <div
+            style={{
+              height: "100%",
+              width: "100%",
+              padding: "0",
+              borderRadius: 20,
+            }}
+          >
+            {selectedKey === "2" && <DrugListScene />}
+            {selectedKey === "5" && <DrugInteractionChecker />}
           </div>
         </Content>
       </Layout>
