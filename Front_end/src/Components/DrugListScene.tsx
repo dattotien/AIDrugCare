@@ -7,7 +7,7 @@ import DrugInfor from "./DrugInfor.tsx";
 import userAvatar from "../assets/user.png";
 import userMailNoti from "../assets/envelope.png";
 import userNoti from "../assets/active.png";
-import listDrug from "../assets/list.png";
+import listDrug from "../assets/list (1).png";
 
 export default function DrugListScene() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -281,7 +281,7 @@ export default function DrugListScene() {
           {
             key: "1",
             label: (
-              <span style={{ display: "flex", alignItems: "center", gap: 8, color: "#000" }}>
+              <span style={{ display: "flex", alignItems: "center", gap: 8, color: "#1c5cb6ff" }}>
                 <img src={listDrug} alt="list" style={{ width: 20, height: 20 }} />
                 <b>All drugs</b>
                 <Badge
