@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Select, Button, Card, Space, Typography, Input } from "antd";
 import styles from "./DrugInteractionChecker.module.css";
 import checked from "../../assets/check-mark.png";
-
-const { Title } = Typography;
+import note_img from "../../assets/notes.png";
+import check from "../../assets/checked.png";
+import no_entry from "../../assets/no-entry.png";
+const { Title, Text, Paragraph } = Typography;
 const { Search } = Input;
 
 export default function DrugInteractionChecker() {
@@ -61,51 +63,132 @@ export default function DrugInteractionChecker() {
           </Button>
         </Space>
       </Card>
-      <Card className={styles.resultCard}>
-
-      </Card>
+      <DrugInteractionCard
+        drugA={selectedDrugs[0] || "para"}
+        drugB={selectedDrugs[1] || "asipirin"}
+        description="aa\"
+      />
     </div>
   );
 }
-
-
-const DrugInteractionCard = ({
+interface DrugInteractionCardProps {
+  drugA: string;
+  drugB: string;
+  description?: string;
+}
+const DrugInteractionCard: React.FC<DrugInteractionCardProps> = ({
   drugA,
   drugB,
   description,
-  recommendation,
-  note,
 }) => {
   return (
-    <Card
-      style={{
-        width: "100%",
-        maxWidth: 800,
-        margin: "20px auto",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        borderRadius: "12px",
-      }}
-    >
-      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-        <Title level={4}>
-          {drugA} <span style={{ color: "red" }}> × </span> {drugB}
-        </Title>
-
-        <div>
-          <Text strong>Mô tả:</Text>
-          <Paragraph>{description || "Chưa có thông tin"}</Paragraph>
-        </div>
-
-        <div>
-          <Text strong>Khuyến nghị:</Text>
-          <Paragraph>{recommendation || "Chưa có khuyến nghị"}</Paragraph>
-        </div>
-
-        <div>
-          <Text strong>Lưu ý:</Text>
-          <Paragraph>{note || "Chưa có lưu ý"}</Paragraph>
-        </div>
-      </Space>
+    <Card style={{ margin: "0 auto", width: "70vw" ,backgroundColor:"transparent"}}>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <img src={note_img} style={{ width: "30px", height: "30px" }}></img>
+        <p
+          style={{
+            fontWeight: "700",
+            marginLeft: "10px",
+            color: "#043BB3",
+            fontSize: "18px",
+          }}
+        >
+          KẾT QUẢ KIỂM TRA
+        </p>
+      </div>
+      {description ? (
+        <Interaction drugA={drugA} drugB={drugB} description={description} />
+      ) : (
+        <NoInteraction drugA={drugA} drugB={drugB} />
+      )}
+      <div className={styles.noteSection}>
+        <Paragraph style={{ color: "#043BB3", margin: "15px" }}>
+          <Text style={{ fontWeight: "bold", color: "#043BB3" }} strong>
+            Lưu ý:
+          </Text>{" "}
+          Mọi thông tin chỉ mang tính chất tham khảo, cần kiểm định chuyên sâu
+          hơn với các cặp thuốc cần dự đoán tương tác trước khi sử dụng cặp
+          thuốc.
+        </Paragraph>
+      </div>
     </Card>
   );
 };
+
+function Interaction({
+  drugA,
+  drugB,
+  description,
+}: {
+  drugA: string;
+  drugB: string;
+  description: string;
+}) {
+  return (
+    <Card className={styles.noInteractionCard}>
+      <div className={styles.interactionBody}>
+        <div
+          style={{
+            backgroundColor: "#D12326",
+            width: "8px",
+            alignItems: "stretch",
+            borderRadius: "10px",
+          }}
+        ></div>
+        <div>
+          <div className={styles.interactionHeader}>
+            <img src={no_entry} style={{ width: "25px" }}></img>
+            <Text style={{ color: "#D12326" }}>Hai thuốc có tương tác</Text>
+          </div>
+          <p className={styles.drugPara1}>
+            {drugA} + {drugB}
+          </p>
+          <p className={styles.interDescription}>{description}</p>
+          <Card className={styles.warningCard}>
+            <div className={styles.warningBody}>
+              <div
+                style={{
+                  backgroundColor: "#043BB3",
+                  width: "5px",
+                  alignItems: "stretch",
+                  borderRadius: "5px",
+                }}
+              ></div>
+              <Text style={{ color: "#043BB3" }}>
+                <strong>Khuyến nghị:</strong> Cần cân nhắc kỹ trước khi sử dụng
+                đồng thời hai thuốc
+              </Text>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </Card>
+  );
+}
+function NoInteraction({ drugA, drugB }: { drugA: string; drugB: string }) {
+  return (
+    <Card className={styles.interactionCard}>
+      <div className={styles.interactionBody}>
+        <div
+          style={{
+            backgroundColor: "#043BB3",
+            width: "8px",
+            alignItems: "stretch",
+            borderRadius: "10px",
+          }}
+        ></div>
+        <div>
+          <div className={styles.interactionHeader}>
+            <img src={check} style={{ width: "25px" }}></img>
+            <Text style={{ color: "#043BB3" }}>
+              Hai thuốc không có tương tác
+            </Text>
+          </div>
+          <p className={styles.drugPara}>
+            {drugA} + {drugB}
+          </p>
+        </div>
+      </div>
+    </Card>
+  );
+}

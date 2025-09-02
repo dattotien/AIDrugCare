@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import PatientApp from "./PatientApp.tsx"
 import IntroductionScene from './Components/IntroductionScene.tsx'
-import DoctorLoginScence from './Components/DoctorLoginScene.tsx'
+import DoctorLoginScence from './Components/DoctorLoginScene/DoctorLoginScene.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <PatientApp/>
