@@ -63,3 +63,12 @@ async def login_patient_service(cccd: str, password: str):
         "message": "Đăng nhập thành công",
         "data": patient_data
     }
+    
+async def logout_service():
+    return {
+        "success": True,
+        "message": "Đăng xuất thành công",
+        "data": None
+    }
+
+
