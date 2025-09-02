@@ -1,0 +1,87 @@
+.card {
+    width: 30vw;
+    height: 50vh;
+    margin: 10vw 14.5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: transparent !important;
+    border-color: transparent;
+}
+
+.title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.text {
+    color:#043bb3;
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 1vh;
+    margin-left: 1vw;
+}
+
+.input {
+    width: 25vw;
+    min-height: 5vh;
+    border-radius: 40px;
+}
+
+.button {
+    width: 7vw;
+    height: 5vh;
+    margin-top: 2vh;
+    border-radius: 40px;
+    background-color: #043bb3;
+    color: white;
+    font-weight: bold;
+}
+.uet {
+    color: black;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 0px;
+}
+
+.bar{
+    background-color: #043bb3;
+    width: 15vw;
+    height: 2.5px;
+    margin-bottom: 10px;
+    margin-left: 3px;
+}
+
+.t1 {
+    color: black;
+    margin: 0px;
+    font-weight: bold;
+    font-size: 45px;
+}
+
+.intro {
+    color:black;
+    margin: 0px;
+    font-weight: bold;
+    font-size: 14px;
+}
+.button1{
+    width: 15vw;
+    height: 6vh;
+    margin-right: 2vh;
+    border-radius: 40px;
+    background-color: #043bb3;
+    color: white;
+    font-weight: bold;
+}
+.button2{
+    width: 15vw;
+    height: 6vh;
+    margin-left: 2vh;
+    border-radius: 40px;
+    background-color: #FFFFFF;
+    color: #043bb3;
+    font-weight: bold;
+}
