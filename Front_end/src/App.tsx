@@ -5,4 +5,4 @@ const App: React.FC = () => {
   return <DoctorScene />;
 };
 
-export default App;
+export default App

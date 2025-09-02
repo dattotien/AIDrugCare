@@ -3,21 +3,16 @@ import {Form,Input,Button,message,Row,Col, Card} from "antd";
 import { EditOutlined, SaveOutlined, CloseOutlined, UserOutlined} from "@ant-design/icons";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
-import "../PatientProfile.css";
+import "./PatientProfile.css";
 
-export default function PatientInforScene() {
+interface PatientInforProps {
+  patient: any;
+  onSave : (updatePatient : any ) => void;
+  onClose : () =>void;
+}
+
+export default function PatientInforScene({patient, onSave, onClose}:PatientInforProps) {
   const [form] = Form.useForm();
-  const [patient, setPatient] = useState({
-    name: "Nguyen Xuan Nam",
-    gender: "Nam",
-    hometown: "Hai Duong",
-    dob: dayjs("1978-08-30", "YYYY-MM-DD"),
-    phone: "0978349285",
-    cccd: "03030303008523",
-    bhyt: "QH3412672H1",
-    code: "1002",
-    email: "namnguyen@gmail.com",
-  });
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
@@ -29,10 +24,7 @@ export default function PatientInforScene() {
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
-      setPatient(prev => ({
-      ...prev,      
-      ...values   
-    }));
+      onSave({...parent, ...values})
       setEditing(false);
       form.setFieldsValue(values);
       message.success("Cập nhật thành công!");
