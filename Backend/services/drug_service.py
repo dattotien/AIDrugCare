@@ -1,5 +1,8 @@
 from entities.drug import Drug
+import numpy as np
 from pydantic import BaseModel, Field
+from beanie import PydanticObjectId
+import re
 class DrugOut(BaseModel):
     id: str = Field(..., alias="_id")
     generic_name: str
@@ -35,44 +38,72 @@ async def get_drug_by_id(drug_id: str):
         "data": None
     }
 
+import re
+
 async def search_drugs_by_name(name: str):
-    drugs = await Drug.find(Drug.generic_name.contains(name)).project(DrugOut).to_list()
+    name = name.strip()
+    if not name:
+        return {
+            "success": False,
+            "message": "Tên thuốc không được để trống",
+            "data": []
+        }
+
+    # ^ để match từ đầu chuỗi
+    regex = re.compile(f"^{re.escape(name)}.*", re.IGNORECASE)
+
+    drugs = await Drug.find(
+        {"generic_name": regex}
+    ).project(DrugOut).to_list()
+
     if drugs:
         return {
             "success": True,
-            "message": f"Tìm thấy {len(drugs)} thuốc khớp với '{name}'",
+            "message": f"Tìm thấy {len(drugs)} thuốc bắt đầu với '{name}'",
             "data": drugs
         }
     return {
         "success": False,
-        "message": "Không tìm thấy thuốc nào",
-        "data": None
+        "message": f"Không tìm thấy thuốc nào bắt đầu với '{name}'",
+        "data": []
     }
 
-# Hàm lấy đầu vào list các thuốc và trả về tương tác thuốc dự đoán
-async def predict_one_drug_interaction(drug_nameA: str, drug_nameB:str, hmgrl_service):
-    # Chuyển tên thuốc sang drugbank_id
-    if drug_nameA not in hmgrl_service.name_to_dbid or drug_nameB not in hmgrl_service.name_to_dbid:
+
+async def predict_one_drug_interaction(drug_nameA: str, drug_nameB: str, hmgrl_service):
+    candidatesA = [drug_nameA, drug_nameA.lower()]
+    candidatesB = [drug_nameB, drug_nameB.lower()]
+
+    drug_idA = next((hmgrl_service.name_to_dbid[name] for name in candidatesA if name in hmgrl_service.name_to_dbid), None)
+    drug_idB = next((hmgrl_service.name_to_dbid[name] for name in candidatesB if name in hmgrl_service.name_to_dbid), None)
+
+    if drug_idA is None or drug_idB is None:
         return {
             "success": False,
             "message": "Không tìm thấy thuốc trong cơ sở dữ liệu",
-            "data": None
+            "data": ""
         }
-    drug_idA = hmgrl_service.name_to_dbid[drug_nameA]
-    drug_idB = hmgrl_service.name_to_dbid[drug_nameB]
-    # Chuyển drugbank_id sang chỉ số trong mô hình
-    if drug_idA not in hmgrl_service.drugbankid2id or drug_idB not in hmgrl_service.drugbankid2id:
+
+    idxA = hmgrl_service.drugbankid2id.get(drug_idA, [None])[0]
+    idxB = hmgrl_service.drugbankid2id.get(drug_idB, [None])[0]
+
+    if idxA is None or idxB is None:
         return {
-            "success": False,
+            "success": True,
             "message": "Không tìm thấy thuốc trong mô hình",
-            "data": None
+            "data": ""
         }
-    idxA = int(hmgrl_service.drugbankid2id[drug_idA][0])
-    idxB = int(hmgrl_service.drugbankid2id[drug_idB][0])
-    drug_ids = [[idxA, idxB]]
-    label = hmgrl_service.predict(drug_ids)
+
+    drug_ids = [[int(idxA), int(idxB)]]
+
+    label_idx = hmgrl_service.predict(drug_ids)
+    if isinstance(label_idx, (list, np.ndarray)):
+        label_idx = int(label_idx[0])
+    label = hmgrl_service.label_mapping[str(label_idx)]
+
+    label = label.replace("[drug1]", drug_nameA).replace("[drug2]", drug_nameB)
+
     return {
         "success": True,
         "message": "Dự đoán thành công",
-        "data": int(label)
+        "data": label
     }

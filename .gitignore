@@ -1,2 +1,7 @@
 Backend/assets/hmgrl_check_point.pt
 Backend/assets/hmrgl_check_point.pt
+# Ignore all .pyc files
+*.pyc
+
+# Optional: ignore __pycache__ folders too
+__pycache__/

@@ -5,6 +5,8 @@ from services.drug_service import get_all_drugs
 from services.drug_service import get_drug_by_id
 from services.drug_service import predict_one_drug_interaction
 from services.model_service import get_hmgrl_service
+from services.drug_service import search_drugs_by_name
+from fastapi import Query
 router = APIRouter()
 
 class ResponseModel(BaseModel):
@@ -28,3 +30,13 @@ async def predict_drug_interaction(
     if hmgrl_service is None:
         raise HTTPException(status_code=503, detail="Model service is not available")
     return await predict_one_drug_interaction(drug_nameA, drug_nameB, hmgrl_service)
+
+@router.get("/search")
+async def api_search_drugs(name: Optional[str] = Query("", description="Tên thuốc cần tìm")):
+    if not name or name.strip() == "":
+        return {
+            "success": False,
+            "message": "Tên thuốc không được để trống",
+            "data": []
+        }
+    return await search_drugs_by_name(name)

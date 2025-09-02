@@ -1,28 +1,73 @@
 import { useState } from "react";
-import { Select, Button, Card, Space, Typography, Input } from "antd";
+import {
+  Button,
+  Card,
+  Space,
+  Typography,
+  Input,
+  message,
+  AutoComplete,
+} from "antd";
 import styles from "./DrugInteractionChecker.module.css";
 import checked from "../../assets/check-mark.png";
 import note_img from "../../assets/notes.png";
 import check from "../../assets/checked.png";
 import no_entry from "../../assets/no-entry.png";
+
 const { Title, Text, Paragraph } = Typography;
 const { Search } = Input;
 
 export default function DrugInteractionChecker() {
-  const [selectedDrugs, setSelectedDrugs] = useState<string[]>([]);
+  const [drugA, setDrugA] = useState<string>("");
+  const [drugB, setDrugB] = useState<string>("");
+  const [optionsA, setOptionsA] = useState<{ value: string }[]>([]);
+  const [optionsB, setOptionsB] = useState<{ value: string }[]>([]);
+  const [result, setResult] = useState<{ description: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const fetchDrugOptions = async (query: string, setOptions: Function) => {
+    if (!query) {
+      setOptions([]);
+      return;
+    }
+    try {
+      const res = await fetch(
+        `http://localhost:8000/search?name=${encodeURIComponent(query)}`
+      );
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        setOptions(data.data.map((d: any) => ({ value: d.generic_name })));
+      } else {
+        setOptions([]);
+      }
+    } catch (err) {
+      console.error(err);
+      setOptions([]);
+    }
+  };
+  const handleCheck = async () => {
+    if (!drugA || !drugB) return;
 
-  const drugDatabase = [
-    { value: "warfarin", label: "Warfarin (Thuốc chống đông máu)" },
-    { value: "aspirin", label: "Aspirin (Axit acetylsalicylic)" },
-    { value: "ibuprofen", label: "Ibuprofen (Thuốc giảm đau)" },
-    { value: "paracetamol", label: "Paracetamol (Thuốc hạ sốt)" },
-    { value: "amoxicillin", label: "Amoxicillin (Kháng sinh)" },
-    { value: "metformin", label: "Metformin (Thuốc tiểu đường)" },
-    { value: "lisinopril", label: "Lisinopril (Thuốc huyết áp)" },
-    { value: "simvastatin", label: "Simvastatin (Thuốc cholesterol)" },
-    { value: "omeprazole", label: "Omeprazole (Thuốc dạ dày)" },
-    { value: "digoxin", label: "Digoxin (Thuốc tim mạch)" },
-  ];
+    setLoading(true);
+    setResult(null);
+
+    try {
+      const res = await fetch(
+        `http://localhost:8000/drugs/predict${drugA}/${drugB}`
+      );
+      const data = await res.json();
+
+      if (data.success) {
+        setResult({ description: data.data });
+      } else {
+        message.error(data.message || "Không lấy được kết quả");
+      }
+    } catch (err) {
+      console.error(err);
+      message.error("Lỗi khi gọi API");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -39,16 +84,24 @@ export default function DrugInteractionChecker() {
           <div className={styles.searchRow}>
             <div>
               <p>Thuốc thứ nhất</p>
-              <Search
+              <AutoComplete
+                style={{ width: 300 }}
+                options={optionsA}
+                value={drugA}
+                onSearch={(val) => fetchDrugOptions(val, setOptionsA)}
+                onChange={(val) => setDrugA(val)}
                 placeholder="Nhập tên thuốc"
-                className={styles.searchInput}
               />
             </div>
             <div>
               <p>Thuốc thứ hai</p>
-              <Search
+              <AutoComplete
+                style={{ width: 300 }}
+                options={optionsB}
+                value={drugB}
+                onSearch={(val) => fetchDrugOptions(val, setOptionsB)}
+                onChange={(val) => setDrugB(val)}
                 placeholder="Nhập tên thuốc"
-                className={styles.searchInput}
               />
             </div>
           </div>
@@ -56,18 +109,23 @@ export default function DrugInteractionChecker() {
           <Button
             type="primary"
             size="large"
-            disabled={selectedDrugs.length < 2}
+            disabled={!drugA || !drugB}
+            loading={loading}
+            onClick={handleCheck}
             className={styles.button}
           >
             KIỂM TRA TƯƠNG TÁC THUỐC
           </Button>
         </Space>
       </Card>
-      <DrugInteractionCard
-        drugA={selectedDrugs[0] || "para"}
-        drugB={selectedDrugs[1] || "asipirin"}
-        description="aa\"
-      />
+
+      {result && (
+        <DrugInteractionCard
+          drugA={drugA}
+          drugB={drugB}
+          description={result.description}
+        />
+      )}
     </div>
   );
 }
@@ -82,7 +140,13 @@ const DrugInteractionCard: React.FC<DrugInteractionCardProps> = ({
   description,
 }) => {
   return (
-    <Card style={{ margin: "0 auto", width: "70vw" ,backgroundColor:"transparent"}}>
+    <Card
+      style={{
+        margin: "0 auto",
+        width: "70vw",
+        backgroundColor: "transparent",
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center" }}>
         <img src={note_img} style={{ width: "30px", height: "30px" }}></img>
         <p
