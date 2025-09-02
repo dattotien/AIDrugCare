@@ -12,7 +12,7 @@ class Patient(Document):
     dob: Optional[datetime] = None
     phone: Optional[str] = None
     gender: Optional[str] = None
-    cccd: Optional[int] = None
+    cccd: Optional[str] = None
     bhyt_code: Optional[str] = None
     address: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
