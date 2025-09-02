@@ -6,4 +6,4 @@ const App: React.FC = () => {
   return <PatientLoginScence/>;
 };
 
-export default App;
+export default App

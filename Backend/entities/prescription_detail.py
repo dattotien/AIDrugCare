@@ -12,7 +12,7 @@ class PrescriptionItem(BaseModel):
     note: Optional[str] = None
 
 class PrescriptionDetail(Document):
-    id: int
+    id: Optional[int]
     visit_id: int
     start_time: datetime
     items: List[PrescriptionItem]
