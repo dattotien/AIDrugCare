@@ -3,7 +3,7 @@ import "./App.css";
 import DoctorScene from "./Components/DoctorScene";
 import PatientLoginScence from "./Components/PatientLoginScene/PatientLoginScene";
 const App: React.FC = () => {
-  return <PatientLoginScence/>;
+  return <DoctorScene />;
 };
 
 export default App
