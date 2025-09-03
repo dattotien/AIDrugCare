@@ -4,7 +4,6 @@ import { MoreOutlined, FilterOutlined, PlusOutlined } from "@ant-design/icons";
 
 import DrugInfor from "./DrugInfor.tsx";
 
-
 import listDrug from "../assets/list (1).png";
 
 export default function DrugListScene() {
