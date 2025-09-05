@@ -21,7 +21,7 @@ app.add_middleware(
 )
 app.include_router(drug_api.router, tags=["Drug"])
 app.include_router(patient_api.router, tags=["Patient"])
-app.inclide_router(doctor_api.router, tags=["Doctor"])
+app.include_router(doctor_api.router, tags=["Doctor"])
 app.include_router(authorization_api.router, tags=["Authorization"])
 @app.on_event("startup")
 async def startup_db():
