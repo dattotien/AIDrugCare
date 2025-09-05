@@ -4,9 +4,12 @@ import json
 import torch.nn.functional as F
 from .model import HMGRL, gcnnormalization, adj_Heter_gene, args
 from fastapi import Request
+device = torch.device("cpu")
+
 def get_hmgrl_service(request: Request):
     return request.app.state.hmgrl_service
-N_three_attribute = torch.tensor([2033, 1589, 285], dtype=torch.int32)
+N_three_attribute = torch.tensor([2033, 1589, 285], dtype=torch.long, device="cpu")
+
 class HMGRLService:
     def __init__(self, model_path, data_path, device="cpu"):
         with open(data_path + "/drugbankid2id.json", "r") as f:
@@ -15,8 +18,10 @@ class HMGRLService:
             self.id2drugbankid = json.load(f)
         with open(data_path + "/name_to_drugbank_id.json", "r") as f:
             self.name_to_dbid = json.load(f)
-        self.device = device
-        self.N_three_attribute = N_three_attribute.to(self.device)
+            self.device = device
+            self.N_three_attribute = torch.tensor(
+            [2033, 1589, 285], dtype=torch.long, device="cpu"
+        )
         self.load_model(model_path)
         self.load_data(data_path)
         with open(data_path + "/label_mapping.json", "r") as f:

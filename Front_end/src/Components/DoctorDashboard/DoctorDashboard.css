@@ -7,6 +7,7 @@
       display: flex;
       flex-direction: row;
       margin-top: 0 !important;
+
       
 
   }
@@ -20,7 +21,7 @@
     display: flex;
     flex-direction: row;
     margin: 0px !important;
-    margin-right: -100px !important;
+    margin-right: -120px !important;
 
   }
 
@@ -33,7 +34,7 @@
     display: flex;
     flex-direction: row;
     margin: 0 !important;
-    margin-left: 20px !important;
+    margin-left: 50px !important;
   }
 
   .circle {
@@ -56,6 +57,7 @@
     flex-direction: column;
     justify-items: center;
     margin: 0;
+    margin-right: 130px;
   }
 
   .circle-small {
@@ -141,3 +143,15 @@
   .news-scroll::-webkit-scrollbar-thumb { background: #737373; border-radius: 10px; }
   .news-scroll::-webkit-scrollbar-track { background: #fff0f0; border-radius: 10px; }
 
+.row span {
+  display: block;     /* ép span xuống dòng */
+  text-align: left;   /* căn trái */
+  margin-left: 12px;
+}
+
+.symptom {
+  max-width: 220px;      /* giới hạn chiều rộng */
+  white-space: nowrap;   /* không xuống dòng */
+  overflow: hidden;      /* ẩn phần thừa */
+  text-overflow: ellipsis; /* hiện dấu ... */
+}

@@ -3,7 +3,6 @@ import waitLogo from "../../assets/waiting.png";
 import timeLogo from "../../assets/time-left.png";
 import eventLogo from "../../assets/event.png";
 import "./PatientScene.css";
-
 export default function PatientCardCount() {
     return (
         <div className = "card-contain">

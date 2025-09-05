@@ -64,7 +64,26 @@
   color: #fff;
 }
 
+<<<<<<< Updated upstream
 /* Content */
+=======
+.doctor-menu-item.selected {
+  background-color: #1c5cb6ff !important;
+}
+
+.doctor-divider {
+  margin: 50px 0;
+  border-top: 1px solid #ffffffff;
+}
+
+.doctor-content-layout {
+  margin-right: 0px;
+  margin-left: 220px;
+  min-height: 100vh;
+  background-color: transparent;
+}
+
+>>>>>>> Stashed changes
 .doctor-content {
   flex: 1;
   background-color: transparent;

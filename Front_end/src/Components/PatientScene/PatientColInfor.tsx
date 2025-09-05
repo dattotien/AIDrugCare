@@ -96,8 +96,8 @@ export default function PatientColInfor(){
                     footer={null}
                     width={700}
                     zIndex={2000} >
-        <PatientInforScene patient={patient} onSave={handleUpdatePatient} onClose = {() =>setOpen(false)}/>
-      </Modal>
+                    <PatientInforScene patient={patient}/>
+                </Modal>
         </div>
 
     );

@@ -9,7 +9,7 @@ export default function DoctorWaitingList() {
       name: "Nguyễn Xuân Nam",
       age: "25 tuổi",
       gender: "Nam",
-      symptom: "Đau, quặn thắt ở bụng trái",
+      symptom: "Đau, quặn thắt ở bụng trái aaaaaaaaaaaaaa",
       status: "Waiting",
     },
     {
@@ -79,7 +79,7 @@ export default function DoctorWaitingList() {
           <span>{p.name}</span>
           <span>{p.age}</span>
           <span>{p.gender}</span>
-          <span>{p.symptom}</span>
+          <span className="symptom">{p.symptom}</span>
           <span className="waiting">{p.status}</span>
         </div>
       ))}
