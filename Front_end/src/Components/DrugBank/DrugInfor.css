@@ -1,0 +1,89 @@
+.drug-infor-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+
+.drug-header {
+  background: linear-gradient(90deg, #245bafff, #042f6fff);
+  color: #fff;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.avatar-wrapper {
+  background: rgba(255, 255, 255, 1);
+  border-radius: 50%;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drug-avatar {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.drug-info h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.drug-info p {
+  margin: 4px 0;
+  opacity: 0.9;
+}
+
+.drug-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.drug-id {
+  font-size: 14px;
+  padding: 4px 8px;
+  font-weight: bold;
+  margin-right: 5px;
+  margin-top: 8px;
+}
+
+.tab-container {
+  padding: 16px;
+  background: #fff;
+}
+
+.card-title {
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.desc-card {
+  margin-bottom: 16px;
+  background: #f9fbff;
+}
+
+.product-info-container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.product-card {
+  flex: 1;
+  border-radius: 12px;
+  border: 2px solid #85b3f3ff;
+}
+
+.alert-box {
+  margin-bottom: 16px;
+}
+
+.table-header {
+  color: #ffffff;
+  font-weight: bold;
+}
