@@ -1,0 +1,147 @@
+.doctor-layout {
+  min-height: 100vh;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.doctor-sider {
+  background-color: #f5f8fbff;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  z-index: 100;
+}
+
+.doctor-logo {
+  padding-left: 30px;
+  margin-bottom: 150px;
+}
+
+.doctor-logo img {
+  width: 120px;
+}
+
+.doctor-menu-item {
+  width: 90%;
+  margin: 0 auto 10px auto;
+  border-radius: 50px;
+}
+
+.doctor-menu-item-content {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.doctor-menu-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  margin-right: 12px;
+}
+
+.doctor-menu-label {
+  font-size: 14px;
+  color: #000;
+}
+
+.doctor-menu-label.active {
+  color: #fff;
+}
+
+.doctor-menu-item.selected {
+  background-color: #1c5cb6ff !important;
+}
+
+.doctor-divider {
+  margin: 50px 0;
+  border-top: 1px solid #ffffffff;
+}
+
+.doctor-content-layout {
+  margin-left: 220px;
+  min-height: 100vh;
+  background-color: transparent;
+}
+
+.doctor-content {
+  padding: 20px 48px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.doctor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+}
+
+.doctor-header-title {
+  color: #1c5cb6ff;
+  font-weight: bold;
+  margin: 0;
+}
+
+.doctor-header-patients.clickable {
+  cursor: pointer;
+  color: #1c5cb6ff;
+  font-weight: bold;
+}
+
+.doctor-header-divider {
+  color: #1c5cb6ff;
+  font-weight: bold;
+}
+
+.doctor-header-patient-name {
+  color: black;
+  font-weight: bold;
+}
+
+.doctor-header-user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.doctor-icon-btn {
+  width: 24px;
+  cursor: pointer;
+}
+
+.doctor-user-info {
+  display: flex;
+  align-items: center;
+}
+
+.doctor-avatar {
+  margin-right: 10px;
+}
+
+.doctor-user-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.doctor-user-email {
+  font-size: 12px;
+  color: #666;
+}
+
+.doctor-body {
+  flex: 1 1 auto;
+  padding-top: 12px;
+  border-radius: 20px;
+  overflow: auto;
+}

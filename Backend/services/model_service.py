@@ -19,6 +19,8 @@ class HMGRLService:
         self.N_three_attribute = N_three_attribute.to(self.device)
         self.load_model(model_path)
         self.load_data(data_path)
+        with open(data_path + "/label_mapping.json", "r") as f:
+            self.label_mapping = json.load(f)
         self.prepare_adj()
 
     def load_model(self, path):
