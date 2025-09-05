@@ -5,7 +5,7 @@ import userAvatar from "../assets/user.png";
 import userMailNoti from "../assets/envelope.png";
 import userNoti from "../assets/active.png";
 import DrugInteractionChecker from "./DrugInteractionChecker/DrugInteractionChecker.tsx";
-import DrugListScene from "./DrugListScene.tsx";
+import DrugListScene from "./DrugBank/DrugListScene.tsx";
 import DoctorInformationScene from "./DoctorInformationScene/DoctorInformationScene.tsx";
 import DoctorHistoryScene from "../Components/DoctorHistory/DoctorHistoryScene.tsx";
 import dayjs from "dayjs";
@@ -99,7 +99,7 @@ export default function DoctorScene() {
 
   const [doctor, setDoctor] = useState({
     name: "Nguyễn Thị Ngọc Yến",
-    dr : "PGS.TS",
+    dr: "PGS.TS",
     department: "Khoa Răn - hàm - mặt",
     email: "ngyen23102005@gmail.com",
     phone: "0978349285",
@@ -111,11 +111,11 @@ export default function DoctorScene() {
     creatAt: "2025 - 23 - 1",
   });
 
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const handleUpdateDoctor = (updateDoctor: typeof doctor) => {
-        setDoctor(updateDoctor);
-    }
+  const handleUpdateDoctor = (updateDoctor: typeof doctor) => {
+    setDoctor(updateDoctor);
+  };
 
   const renderMenuItems = (items: typeof mainItems) =>
     items.map((item) => (
@@ -126,8 +126,7 @@ export default function DoctorScene() {
           margin: "0 auto",
           borderRadius: "50px",
           marginBottom: "10px",
-          backgroundColor:
-            selectedKey === item.key ? "#043bb3" : "transparent",
+          backgroundColor: selectedKey === item.key ? "#043bb3" : "transparent",
         }}
       >
         <div
@@ -188,8 +187,18 @@ export default function DoctorScene() {
         }}
       >
         {/* Logo */}
-        <div >
-          <img src={Logo} alt="Logo" style={{ position: "fixed", width: "100px", height: "70px", marginTop: 20, marginLeft : 40 }} />
+        <div>
+          <img
+            src={Logo}
+            alt="Logo"
+            style={{
+              position: "fixed",
+              width: "100px",
+              height: "70px",
+              marginTop: 20,
+              marginLeft: 40,
+            }}
+          />
         </div>
 
         {/* Menu chính */}
@@ -198,7 +207,11 @@ export default function DoctorScene() {
             mode="inline"
             selectedKeys={[selectedKey]}
             onSelect={handleMenuSelect}
-            style={{ marginTop: 200,borderInlineEnd: "none", background: "transparent" }}
+            style={{
+              marginTop: 200,
+              borderInlineEnd: "none",
+              background: "transparent",
+            }}
           >
             {renderMenuItems(mainItems)}
           </Menu>
@@ -249,7 +262,14 @@ export default function DoctorScene() {
                 {selectedKey === "5" && "DDIs check"}
               </h2>
 
-              <div style={{ display: "flex", alignItems: "center", gap: 5 ,justifyContent: "flex-end"}}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  justifyContent: "flex-end",
+                }}
+              >
                 <Badge size="small">
                   <img
                     src={userMailNoti}
@@ -271,7 +291,7 @@ export default function DoctorScene() {
                     style={{ marginRight: "10px" }}
                     onClick={() => setOpen(true)}
                   />
-                  <div style = {{marginTop: 0, marginRight: 0}}>
+                  <div style={{ marginTop: 0, marginRight: 0 }}>
                     <div style={{ fontWeight: "bold", color: "#043bb3" }}>
                       {accountInfo.name}
                     </div>
@@ -283,11 +303,10 @@ export default function DoctorScene() {
               </div>
             </div>
           </div>
-          <div
-          >
-            {selectedKey === "1" && <DoctorDashBoard/>}
+          <div>
+            {selectedKey === "1" && <DoctorDashBoard />}
             {selectedKey === "2" && <DrugListScene />}
-            {selectedKey === "3" && <DoctorHistoryScene/>}
+            {selectedKey === "3" && <DoctorHistoryScene />}
             {selectedKey === "5" && <DrugInteractionChecker />}
           </div>
         </Content>
@@ -297,8 +316,13 @@ export default function DoctorScene() {
           onCancel={() => setOpen(false)}
           footer={null}
           width={890}
-          zIndex={2000} >
-         <DoctorInformationScene doctor={doctor} onSave={handleUpdateDoctor} onClose = {() =>setOpen(false)}/>
+          zIndex={2000}
+        >
+          <DoctorInformationScene
+            doctor={doctor}
+            onSave={handleUpdateDoctor}
+            onClose={() => setOpen(false)}
+          />
         </Modal>
 
         <div
