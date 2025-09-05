@@ -13,7 +13,7 @@ class Visit(Document):
     symptoms: List[str] = []
     diagnosis: Optional[str] = None
     note: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    status: str 
 
     class Settings:
         name = "Visit"   # Tên collection
@@ -29,6 +29,6 @@ class Visit(Document):
                 "symptoms": ["buồn nôn", "chán ăn", "Đau bụng"],
                 "diagnosis": "Viêm dạ dày",
                 "note": "Khuyến cáo uống nhiều nước và nghỉ ngơi.",
-                "created_at": "2025-04-25T00:00:56.306107"
+                "status": "Đã khám"
             }
         }

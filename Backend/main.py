@@ -21,7 +21,7 @@ app.add_middleware(
 )
 app.include_router(drug_api.router, tags=["Drug"])
 app.include_router(patient_api.router, tags=["Patient"])
-app.inclide_router(doctor_api.router, tags=["Doctor"])
+app.include_router(doctor_api.router, tags=["Doctor"])
 app.include_router(authorization_api.router, tags=["Authorization"])
 @app.on_event("startup")
 async def startup_db():
@@ -41,7 +41,7 @@ async def startup_db():
     app.state.hmgrl_service = HMGRLService(
         model_path="./assets/hmrgl_check_point.pt",
         data_path="./assets",
-        device="cuda"
+        device="cpu"
     )
 
 @app.on_event("shutdown")

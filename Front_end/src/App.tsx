@@ -1,13 +1,9 @@
 import type React from "react";
 import "./App.css";
-<<<<<<< Updated upstream
-import DoctorScene from "./Components/DoctorScene/DoctorScene";
-=======
-import DoctorScene from "./Components/DoctorScene"
->>>>>>> Stashed changes
+import DoctorScene from "./Components/DoctorScene/DoctorScene.tsx";
 import PatientLoginScence from "./Components/PatientLoginScene/PatientLoginScene";
 const App: React.FC = () => {
-  return <DoctorScene />;
+  return <DoctorScene></DoctorScene>;
 };
 
-export default App
+export default App;
