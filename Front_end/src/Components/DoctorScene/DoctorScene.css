@@ -1,12 +1,23 @@
+/* Layout tổng */
+.doctor-body {
+  flex: 1 1 auto;
+  padding-top: 12px;
+  border-radius: 20px;
+  overflow: auto;
+}
 .doctor-layout {
   min-height: 100vh;
   width: 100%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: transparent;
+  display: flex;
 }
 
+/* Sidebar */
 .doctor-sider {
+  width: 205px;
   background-color: #f5f8fbff;
   display: flex;
   flex-direction: column;
@@ -17,35 +28,31 @@
   top: 0;
   bottom: 0;
   height: 100vh;
-  z-index: 100;
 }
 
 .doctor-logo {
-  padding-left: 30px;
-  margin-bottom: 150px;
+  position: fixed;
+  width: 100px;
+  height: 70px;
+  margin-top: 20px;
+  margin-left: 40px;
 }
 
-.doctor-logo img {
-  width: 120px;
+.doctor-menu {
+  margin-top: 200px;
+  border-inline-end: none;
+  background: transparent;
 }
 
 .doctor-menu-item {
   width: 90%;
-  margin: 0 auto 10px auto;
+  margin: 0 auto;
   border-radius: 50px;
+  margin-bottom: 10px;
 }
 
-.doctor-menu-item-content {
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-}
-
-.doctor-menu-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  margin-right: 12px;
+.doctor-menu-item-selected {
+  background-color: #043bb3 !important;
 }
 
 .doctor-menu-label {
@@ -53,44 +60,34 @@
   color: #000;
 }
 
-.doctor-menu-label.active {
+.doctor-menu-label-active {
   color: #fff;
 }
 
-.doctor-menu-item.selected {
-  background-color: #1c5cb6ff !important;
-}
-
-.doctor-divider {
-  margin: 50px 0;
-  border-top: 1px solid #ffffffff;
-}
-
-.doctor-content-layout {
-  margin-left: 220px;
-  min-height: 100vh;
-  background-color: transparent;
-}
-
+/* Content */
 .doctor-content {
-  padding: 20px 48px;
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+  background-color: transparent;
+  margin-left: 205px;
+  padding: 0 48px;
   min-height: 100vh;
-  background: transparent;
 }
 
 .doctor-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 8px;
+  margin-bottom: 20px;
 }
 
 .doctor-header-title {
-  color: #1c5cb6ff;
+  color: #043bb3;
   font-weight: bold;
   margin: 0;
+}
+
+.doctor-header-patients {
+  cursor: default;
 }
 
 .doctor-header-patients.clickable {
@@ -105,43 +102,37 @@
 }
 
 .doctor-header-patient-name {
-  color: black;
+  color: #043bb3;
   font-weight: bold;
 }
 
-.doctor-header-user {
+.doctor-header-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 5px;
+  justify-content: flex-end;
 }
 
-.doctor-icon-btn {
-  width: 24px;
-  cursor: pointer;
-}
-
-.doctor-user-info {
-  display: flex;
-  align-items: center;
-}
-
-.doctor-avatar {
-  margin-right: 10px;
-}
-
-.doctor-user-name {
+.doctor-account-name {
   font-weight: bold;
-  color: #333;
+  color: #043bb3;
 }
 
-.doctor-user-email {
+.doctor-account-email {
   font-size: 12px;
-  color: #666;
+  color: #737373;
 }
 
-.doctor-body {
-  flex: 1 1 auto;
-  padding-top: 12px;
-  border-radius: 20px;
-  overflow: auto;
+.doctor-footer {
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+}
+.doctor-divider {
+  margin: 50px 0;
+  border-top: 1px solid #ffffffff;
 }
