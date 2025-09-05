@@ -20,6 +20,12 @@
   font-weight: bold;
 }
 
+/* Force all cells left aligned */
+.drug-table .ant-table-cell {
+  text-align: left !important;
+  padding-left: 8px !important;
+}
+
 /* Dropdown menu items */
 .menu-item {
   color: var(--primary-hover);
@@ -197,5 +203,18 @@
   background: var(--primary-color) !important;
   color: var(--white) !important;
   font-weight: bold;
-  text-align: center;
+  text-align: left !important;
+  padding-left: 8px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  max-width: 100%;
+}
+
+.ellipsis-cell {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

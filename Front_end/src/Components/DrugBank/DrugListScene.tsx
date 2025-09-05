@@ -8,6 +8,7 @@ import {
   Tabs,
   Pagination,
   message,
+  Typography,
 } from "antd";
 import { useEffect, useState } from "react";
 import { MoreOutlined, FilterOutlined, PlusOutlined } from "@ant-design/icons";
@@ -17,6 +18,8 @@ import type { ColumnsType } from "antd/es/table";
 import DrugInfor from "./DrugInfor.tsx";
 import listDrug from "../../assets/list (1).png";
 import "./DrugListScene.css";
+
+const { Text } = Typography;
 
 interface Drug {
   _id: string;
@@ -126,7 +129,11 @@ export default function DrugListScene() {
       key: "_id",
       width: 120,
       align: "left",
-      ellipsis: true,
+      render: (text) => (
+        <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 110, display: "block", textAlign: "left" }}>
+          {text}
+        </Text>
+      ),
     },
     {
       title: <span className="table-header">Tên thuốc</span>,
@@ -134,15 +141,35 @@ export default function DrugListScene() {
       key: "generic_name",
       width: 200,
       align: "left",
-      ellipsis: true,
+      render: (text) => (
+        <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
+          {text}
+        </Text>
+      ),
     },
     {
       title: <span className="table-header">Mô tả</span>,
       dataIndex: "description",
       key: "description",
       width: 400,
+      ellipsis: true, // ép cột này cắt bớt
       align: "left",
-      ellipsis: false,
+      render: (text) => (
+        <Text
+          ellipsis={{ tooltip: text }}
+          style={{
+            width: "100%",           // chiếm full ô
+            maxWidth: "380px",       // không cho vượt quá
+            display: "inline-block",
+            textAlign: "left",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {text}
+        </Text>
+      ),
     },
     {
       title: <span className="table-header">Tên thị trường</span>,
@@ -150,8 +177,14 @@ export default function DrugListScene() {
       key: "brand_names",
       width: 200,
       align: "left",
-      ellipsis: true,
-      render: (brands) => <span>{brands?.join(", ")}</span>,
+      render: (brands) => {
+        const content = brands?.join(", ") || "";
+        return (
+          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
+            {content}
+          </Text>
+        );
+      },
     },
     {
       title: <span className="table-header">Phân loại</span>,
@@ -159,8 +192,14 @@ export default function DrugListScene() {
       key: "categories",
       width: 200,
       align: "left",
-      ellipsis: true,
-      render: (cats) => <span>{cats?.join(", ")}</span>,
+      render: (cats) => {
+        const content = cats?.join(", ") || "";
+        return (
+          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
+            {content}
+          </Text>
+        );
+      },
     },
     {
       title: <span className="table-header">Dạng liều</span>,
@@ -168,8 +207,14 @@ export default function DrugListScene() {
       key: "dosage_forms",
       width: 200,
       align: "left",
-      ellipsis: true,
-      render: (forms) => <span>{forms?.join(", ")}</span>,
+      render: (forms) => {
+        const content = forms?.join(", ") || "";
+        return (
+          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
+            {content}
+          </Text>
+        );
+      },
     },
     {
       title: <span className="table-header">ATC Code</span>,
@@ -177,8 +222,14 @@ export default function DrugListScene() {
       key: "atc_code",
       width: 150,
       align: "left",
-      ellipsis: true,
-      render: (codes) => <span>{codes?.join(", ")}</span>,
+      render: (codes) => {
+        const content = codes?.join(", ") || "";
+        return (
+          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 140, display: "block", textAlign: "left" }}>
+            {content}
+          </Text>
+        );
+      },
     },
     {
       title: <span className="table-header">CTHH</span>,
@@ -186,7 +237,11 @@ export default function DrugListScene() {
       key: "chemical_formula",
       width: 150,
       align: "left",
-      ellipsis: true,
+      render: (text) => (
+        <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 140, display: "block", textAlign: "left" }}>
+          {text}
+        </Text>
+      ),
     },
     {
       title: <span className="table-header">CTPT</span>,
@@ -194,7 +249,11 @@ export default function DrugListScene() {
       key: "molecular_formula",
       width: 200,
       align: "left",
-      ellipsis: true,
+      render: (text) => (
+        <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
+          {text}
+        </Text>
+      ),
     },
     {
       title: <span className="table-header">Tương tác</span>,
@@ -202,8 +261,14 @@ export default function DrugListScene() {
       key: "drug_interaction",
       width: 300,
       align: "left",
-      ellipsis: true,
-      render: (interactions) => <span>{interactions?.join(", ")}</span>,
+      render: (interactions) => {
+        const content = interactions?.join(", ") || "";
+        return (
+          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 290, display: "block", textAlign: "left" }}>
+            {content}
+          </Text>
+        );
+      },
     },
     {
       title: <span className="table-header">Tên đồng nghĩa</span>,
@@ -211,8 +276,14 @@ export default function DrugListScene() {
       key: "synonyms",
       width: 200,
       align: "left",
-      ellipsis: true,
-      render: (syns) => <span>{syns?.join(", ")}</span>,
+      render: (syns) => {
+        const content = syns?.join(", ") || "";
+        return (
+          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
+            {content}
+          </Text>
+        );
+      },
     },
     {
       title: <span className="table-header">Nhà sản xuất</span>,
@@ -220,8 +291,14 @@ export default function DrugListScene() {
       key: "manufacturers",
       width: 200,
       align: "left",
-      ellipsis: true,
-      render: (mans) => <span>{mans?.join(", ")}</span>,
+      render: (mans) => {
+        const content = mans?.join(", ") || "";
+        return (
+          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
+            {content}
+          </Text>
+        );
+      },
     },
     {
       title: "",

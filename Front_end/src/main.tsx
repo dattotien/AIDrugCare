@@ -5,7 +5,7 @@ import App from './App.tsx'
 import PatientApp from "./PatientApp.tsx"
 import IntroductionScene from './Components/IntroductionScene/IntroductionScene.tsx'
 import DoctorLoginScence from './Components/DoctorLoginScene/DoctorLoginScene.tsx'
-import DoctorScene from './Components/DoctorScene.tsx'
+import DoctorScene from './Components/DoctorScene/DoctorScene.tsx'
 import DoctorDashboard from './Components/DoctorDashboard/DoctorDashboard.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
