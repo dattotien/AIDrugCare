@@ -65,7 +65,7 @@
 
 /* Pagination center */
 .pagination-center {
-  flex: 1;
+  flex: 2;
   display: flex;
   justify-content: center;
 }
@@ -78,7 +78,7 @@
 }
 
 .search-input {
-  width: 300px;
+  width: 250px;
 }
 
 .add-button {
@@ -191,4 +191,11 @@
 
 .modal-footer .ant-btn-primary:hover {
   background: var(--primary-hover);
+}
+
+.drug-table .ant-table-thead > tr > th {
+  background: var(--primary-color) !important;
+  color: var(--white) !important;
+  font-weight: bold;
+  text-align: center;
 }

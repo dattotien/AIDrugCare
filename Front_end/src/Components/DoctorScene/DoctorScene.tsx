@@ -30,6 +30,7 @@ import LogoutIconDefault from "../../assets/logout_blue.png";
 import LogoutIconActive from "../../assets/logout_white.png";
 
 import "./DoctorScene.css";
+import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
 
 const { Content, Sider } = Layout;
 
