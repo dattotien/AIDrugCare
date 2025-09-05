@@ -192,3 +192,10 @@
 .modal-footer .ant-btn-primary:hover {
   background: var(--primary-hover);
 }
+
+.drug-table .ant-table-thead > tr > th {
+  background: var(--primary-color) !important;
+  color: var(--white) !important;
+  font-weight: bold;
+  text-align: center;
+}

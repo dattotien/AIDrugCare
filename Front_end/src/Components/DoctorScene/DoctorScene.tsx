@@ -8,6 +8,7 @@ import DrugInteractionChecker from "../DrugInteractionChecker/DrugInteractionChe
 import DrugListScene from "../DrugBank/DrugListScene.tsx";
 import PatientsList from "../PatientsList/PatientsList.tsx";
 import VisitInfor from "../Visit/VisitInfor.tsx";
+import DoctorHistory from "../DoctorHistory/DoctorHistoryScene.tsx";
 
 import Logo from "../../assets/AIDrugCare.png";
 import backgroundImage from "../../assets/background.png";
@@ -28,6 +29,7 @@ import LogoutIconDefault from "../../assets/logout_blue.png";
 import LogoutIconActive from "../../assets/logout_white.png";
 
 import "./DoctorScene.css";
+import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
 
 const { Content, Sider } = Layout;
 
@@ -143,7 +145,9 @@ export default function DoctorScene() {
 
           {/* Body */}
           <div className="doctor-body">
+            {selectedKey === "1" && <DoctorDashboard />}
             {selectedKey === "2" && <DrugListScene />}
+            {selectedKey === "3" && <DoctorHistory/>}
             {selectedKey === "4" && !selectedPatient && (
               <PatientsList onSelectPatient={(p: any) => setSelectedPatient(p)} />
             )}
