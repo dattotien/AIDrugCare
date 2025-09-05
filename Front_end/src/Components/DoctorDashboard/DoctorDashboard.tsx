@@ -8,8 +8,8 @@ import DoctorSchedule from "./DoctorSchedule";
 export default function DoctorDashboard() {
     return (
         <div style = {{
-            width : "1045px",
-            height: "570px",
+            width : "100%",
+            height: "100%",
             backgroundColor: "transparent",
             display: "flex",
             flexDirection: "row",
@@ -17,7 +17,7 @@ export default function DoctorDashboard() {
             margin: 0
         }}>
             <div style = {{
-                width: "660px",
+                width: "56vw",
                 height: "570px",
                 backgroundColor: "transparent",
             }}>
@@ -48,8 +48,6 @@ export default function DoctorDashboard() {
                     <DoctorEventListCard highlight="#043bb3"></DoctorEventListCard>
                     <DoctorEventListCard highlight="#d12362"></DoctorEventListCard>
             </div>
-        
-        
 
         </div>
     );
