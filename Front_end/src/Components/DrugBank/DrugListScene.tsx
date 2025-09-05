@@ -5,7 +5,6 @@ import {
   Badge,
   Input,
   Modal,
-  Form,
   Tabs,
   Pagination,
   message,
@@ -13,10 +12,26 @@ import {
 import { useEffect, useState } from "react";
 import { MoreOutlined, FilterOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
+import type { ColumnsType } from "antd/es/table";
 
 import DrugInfor from "./DrugInfor.tsx";
 import listDrug from "../../assets/list (1).png";
 import "./DrugListScene.css";
+
+interface Drug {
+  _id: string;
+  generic_name: string;
+  description?: string;
+  brand_names?: string[];
+  categories?: string[];
+  dosage_forms?: string[];
+  atc_code?: string[];
+  chemical_formula?: string;
+  molecular_formula?: string;
+  drug_interaction?: string[];
+  synonyms?: string[];
+  manufacturers?: string[];
+}
 
 export default function DrugListScene() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -25,9 +40,9 @@ export default function DrugListScene() {
   const [searchText, setSearchText] = useState("");
   const [showAddDrugModal, setShowAddDrugModal] = useState(false);
   const [showDrugInfoModal, setShowDrugInfoModal] = useState(false);
-  const [selectedDrug, setSelectedDrug] = useState<any | null>(null);
+  const [selectedDrug, setSelectedDrug] = useState<Drug | null>(null);
 
-  const [drugList, setDrugList] = useState<any[]>([]);
+  const [drugList, setDrugList] = useState<Drug[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Gọi API lấy danh sách thuốc
@@ -66,11 +81,11 @@ export default function DrugListScene() {
   };
 
   // Xóa thuốc
-  const handleDelete = async (record: any) => {
+  const handleDelete = async (record: Drug) => {
     try {
-      await axios.delete(`http://localhost:8000/drugs/${record.id}`);
+      await axios.delete(`http://localhost:8000/drugs/${record._id}`);
       message.success("Xóa thuốc thành công");
-      setDrugList((prev) => prev.filter((d) => d.id !== record.id));
+      setDrugList((prev) => prev.filter((d) => d._id !== record._id));
     } catch (err) {
       console.error(err);
       message.error("Lỗi khi xóa thuốc");
@@ -78,13 +93,13 @@ export default function DrugListScene() {
   };
 
   // Xem chi tiết
-  const handleMore = (record: any) => {
+  const handleMore = (record: Drug) => {
     setSelectedDrug(record);
     setShowDrugInfoModal(true);
   };
 
   // Menu hành động
-  const menuItems = (record: any) => [
+  const menuItems = (record: Drug) => [
     {
       key: "delete",
       label: (
@@ -104,38 +119,115 @@ export default function DrugListScene() {
   ];
 
   // Cột table
-  const columns = [
-    { title: <span className="table-header">ID</span>, dataIndex: "id", key: "id", width: 100, ellipsis: true },
-    { title: <span className="table-header">Tên thuốc</span>, dataIndex: "generic_name", key: "generic_name", width: 200, ellipsis: true },
+  const columns: ColumnsType<Drug> = [
+    {
+      title: <span className="table-header">ID</span>,
+      dataIndex: "_id",
+      key: "_id",
+      width: 120,
+      align: "left",
+      ellipsis: true,
+    },
+    {
+      title: <span className="table-header">Tên thuốc</span>,
+      dataIndex: "generic_name",
+      key: "generic_name",
+      width: 200,
+      align: "left",
+      ellipsis: true,
+    },
+    {
+      title: <span className="table-header">Mô tả</span>,
+      dataIndex: "description",
+      key: "description",
+      width: 400,
+      align: "left",
+      ellipsis: false,
+    },
     {
       title: <span className="table-header">Tên thị trường</span>,
       dataIndex: "brand_names",
       key: "brand_names",
       width: 200,
+      align: "left",
       ellipsis: true,
-      render: (brands: any[]) => brands?.map(b => b.name).join(", "),
+      render: (brands) => <span>{brands?.join(", ")}</span>,
     },
     {
       title: <span className="table-header">Phân loại</span>,
       dataIndex: "categories",
       key: "categories",
       width: 200,
+      align: "left",
       ellipsis: true,
-      render: (cats: string[]) => cats?.join(", "),
+      render: (cats) => <span>{cats?.join(", ")}</span>,
     },
     {
       title: <span className="table-header">Dạng liều</span>,
       dataIndex: "dosage_forms",
       key: "dosage_forms",
       width: 200,
+      align: "left",
       ellipsis: true,
-      render: (forms: string[]) => forms?.join(", "),
+      render: (forms) => <span>{forms?.join(", ")}</span>,
+    },
+    {
+      title: <span className="table-header">ATC Code</span>,
+      dataIndex: "atc_code",
+      key: "atc_code",
+      width: 150,
+      align: "left",
+      ellipsis: true,
+      render: (codes) => <span>{codes?.join(", ")}</span>,
+    },
+    {
+      title: <span className="table-header">CTHH</span>,
+      dataIndex: "chemical_formula",
+      key: "chemical_formula",
+      width: 150,
+      align: "left",
+      ellipsis: true,
+    },
+    {
+      title: <span className="table-header">CTPT</span>,
+      dataIndex: "molecular_formula",
+      key: "molecular_formula",
+      width: 200,
+      align: "left",
+      ellipsis: true,
+    },
+    {
+      title: <span className="table-header">Tương tác</span>,
+      dataIndex: "drug_interaction",
+      key: "drug_interaction",
+      width: 300,
+      align: "left",
+      ellipsis: true,
+      render: (interactions) => <span>{interactions?.join(", ")}</span>,
+    },
+    {
+      title: <span className="table-header">Tên đồng nghĩa</span>,
+      dataIndex: "synonyms",
+      key: "synonyms",
+      width: 200,
+      align: "left",
+      ellipsis: true,
+      render: (syns) => <span>{syns?.join(", ")}</span>,
+    },
+    {
+      title: <span className="table-header">Nhà sản xuất</span>,
+      dataIndex: "manufacturers",
+      key: "manufacturers",
+      width: 200,
+      align: "left",
+      ellipsis: true,
+      render: (mans) => <span>{mans?.join(", ")}</span>,
     },
     {
       title: "",
       key: "actions",
       width: 50,
-      render: (_: any, record: any) => (
+      render: (_, record) => (
         <Dropdown menu={{ items: menuItems(record) }} trigger={["click"]}>
           <MoreOutlined className="more-icon" />
         </Dropdown>
@@ -175,7 +267,7 @@ export default function DrugListScene() {
       <Table
         className="drug-table"
         scroll={{ x: "max-content" }}
-        rowKey="id"
+        rowKey="_id"
         columns={columns}
         dataSource={paginatedData}
         loading={loading}
@@ -192,6 +284,7 @@ export default function DrugListScene() {
           <div className="table-header-bar">
             <Button icon={<FilterOutlined />}>Filter</Button>
 
+            {/* Pagination center */}
             <div className="pagination-center">
               <Pagination
                 current={currentPage}
@@ -202,6 +295,7 @@ export default function DrugListScene() {
               />
             </div>
 
+            {/* Search + Add */}
             <div className="search-add">
               <Input.Search
                 placeholder="Tìm thuốc tại đây"
@@ -242,11 +336,18 @@ export default function DrugListScene() {
       {showActionBar && (
         <div className="action-bar">
           <span>
-            {selectedRowKeys.length} {selectedRowKeys.length > 1 ? "items" : "item"} selected
+            {selectedRowKeys.length}{" "}
+            {selectedRowKeys.length > 1 ? "items" : "item"} selected
           </span>
-          <Button type="link" className="action-btn">Print</Button>
-          <Button type="link" className="action-btn">Send</Button>
-          <Button danger type="link">Delete</Button>
+          <Button type="link" className="action-btn">
+            Print
+          </Button>
+          <Button type="link" className="action-btn">
+            Send
+          </Button>
+          <Button danger type="link">
+            Delete
+          </Button>
           <Button
             type="link"
             className="action-close"
