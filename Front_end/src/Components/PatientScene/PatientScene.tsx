@@ -71,7 +71,7 @@ export default function PatientScene() {
             padding: "2px",
           }}
         >
-          <img src={Logo} alt="Logo" style={{ width: "100%" }} />
+          <img src={Logo} alt="Logo" style={{ position: "fixed", width: "100px", height: "70px", marginTop: 20, marginLeft : 40 }} />
         </div>
 
         <Menu
@@ -83,7 +83,7 @@ export default function PatientScene() {
           style={{
             flex: 1,
             minWidth: 0,
-            marginTop: "110px",
+            marginTop: "240px",
             backgroundColor: "transparent",
             textAlign: "left",
             fontSize: "14px",
@@ -121,7 +121,7 @@ export default function PatientScene() {
           <Breadcrumb
             style={{
               margin: "26px 0",
-              fontSize: "20px",
+              fontSize: "18px",
               fontWeight: "bold",
               color: "#043bb3",
             }}
