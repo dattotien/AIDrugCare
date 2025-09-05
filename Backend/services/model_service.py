@@ -8,7 +8,7 @@ def get_hmgrl_service(request: Request):
     return request.app.state.hmgrl_service
 N_three_attribute = torch.tensor([2033, 1589, 285], dtype=torch.int32)
 class HMGRLService:
-    def __init__(self, model_path, data_path, device="cuda"):
+    def __init__(self, model_path, data_path, device="cpu"):
         with open(data_path + "/drugbankid2id.json", "r") as f:
             self.drugbankid2id = json.load(f)
         with open(data_path + "/id2drugbankid.json", "r") as f:

@@ -9,7 +9,7 @@ class ResponseModel(BaseModel):
     message: str
     data: Optional[Any] = None
 
-@router.get("/profile/{profile_id}", response_model=ResponseModel)
+@router.get("/patient-profile/{profile_id}", response_model=ResponseModel)
 async def get_profile(profile_id: int):
     return await get_profile_by_id(profile_id)
 
