@@ -15,7 +15,6 @@ class Patient(Document):
     cccd: Optional[str] = None
     bhyt_code: Optional[str] = None
     address: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:
         json_schema_extra = {
@@ -30,7 +29,6 @@ class Patient(Document):
                 "cccd": '022205002980',
                 "bhyt_code": "BHYT76627167",
                 "address": "Bắc Ninh",
-                "created_at": "2025-08-09T04:55:52.106008"
             }
         }
 

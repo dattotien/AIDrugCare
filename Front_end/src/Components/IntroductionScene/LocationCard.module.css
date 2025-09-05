@@ -1,0 +1,51 @@
+.location_card {
+  width: 250px;
+  height: 250px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+}
+
+.card_img {
+  height: 120px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.card_info {
+  position: relative;
+  padding: 10px 10px;
+}
+
+.card_badge {
+  position: absolute;
+  top: -25px;
+  left: 15px;
+  background: #0d6efd;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.card_title {
+  margin: 10px 0 0px 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0d6efd;
+}
+
+.card_content {
+  margin: 0;
+  font-size: 14px;
+  color: #110f0f;
+}
+
+
