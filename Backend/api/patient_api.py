@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Any
-from services.patient_service import get_profile_by_id, get_visit_history_by_patient_id, get_three_latest_visits, get_total_visits, get_latest_visit_day
+from services.patient_service import get_profile_by_id, get_visit_history_by_patient_id, get_three_latest_visits, get_total_visits, get_latest_visit_day, get_next_visit_day
 router = APIRouter()
 
 class ResponseModel(BaseModel):
@@ -26,3 +26,6 @@ async def get_total_visits_endpoint(patient_id: int):
 @router.get("/latest-visit-day/{patient_id}", response_model=ResponseModel)
 async def get_latest_visit_day_endpoint(patient_id: int):
     return await get_latest_visit_day(patient_id)
+@router.get("/next-visit-day/{patient_id}", response_model=ResponseModel)
+async def get_next_visit_day_endpoint(patient_id: int):
+    return await get_next_visit_day(patient_id)
