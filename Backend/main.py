@@ -41,7 +41,7 @@ async def startup_db():
     app.state.hmgrl_service = HMGRLService(
         model_path="./assets/hmrgl_check_point.pt",
         data_path="./assets",
-        device="cuda"
+        device="cpu"
     )
 
 @app.on_event("shutdown")
