@@ -5,6 +5,7 @@ from entities.visit import Visit
 from entities.prescription_detail import PrescriptionDetail
 from entities.medical_history import Medical_History
 from pydantic import BaseModel, Field
+from typing import List, Optional, Dict, Any
 
 async def get_profile_by_id(profile_id: int):
     profile = await Patient.find_one(Patient.id == profile_id)
@@ -113,5 +114,67 @@ async def get_next_visit_day(patient_id: int):
         "success": False,
         "message": "Không tìm thấy lịch sử khám bệnh",
         "data": None
+    }
+    
+async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
+    visit = await Visit.get(visit_id)
+    if not visit:
+        return {
+            "success": False,
+            "message": "Không tìm thấy thông tin lần khám",
+            "data": None
+            }
+    patient = await Patient.get(visit.patient_id)
+
+    medical_history = await Medical_History.find_one(
+        Medical_History.patient_id == visit.patient_id
+    )
+
+    prescription_detail = await PrescriptionDetail.find_one(
+        PrescriptionDetail.visit_id == visit_id
+    )
+
+    if not prescription_detail or not prescription_detail.items:
+        return {
+            "success": False,
+            "message": "Không tìm thấy đơn thuốc",
+            "data": None
+        }
+    prescription_items = []
+    for item in prescription_detail.items:
+        drug = await Drug.get(item.drug_id)  # join bảng Drug
+        prescription_items.append({
+            "drug_id": item.drug_id,
+            "drug_name": drug.generic_name if drug else None,
+            "frequency": item.frequency,
+            "time": item.duration_days,
+            "requirement": item.note if item.note else "Không có"
+        })
+
+    data = {
+        "patient": {
+            "name": patient.name if patient else None,
+            "dob": patient.dob if patient else None,
+            "gender": patient.gender if patient else None,
+            "phone": patient.phone if patient else None,
+            "cccd": patient.cccd if patient else None,
+        },
+        "medical_history": {
+            "lab_results": medical_history.labResults if medical_history else None,
+        },
+        "visit": {
+            "diagnosis": visit.diagnosis,
+            "note": visit.note,
+        },
+        "prescription": {
+            "id": str(prescription_detail.id),
+            "items": prescription_items
+        }
+    }
+
+    return {
+        "success": True,
+        "message": "Lấy đơn thuốc thành công",
+        "data": data
     }
     

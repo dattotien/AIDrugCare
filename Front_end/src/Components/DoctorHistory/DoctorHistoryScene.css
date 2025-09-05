@@ -1,0 +1,88 @@
+.custom-row {
+  height: 20px !important;
+  margin-top: 100 !important;
+}
+
+.custom-row .ant-table-cell {
+  line-height: 15px !important;
+  margin: 10px !important;
+
+  vertical-align: middle !important;
+  text-align: center !important; 
+  stroke: 2 !important;
+  border-radius: 0 !important;
+  border-color: none !important;
+}
+
+.row-even .ant-table-cell {
+  background-color: #ffffff !important;
+}
+
+
+.row-odd .ant-table-cell {
+  background-color: #EDF6FD !important;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #043bb3 !important; 
+  color:  #ffffff !important;         
+  font-weight: bold;
+  text-align: left;
+}
+
+.ant-table-selection-column .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #043bb3 !important;
+  border-color: #043bb3 !important;
+}
+
+.ant-table-cell {
+  padding: 8px 8px !important; 
+  text-align: center !important;
+}
+
+.btn:hover{
+    border-color: transparent !important;
+}
+
+.btn:active{
+    border-color:transparent !important;
+}
+
+btn:focus, 
+.ant-btn:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.ant-modal-content {
+  background-image: url("../../assets/back.png") !important;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footer-button {
+  position: fixed;      
+  bottom: 40px;      
+  right: 20px;      
+  z-index: 1000;     
+}
+
+.more:hover{
+    border-color: transparent !important;
+}
+
+.close:hover{
+    background-color: #737373 !important;
+    border-color: transparent;
+}
+
+.print:hover{
+    background-color: #b71c1f !important;
+    border-color: #b71c1f!important;
+}
+
+.send:hover{
+    background-color: #595959 !important;
+    border-color: #595959 !important;
+}

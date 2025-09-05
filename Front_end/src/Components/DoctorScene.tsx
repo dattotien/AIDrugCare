@@ -1,11 +1,15 @@
 import type React from "react";
 import { useState } from "react";
-import { Layout, Menu, Avatar, Badge, Dropdown } from "antd";
+import { Layout, Menu, Avatar, Badge, Dropdown, Modal } from "antd";
 import userAvatar from "../assets/user.png";
 import userMailNoti from "../assets/envelope.png";
 import userNoti from "../assets/active.png";
 import DrugInteractionChecker from "./DrugInteractionChecker/DrugInteractionChecker.tsx";
-import DrugListScene from "./DrugListScene.tsx";
+import DrugListScene from "./DrugBank/DrugListScene.tsx";
+import DoctorInformationScene from "./DoctorInformationScene/DoctorInformationScene.tsx";
+import DoctorHistoryScene from "../Components/DoctorHistory/DoctorHistoryScene.tsx";
+import dayjs from "dayjs";
+import DoctorDashBoard from "./DoctorDashboard/DoctorDashboard.tsx";
 
 import Logo from "../assets/AIDrugCare.png";
 import backgroundImage from "../assets/background.png";
@@ -93,6 +97,26 @@ export default function DoctorScene() {
     setSelectedKey(key);
   };
 
+  const [doctor, setDoctor] = useState({
+    name: "Nguyễn Thị Ngọc Yến",
+    dr: "PGS.TS",
+    department: "Khoa Răn - hàm - mặt",
+    email: "ngyen23102005@gmail.com",
+    phone: "0978349285",
+    dob: dayjs("1978-08-30", "YYYY-MM-DD"),
+    cccd: "030305008620",
+    id: "BS23102",
+    password: "ntnynguqua4*!",
+    hospital: "Bệnh viện đa khoa A - Cơ sở 4",
+    creatAt: "2025 - 23 - 1",
+  });
+
+  const [open, setOpen] = useState(false);
+
+  const handleUpdateDoctor = (updateDoctor: typeof doctor) => {
+    setDoctor(updateDoctor);
+  };
+
   const renderMenuItems = (items: typeof mainItems) =>
     items.map((item) => (
       <Menu.Item
@@ -102,8 +126,7 @@ export default function DoctorScene() {
           margin: "0 auto",
           borderRadius: "50px",
           marginBottom: "10px",
-          backgroundColor:
-            selectedKey === item.key ? "#1c5cb6ff" : "transparent",
+          backgroundColor: selectedKey === item.key ? "#043bb3" : "transparent",
         }}
       >
         <div
@@ -149,7 +172,7 @@ export default function DoctorScene() {
       }}
     >
       <Sider
-        width={220}
+        width={205}
         style={{
           backgroundColor: "#f5f8fbff",
           display: "flex",
@@ -161,12 +184,21 @@ export default function DoctorScene() {
           top: 0,
           bottom: 0,
           height: "100vh",
-          overflow: "auto", // riêng sider có scroll nếu menu dài
         }}
       >
         {/* Logo */}
-        <div style={{ paddingLeft: "30px", marginBottom: "150px" }}>
-          <img src={Logo} alt="Logo" style={{ width: "120px" }} />
+        <div>
+          <img
+            src={Logo}
+            alt="Logo"
+            style={{
+              position: "fixed",
+              width: "100px",
+              height: "70px",
+              marginTop: 20,
+              marginLeft: 40,
+            }}
+          />
         </div>
 
         {/* Menu chính */}
@@ -175,7 +207,11 @@ export default function DoctorScene() {
             mode="inline"
             selectedKeys={[selectedKey]}
             onSelect={handleMenuSelect}
-            style={{ borderInlineEnd: "none", background: "transparent" }}
+            style={{
+              marginTop: 200,
+              borderInlineEnd: "none",
+              background: "transparent",
+            }}
           >
             {renderMenuItems(mainItems)}
           </Menu>
@@ -218,7 +254,7 @@ export default function DoctorScene() {
                 marginBottom: 20,
               }}
             >
-              <h2 style={{ color: "#1c5cb6ff", fontWeight: "bold", margin: 0 }}>
+              <h2 style={{ color: "#043bb3", fontWeight: "bold", margin: 0 }}>
                 {selectedKey === "1" && "Dashboard"}
                 {selectedKey === "2" && "Drugbank"}
                 {selectedKey === "3" && "History"}
@@ -226,32 +262,40 @@ export default function DoctorScene() {
                 {selectedKey === "5" && "DDIs check"}
               </h2>
 
-              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  justifyContent: "flex-end",
+                }}
+              >
                 <Badge size="small">
                   <img
                     src={userMailNoti}
                     alt="mail"
-                    style={{ width: 24, cursor: "pointer" }}
+                    style={{ width: 20, cursor: "pointer" }}
                   />
                 </Badge>
                 <Badge size="small">
                   <img
                     src={userNoti}
                     alt="noti"
-                    style={{ width: 24, cursor: "pointer" }}
+                    style={{ width: 20, cursor: "pointer" }}
                   />
                 </Badge>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Avatar
                     src={accountInfo.avatar}
-                    size={40}
+                    size={30}
                     style={{ marginRight: "10px" }}
+                    onClick={() => setOpen(true)}
                   />
-                  <div>
-                    <div style={{ fontWeight: "bold", color: "#333" }}>
+                  <div style={{ marginTop: 0, marginRight: 0 }}>
+                    <div style={{ fontWeight: "bold", color: "#043bb3" }}>
                       {accountInfo.name}
                     </div>
-                    <div style={{ fontSize: "12px", color: "#666" }}>
+                    <div style={{ fontSize: "12px", color: "#737373" }}>
                       {accountInfo.email}
                     </div>
                   </div>
@@ -259,18 +303,41 @@ export default function DoctorScene() {
               </div>
             </div>
           </div>
-          <div
-            style={{
-              height: "100%",
-              width: "100%",
-              padding: "0",
-              borderRadius: 20,
-            }}
-          >
+          <div>
+            {selectedKey === "1" && <DoctorDashBoard />}
             {selectedKey === "2" && <DrugListScene />}
+            {selectedKey === "3" && <DoctorHistoryScene />}
             {selectedKey === "5" && <DrugInteractionChecker />}
           </div>
         </Content>
+
+        <Modal
+          open={open}
+          onCancel={() => setOpen(false)}
+          footer={null}
+          width={890}
+          zIndex={2000}
+        >
+          <DoctorInformationScene
+            doctor={doctor}
+            onSave={handleUpdateDoctor}
+            onClose={() => setOpen(false)}
+          />
+        </Modal>
+
+        <div
+          style={{
+            width: "100%",
+            textAlign: "center",
+            fontSize: 14,
+            color: "#ffffff",
+            position: "absolute",
+            bottom: 0,
+            left: 10,
+          }}
+        >
+          Bệnh viện đa khoa A
+        </div>
       </Layout>
     </Layout>
   );

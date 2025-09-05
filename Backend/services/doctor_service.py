@@ -1,3 +1,4 @@
+from beanie.operators import In
 from datetime import datetime, date, timedelta
 from typing import Any, Dict, List
 from entities.medical_history import Medical_History
@@ -7,7 +8,6 @@ from entities.patient import Patient
 from services import patient_service
 from entities.prescription_detail import PrescriptionDetail, PrescriptionItem
 from entities.drug import Drug
-
 async def get_profile_by_id(profile_id: int):
     profile = await Doctor.find_one(Doctor.id == profile_id)
     if profile:
@@ -320,5 +320,108 @@ async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
     return {
         "success": True,
         "message": "Lấy đơn thuốc thành công",
+        "data": data
+    }
+
+async def get_visited_history_by_doctor(doctor_id: int):
+    visits = await Visit.find(
+        Visit.doctor_id == doctor_id,
+        Visit.diagnosis != "Trống"
+        ).to_list()
+
+
+    if not visits:
+        return {
+            "success": False,
+            "message": "Không tìm thấy lịch sử khám bệnh",
+            "data": None
+        }
+        
+    patient_ids = list({v.patient_id for v in visits})
+    patients = await Patient.find(In(Patient.id, patient_ids)).to_list()
+    patient_map = {p.id: p for p in patients}
+    
+    data = []
+    for visit in visits:
+        patient = patient_map.get(visit.patient_id)
+        if patient:
+            data.append({
+                "visit_id": str(visit.id),
+                "patient_id": visit.patient_id,
+                "patient_name": patient.name,
+                "gender": patient.gender,
+                "diagnosis": visit.diagnosis,
+                "date": visit.visit_date,
+            })
+
+    return {
+        "success": True,
+        "message": "Lấy lịch sử khám bệnh thành công",
+        "data": data
+    }
+
+async def get_all_visit_history_by_doctor(doctor_id: int):
+    visits = await Visit.find(Visit.doctor_id == doctor_id).to_list()
+    if not visits:
+        return {
+            "success": False,
+            "message": "Không tìm thấy lịch sử khám bệnh",
+            "data": None
+        }
+
+    patient_ids = list({v.patient_id for v in visits})
+    patients = await Patient.find(In(Patient.id, patient_ids)).to_list()
+    patient_map = {p.id: p for p in patients}
+
+    data = []
+    for visit in visits:
+        patient = patient_map.get(visit.patient_id)
+        if patient:
+            data.append({
+                "visit_id": str(visit.id),
+                "patient_id": visit.patient_id,
+                "patient_name": patient.name,
+                "gender": patient.gender,
+                "diagnosis": visit.diagnosis,
+                "date": visit.visit_date,
+            })
+
+    return {
+        "success": True,
+        "message": "Lấy lịch sử khám bệnh thành công",
+        "data": data
+    }
+
+async def get_waiting_patients_by_doctor(doctor_id: int):
+    visits = await Visit.find({
+        "doctor_id": doctor_id,
+        "diagnosis": "Trống"
+        }).to_list()
+    if not visits:
+        return {
+            "success": False,
+            "message": "Không có bệnh nhân đang chờ khám",
+            "data": None
+        }
+
+    patient_ids = list({v.patient_id for v in visits})
+    patients = await Patient.find(In(Patient.id, patient_ids)).to_list()
+    patient_map = {p.id: p for p in patients}
+
+    data = []
+    for visit in visits:
+        patient = patient_map.get(visit.patient_id)
+        if patient:
+            data.append({
+                "visit_id": str(visit.id),
+                "patient_id": visit.patient_id,
+                "patient_name": patient.name,
+                "gender": patient.gender,
+                "date": visit.visit_date,
+            })
+
+    return {
+        "success": True,
+        "message": "Lấy danh sách bệnh nhân đang chờ khám thành công",
         "data": data
     }
