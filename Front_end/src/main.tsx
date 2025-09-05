@@ -9,10 +9,6 @@ import DoctorScene from './Components/DoctorScene.tsx'
 import DoctorDashboard from './Components/DoctorDashboard/DoctorDashboard.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-<<<<<<< Updated upstream
-    <App/>
-=======
-    <DoctorScene/>
->>>>>>> Stashed changes
+    <PatientApp/>
   </StrictMode>,
 )
