@@ -12,10 +12,14 @@ interface PatientInforProps {
 export default function PatientInforScene({patient}:PatientInforProps) {
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    form.setFieldsValue(patient);
+   useEffect(() => {
+    if (patient) {
+      form.setFieldsValue({
+        ...patient,
+        dob: patient.dob ? dayjs(patient.dob).format("YYYY/MM/DD") : null,
+      });
+    }
   }, [patient, form]);
-
   return (
     <div className="profile-container">
       <div className="profile-header">

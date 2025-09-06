@@ -115,7 +115,7 @@ export default function PatientOneHistory({visitId} : Props){
                 justifyContent: "space-between",
                 width: "90%",
             }}>
-                <p><strong>Ngày sinh:</strong> <span style={{ marginLeft: "10px" }}>{dayjs(patient?.dob).format("DD/MM/YYYY")}</span></p>
+                <p><strong>Ngày sinh:</strong> <span style={{ marginLeft: "10px" }}>{dayjs(patient?.dob).format("YYYY/MM/DD")}</span></p>
                 <p><strong>CCCD:</strong> <span style={{ marginLeft: "10px" }}>{patient?.cccd}</span></p>
             </div>
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import moreLogo from "../../assets/more (1).png";
 import { Button, Dropdown, Menu, Modal } from "antd";
+import dayjs from "dayjs";
 import PatientOneHistory from "../PatientHistory/PatientOneHistory";
 interface Props {
   visit: any; 
@@ -75,7 +76,7 @@ export default function PatientCardHistory({ visit, highlight = "blue" } : Props
               ID : {visit._id}
             </span>
             <span style={{ color: "#000000" }}>
-              {visit.hospital} - {visit.visit_date}
+              {visit.hospital} - {dayjs(visit.visit_date).format("YYYY/MM/DD")}
             </span>
             <span style={{ color: "#000000" }}>
               Chẩn đoán : {visit.diagnosis}
@@ -93,7 +94,7 @@ export default function PatientCardHistory({ visit, highlight = "blue" } : Props
                 bottom: "3px",
                 padding: "0",
                 border: "none",
-                background: "transparent",
+                background: "blue",
                 outline: "none",
               }}
               icon={

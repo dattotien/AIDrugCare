@@ -19,6 +19,7 @@ import setLogo2 from "../../assets/setting2.png";
 import logLogo from "../../assets/logout.png";
 import logLogo2 from "../../assets/logout2.png";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function PatientScene() {
   const [selectedKey, setSelectedKey] = useState("1");
@@ -32,7 +33,7 @@ export default function PatientScene() {
   const [loading, setLoading] = useState(true);
 
   const patientId = localStorage.getItem("patientId");
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -67,6 +68,13 @@ export default function PatientScene() {
 
     fetchData();
   }, [patientId]);
+
+  const getKeyFromPath = (path:string)=> {
+    if(path.startsWith("/patientDashboard")) return "1";
+    if(path.startsWith("/patientHistory")) return "2";
+    if(path.startsWith("/patientSetting")) return "3";
+    return "1";
+  }
   const makeItem = (key: string, label: string, icon: string, activeIcon: string) => ({
     key,
     label,
@@ -108,7 +116,12 @@ export default function PatientScene() {
           className="menu"
           mode="vertical"
           selectedKeys={[selectedKey]}
-          onClick={({ key }) => setSelectedKey(key)}
+          onClick={({ key }) =>{
+            if (key === "1") navigate("/patientDashboard"); 
+            if (key === "2") navigate("/patientHistory"); 
+            if (key === "3") navigate("/patientSetting"); 
+            }
+          }
           items={menuItems}
           style={{
             flex: 1,

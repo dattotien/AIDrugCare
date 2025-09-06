@@ -9,6 +9,7 @@ import PatientOneHistory from "./PatientOneHistory";
 import type { ColumnsType } from "antd/es/table";
 import Back from "../../assets/back.png";
 import axios from "axios";
+import dayjs from "dayjs";
 
 interface His{
   patientId: string | null;
@@ -124,7 +125,7 @@ export default function PatientHistory({patientId} : His) {
   const columns: ColumnsType<History> = [
   { title: "ID", dataIndex: "visit_id", key: "visit_id", align: "left" },
   { title: "Tên bác sĩ", dataIndex: "doctor_name", key: "doctor_name", align: "left" },
-  { title: "Ngày khám", dataIndex: "date", key: "date", align: "left" },
+  { title: "Ngày khám", dataIndex: "date", key: "date", align: "left",render: (date: string) => date ? dayjs(date).format("YYYY/MM/DD") : "", },
   { title: "Khoa", dataIndex: "doctor_specialty", key: "doctor_specialty", align: "left" },
   { title: "Chẩn đoán", dataIndex: "diagnosis", key: "diagnosis", align: "center" },
   {
@@ -316,7 +317,7 @@ export default function PatientHistory({patientId} : His) {
           </Button>
         </div>
       )}
-      {showHistoryInfoModal&& selectedHistory && (
+      {showHistoryInfoModal&& selectedHistory && selectVisitId && (
         <Modal
           open={showHistoryInfoModal}
           centered

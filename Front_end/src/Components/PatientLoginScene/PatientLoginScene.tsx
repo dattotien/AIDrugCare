@@ -4,11 +4,16 @@ import { RightCircleOutlined, CaretRightOutlined } from "@ant-design/icons";
 import styles from "./PatientLoginScene.module.css";
 import PatientScene from "../PatientScene/PatientScene";
 import {useState} from "react";
+import { useNavigate } from "react-router-dom";
+
 export default function PatientLoginScene() {
   const [cccd, setCccd] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     if (!cccd || !password) {
       message.error("Vui lòng nhập CCCD và mật khẩu");
@@ -30,7 +35,7 @@ export default function PatientLoginScene() {
 
       if (data.success && data.data) {
         localStorage.setItem("patientId", data.data.id);
-        setLoggedIn(true); 
+        navigate("/patientDashboard");
       } else {
         message.error("CCCD hoặc mật khẩu không đúng");
       }
@@ -41,9 +46,6 @@ export default function PatientLoginScene() {
       setLoading(false);
     }
   };
-  if (loggedIn) {
-  return <PatientScene />;
-  }
   return (
     <div
       style={{

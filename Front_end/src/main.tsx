@@ -7,9 +7,19 @@ import IntroductionScene from './Components/IntroductionScene/IntroductionScene.
 import DoctorLoginScence from './Components/DoctorLoginScene/DoctorLoginScene.tsx'
 import DoctorScene from './Components/DoctorScene.tsx'
 import DoctorDashboard from './Components/DoctorDashboard/DoctorDashboard.tsx'
+import PatientScene from './Components/PatientScene/PatientScene.tsx'
 import PatientLoginScene from './Components/PatientLoginScene/PatientLoginScene.tsx'
+import PatientHistory from './Components/PatientHistory/PatientHistory.tsx'
+import { BrowserRouter, Routes, Route  } from 'react-router-dom'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <PatientLoginScene/>
+    <BrowserRouter>
+        <Routes>
+          <Route path = "/" element = {<DoctorDashboard/>}/>
+          <Route path="/patientDashboard" element={<PatientScene />} />
+          <Route path="/patientHistory"   element={<PatientHistory patientId={localStorage.getItem("patientId")!} />} />
+        </Routes>
+
+    </BrowserRouter>
   </StrictMode>,
 )

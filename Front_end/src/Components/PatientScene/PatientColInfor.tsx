@@ -54,7 +54,7 @@ export default function PatientColInfor({patient} : PatientProps){
                 <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.address}</p>
 
                 <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>Ngày sinh:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.dob}</p>
+                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{dayjs(patient.dob).format("YYYY/MM/DD")}</p>
 
                 <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>CCCD:</p>
                 <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.cccd}</p>
