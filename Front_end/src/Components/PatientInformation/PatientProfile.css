@@ -1,7 +1,7 @@
 
 .profile-container {
   position: relative;
-  width: 654px;
+  width: 840px !important;
   height: 407px;
   background-image: url("/src/assets/background.png");
   background-size: cover;      
@@ -16,7 +16,7 @@
 .profile-header {
   background: linear-gradient(90deg, #043bb3, #000000);
   font-family: sans-serif;
-  width: 654px;
+  width: 830px !important;
   height: 70px;
   color: white;
   padding: 20px;

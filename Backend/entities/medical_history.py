@@ -6,11 +6,11 @@ class Medical_History(Document):
     id: int
     patient_id: int
     visit_id: int
-    allergies: List[str] = []
-    chronic_diseases: List[str] = []
+    allergies: str
+    chronic_diseases: str
     surgeries: Optional[str]
     family_history: Optional[str] = None
-    labResults: Optional[str] = None
+    labResult: Optional[str] = None
     
     class Config:
         json_schema_extra = {
@@ -18,11 +18,11 @@ class Medical_History(Document):
                 "_id": 1002,
                 "patient_id": 1026,
                 "visit_id": 1002,
-                "allergies": [],
-                "chronic_diseases": [],
-                "surgeries": [],
+                "allergies": "",
+                "chronic_diseases": "",
+                "surgeries": "",
                 "family_history": "Mẹ bị ung thư vú",
-                "labResults": "Xét nghiệm máu bình thường"
+                "labResult": "Xét nghiệm máu bình thường"
             }
         }
     class Settings:

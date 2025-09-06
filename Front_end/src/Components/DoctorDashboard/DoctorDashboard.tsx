@@ -33,13 +33,15 @@ export default function DoctorDashboard() {
                 borderRadius: "10PX"
             }}>
                 <DoctorSchedule></DoctorSchedule>
-                <div style = {{display : "flex", flexDirection: "row", justifyContent: "space-between"}}>
-                    <p style = {{fontSize : "12px", fontWeight: "bold", color : "#000", margin: 0,  marginTop: 20, marginLeft: 18 , marginBottom: 7}}>Danh sách đã khám</p>
-                    <p style = {{fontSize : "12px", color: "#737373", margin: 0, marginTop: 20, marginRight: 25 , marginBottom: 7}}>Xem tất cả</p>
+                <div>
+                    <div style = {{display : "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                        <p style = {{fontSize : "12px", fontWeight: "bold", color : "#000", margin: 0,  marginTop: 20, marginLeft: 18 , marginBottom: 7}}>Danh sách đã khám</p>
+                        <p style = {{fontSize : "12px", color: "#737373", margin: 0, marginTop: 20, marginRight: 25 , marginBottom: 7}}>Xem tất cả</p>
+                    </div>
+                        <DoctorDoneListCard highlight="#043bb3"></DoctorDoneListCard>
+                        <DoctorDoneListCard highlight="#d12362"></DoctorDoneListCard>
+                        <DoctorDoneListCard highlight="#043bb3"></DoctorDoneListCard>
                 </div>
-                    <DoctorDoneListCard highlight="#043bb3"></DoctorDoneListCard>
-                    <DoctorDoneListCard highlight="#d12362"></DoctorDoneListCard>
-                    <DoctorDoneListCard highlight="#043bb3"></DoctorDoneListCard>
 
                 <div style = {{display : "flex", flexDirection: "row", justifyContent: "space-between"}}>
                     <p style = {{fontSize : "12px", fontWeight: "bold", color : "#000", margin: 0 ,  marginTop: 12, marginLeft: 18 , marginBottom: 7}}>Sự kiện</p>
