@@ -15,7 +15,7 @@ interface Patient {
 interface DoctorWaitingListProps {
   onSelectPatient: (patient: any) => void;
 }
-export default function DoctorWaitingList({ onSelectPatient }: DoctorWaitingListProps) {
+export default function DoctorWaitingList() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const navigate = useNavigate();
   const storedDoctorId = localStorage.getItem("doctorId");
@@ -24,7 +24,7 @@ export default function DoctorWaitingList({ onSelectPatient }: DoctorWaitingList
       const fetchWaitingList = async () => {
         try {
           const res = await axios.get(
-            `http://localhost:8000/waiting-patients/${doctorId}`
+            'http://localhost:8000/waiting-patients/${doctorId}'
           );
           setPatients(res.data.data || res.data || []);
         } catch (err: any) {

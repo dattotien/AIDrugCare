@@ -11,7 +11,7 @@ import pic3 from "../../assets/pic3.jpg";
 
 export default function DoctorNews() {
     return (
-        <div style = {{width: "660px", height: "230px", display: "flex", justifyContent: "space-between", backgroundColor: "transparent", margin: 0, marginTop: -25}}>
+        <div style = {{width: "50vw", height: "230px", display: "flex", justifyContent: "space-between", backgroundColor: "transparent", margin: 0, marginTop: -25}}>
             <div style = {{width: "260px", height: "230px", backgroundColor: "rgb(255,255,255,0.7)", borderRadius: "10px", display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center"}}>
                 <p style = {{fontSize: "16px", color: "#000000", margin: 0, fontWeight: "bold", marginLeft: -150}}>TIN TỨC</p>
                 <img src = {pic} alt = "pic" style = {{width: "220px", height: "120px", borderRadius: "10px", marginTop: 20}}></img>
