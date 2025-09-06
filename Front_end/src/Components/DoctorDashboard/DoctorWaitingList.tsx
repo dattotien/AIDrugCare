@@ -24,7 +24,7 @@ export default function DoctorWaitingList() {
       const fetchWaitingList = async () => {
         try {
           const res = await axios.get(
-            http://localhost:8000/waiting-patients/${doctorId}
+            'http://localhost:8000/waiting-patients/${doctorId}'
           );
           setPatients(res.data.data || res.data || []);
         } catch (err: any) {
