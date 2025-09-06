@@ -160,11 +160,12 @@ async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
             "cccd": patient.cccd if patient else None,
         },
         "medical_history": {
-            "lab_results": medical_history.labResults if medical_history else None,
+            "labResult": medical_history.labResult if medical_history else None,
         },
         "visit": {
             "diagnosis": visit.diagnosis,
             "note": visit.note,
+
         },
         "prescription": {
             "id": str(prescription_detail.id),

@@ -1,8 +1,51 @@
-import { Button, Card, Checkbox, Input } from "antd";
+import { Button, Card, Checkbox, Input, message  } from "antd";
 import login_back from "../../assets/test.png";
 import { RightCircleOutlined, CaretRightOutlined } from "@ant-design/icons";
 import styles from "./PatientLoginScene.module.css";
-export default function PatientLoginScence() {
+import PatientScene from "../PatientScene/PatientScene";
+import {useState} from "react";
+import { useNavigate } from "react-router-dom";
+
+export default function PatientLoginScene() {
+  const [cccd, setCccd] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    if (!cccd || !password) {
+      message.error("Vui lòng nhập CCCD và mật khẩu");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/login-patient", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({ cccd, password }).toString()
+    });
+      const data = await res.json();
+      console.log("Login response:", data);
+
+      if (data.success && data.data) {
+        localStorage.setItem("patientId", data.data.id);
+        navigate("/patientDashboard");
+      } else {
+        message.error("CCCD hoặc mật khẩu không đúng");
+      }
+    } catch (err) {
+      console.error("Lỗi kết nối server:", err);
+      message.error("Lỗi kết nối server");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div
       style={{
@@ -86,14 +129,28 @@ export default function PatientLoginScence() {
           <h2 className={styles.title}>TRY TO SIGN IN</h2>
           <p></p>
           <p className={styles.text}>Tên đăng nhập</p>
-          <Input className={styles.input}></Input>
+          <Input
+            className={styles.input}
+            value={cccd}
+            onChange={(e) => setCccd(e.target.value)}
+          />
           <p className={styles.text}>Mật khẩu</p>
-          <Input.Password className={styles.input}></Input.Password>
+                    <Input.Password
+            className={styles.input}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <div style={{ marginTop: "2vh", marginLeft: "1vw" }}>
             <Checkbox style={{ color: "#043BB3" }}>Nhớ mật khẩu</Checkbox>
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button className={styles.button}>LOGIN</Button>
+            <Button
+              className={styles.button}
+              loading={loading}
+              onClick={handleLogin}
+            >
+              LOGIN
+            </Button>
           </div>
         </Card>
       </div>

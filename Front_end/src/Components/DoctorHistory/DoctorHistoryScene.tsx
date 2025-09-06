@@ -471,7 +471,7 @@ const columns: ColumnsType<History> = [
           height: "500px", 
           overflowY: "auto",
           }}>
-          <PatientOneHistory />
+          <PatientOneHistory  />
         </div>
         </Modal>
       )}

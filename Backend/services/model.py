@@ -7,8 +7,8 @@ import os
 import gc
 from torch.autograd import Variable
 drug_encoding = 'CNN'
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+device = torch.device("cpu")
 def gcnnormalization(a):
     sum_a = torch.sum(a, dim=1)
     sqrt_sum_a = torch.pow(sum_a, -0.5)

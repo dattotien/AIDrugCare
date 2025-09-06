@@ -1,5 +1,5 @@
 import { Button, Dropdown, Table, Badge, Input, Modal, Form, Tabs, Pagination } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MoreOutlined, FilterOutlined, PlusOutlined } from "@ant-design/icons";
 import "./PatientHistory.css";
 import binLogo from "../../assets/bin.png";
@@ -8,123 +8,51 @@ import listDrug from "../../assets/list (1).png";
 import PatientOneHistory from "./PatientOneHistory";
 import type { ColumnsType } from "antd/es/table";
 import Back from "../../assets/back.png";
+import axios from "axios";
+import dayjs from "dayjs";
+
+interface His{
+  patientId: string | null;
+}
+
 interface History {
-  id: string;
-  name: string;
+  visit_id: number;
+  doctor_name: string;
   date: string;
-  department: string;
+  doctor_specialty: string;
   diagnosis: string;
 }
-export default function PatientHistory() {
+export default function PatientHistory({patientId} : His) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showActionBar, setShowActionBar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [showHistoryInfoModal, setShowHistoryInfoModal] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState<any | null>(null);
+  const [history, setHistory] = useState<any[]> ([]);
+  const [selectVisitId, setSelectVisitId] = useState<string | null>(null);
 
-  const [historyList, setHistoryList] = useState<any[]>([
-    {
-      id: "10000",
-      name: "Nguyen Thi Ngoc Yen",
-      date: "28 - 8 - 2025",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "10001",
-      name: "Nguyen Thi  Yen",
-      date: "28 - 2 - 2025",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "10003",
-      name: "Trần Thi Lien",
-      date: "20 - 12 - 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "10019",
-      name: "Trần Thi Lien",
-      date: "1 - 12 - 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "10020",
-      name: "Mai Thi Thao",
-      date: "20 - 9 - 2024",
-      department: "Rang - ham - mat",
-      diagnosis: "viem loi",
-    },
-    {
-      id: "102209",
-      name: "Trần Kim Thoa",
-      date: "1 - 6 - 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "103303",
-      name: "Trần Thanh Lien",
-      date: "20 - 5- 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "103389",
-      name: "Bùi Thiên Hương",
-      date: "20 - 4 - 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "103398",
-      name: "Trần Thi Lien",
-      date: "20 - 3 - 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "103399",
-      name: "Trần Thi Lien",
-      date: "20 - 2 - 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "103435",
-      name: "Trần Thi Lien",
-      date: "20 - 1 - 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "103445",
-      name: "Trần Thi Binh",
-      date: "2 - 1 - 2024",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "103550",
-      name: "Đao Thi Lâm",
-      date: "10 - 12 - 2023",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-    {
-      id: "103689",
-      name: "Trần Thi Lien",
-      date: "1 - 12 - 2023",
-      department: "Tiêu hóa",
-      diagnosis: "Viêm dạ dày cấp",
-    },
-  ]);
+ useEffect(() => {
+  const fetchHistory = async () => {
+    try {
+      const res = await axios.get(`http://127.0.0.1:8000/visit-history/${patientId}`);
+      if (res.data && Array.isArray(res.data)) {
+        setHistory(res.data);
+      } else if (res.data?.data && Array.isArray(res.data.data)) {
+        setHistory(res.data.data);
+      } else {
+        console.warn("Dữ liệu trả về không hợp lệ:", res.data);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy lịch sử khám:", error);
+    }
+  };
 
-  const filteredList = historyList.filter((history) =>
+  if (patientId) {
+    fetchHistory();
+  }
+}, [patientId]);
+  const filteredList = history.filter((history) =>
     Object.values(history).some((field) =>
       String(field).toLowerCase().includes(searchText.toLowerCase())
     )
@@ -136,12 +64,13 @@ export default function PatientHistory() {
   };
 
   const handleDelete = (record: any) => {
-    setHistoryList((prev) => prev.filter((d) => d.id !== record.id));
+    setHistory((prev) => prev.filter((d) => d.id !== record.id));
   };
 
   const handleMore = (record: any) => {
     setSelectedHistory(record);
     setShowHistoryInfoModal(true);
+    setSelectVisitId(record.visit_id.toString());
   };
 
   const menuItems = (record: any) => [
@@ -194,10 +123,10 @@ export default function PatientHistory() {
   ];
 
   const columns: ColumnsType<History> = [
-  { title: "ID", dataIndex: "id", key: "id", align: "center" },
-  { title: "Tên bác sĩ", dataIndex: "name", key: "name", align: "center" },
-  { title: "Ngày khám", dataIndex: "date", key: "date", align: "center" },
-  { title: "Khoa", dataIndex: "department", key: "department", align: "center" },
+  { title: "ID", dataIndex: "visit_id", key: "visit_id", align: "left" },
+  { title: "Tên bác sĩ", dataIndex: "doctor_name", key: "doctor_name", align: "left" },
+  { title: "Ngày khám", dataIndex: "date", key: "date", align: "left",render: (date: string) => date ? dayjs(date).format("YYYY/MM/DD") : "", },
+  { title: "Khoa", dataIndex: "doctor_specialty", key: "doctor_specialty", align: "left" },
   { title: "Chẩn đoán", dataIndex: "diagnosis", key: "diagnosis", align: "center" },
   {
     title: "",
@@ -246,7 +175,7 @@ export default function PatientHistory() {
         fontWeight: "bold"
         }}
       >
-        {historyList.length}
+        {history.length}
       </div>
     </div>
 
@@ -388,7 +317,7 @@ export default function PatientHistory() {
           </Button>
         </div>
       )}
-      {showHistoryInfoModal&& selectedHistory && (
+      {showHistoryInfoModal&& selectedHistory && selectVisitId && (
         <Modal
           open={showHistoryInfoModal}
           centered
@@ -400,7 +329,7 @@ export default function PatientHistory() {
           height: "500px", 
           overflowY: "auto",
           }}>
-          <PatientOneHistory />
+          <PatientOneHistory visitId = {selectVisitId}/>
         </div>
         </Modal>
       )}
