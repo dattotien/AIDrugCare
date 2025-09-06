@@ -1,8 +1,33 @@
-import { Button, Card, Checkbox, Input } from "antd";
+import { Button, Card, Checkbox, Input, Result } from "antd";
+import { useState } from "react";
 import login_back from "../../assets/test.png";
 import { RightCircleOutlined, CaretRightOutlined } from "@ant-design/icons";
 import styles from "./DoctorLoginScene.module.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 export default function DoctorLoginScence() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const handleOnLogin = async () => {
+    try {
+        const result = await axios.post("http://localhost:8000/login-doctor", null, {
+          params: {
+            email: username,
+            password: password,
+          },
+        });
+        if (result.data.success) {
+          const doctorId = result.data.data._id;
+          console.log("Saving doctorId to localStorage:", doctorId);
+          localStorage.setItem("doctorId", String(doctorId)); 
+          navigate("/dashboard");
+        }
+      } catch (error: any) {
+        console.error("Login failed:", error.response?.data || error.message);
+      }
+    };
+
   return (
     <div
       style={{
@@ -86,14 +111,16 @@ export default function DoctorLoginScence() {
           <h2 className={styles.title}>TRY TO SIGN IN</h2>
           <p></p>
           <p className={styles.text}>Tên đăng nhập</p>
-          <Input className={styles.input}></Input>
+          <Input className={styles.input} value={username} onChange={(e) => setUsername(e.target.value)}></Input>
           <p className={styles.text}>Mật khẩu</p>
-          <Input.Password className={styles.input}></Input.Password>
+          <Input.Password className={styles.input} value={password} onChange={(e) => setPassword(e.target.value)}></Input.Password>
           <div style={{ marginTop: "2vh", marginLeft: "1vw" }}>
             <Checkbox style={{ color: "#043BB3" }}>Nhớ mật khẩu</Checkbox>
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button className={styles.button}>LOGIN</Button>
+            <Button className={styles.button} onClick={
+              handleOnLogin
+            }>LOGIN</Button>
           </div>
         </Card>
       </div>
