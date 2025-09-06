@@ -81,12 +81,7 @@ export default function DoctorWaitingList({ onSelectPatient }: DoctorWaitingList
         <p style={{ fontSize: "12px", color: "#999" }}>Không có bệnh nhân nào</p>
       ) : (
       patients.slice(0, 3).map((p) => (
-          <div key={p.id} className="row"
-            onClick={() => {
-              console.log("Click patient:", p);
-              navigate("/visit-info", { state: { p } })}}
-            style={{ cursor: "pointer" }}
-            >
+          <div key={p.id} className="row">
             <span>
               <img
                 src={p.gender === "Nam" ? blueLogo : redLogo}
