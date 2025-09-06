@@ -1,34 +1,47 @@
 import "./DoctorDashboard.css";
 import blueLogo from "../../assets/blue.png"; // icon nam
 import redLogo from "../../assets/red.png";   // icon nữ
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function DoctorWaitingList() {
-  const patients = [
-    {
-      id: 10002,
-      name: "Nguyễn Xuân Nam",
-      age: "25 tuổi",
-      gender: "Nam",
-      symptom: "Đau, quặn thắt ở bụng trái",
-      status: "Waiting",
-    },
-    {
-      id: 10003,
-      name: "Nguyễn Thị Ngọc Yến",
-      age: "20 tuổi",
-      gender: "Nữ",
-      symptom: "Quặn thắt ở bụng trái",
-      status: "Waiting",
-    },
-    {
-      id: 10004,
-      name: "Nguyễn Phương Đông",
-      age: "15 tuổi",
-      gender: "Nam",
-      symptom: "Đầy hơi, khó tiêu",
-      status: "Waiting",
-    },
-  ];
+interface Patient {
+  id: number;
+  name: string;
+  gender: string;
+  symptoms: string[];
+  status: string;
+}
+interface DoctorWaitingListProps {
+  onSelectPatient: (patient: any) => void;
+}
+export default function DoctorWaitingList({ onSelectPatient }: DoctorWaitingListProps) {
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const navigate = useNavigate();
+  const storedDoctorId = localStorage.getItem("doctorId");
+  const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
+    useEffect(() => {
+      const fetchWaitingList = async () => {
+        try {
+          const res = await axios.get(
+            `http://localhost:8000/waiting-patients/${doctorId}`
+          );
+          setPatients(res.data.data || res.data || []);
+        } catch (err: any) {
+          console.error(
+            "Error fetching waiting list:",
+            err.response?.data || err.message
+          );
+        }
+      };
+
+      if (doctorId !== null && !isNaN(doctorId)) {
+        fetchWaitingList();
+      } else {
+        console.warn("doctorId không hợp lệ:", doctorId);
+      }
+    }, [doctorId]);
+
 
   return (
     <div className="container">
@@ -64,25 +77,30 @@ export default function DoctorWaitingList() {
           Xem tất cả
         </p>
       </div>
-
-      {patients.map((p) => (
-        <div key={p.id} className="row">
-
-          <span>
-            <img
-              src={p.gender === "Nam" ? blueLogo : redLogo}
-              alt={p.gender}
-              style={{ width: "22px", height: "22px" }}
-            />
-          </span>
-
-          <span>{p.name}</span>
-          <span>{p.age}</span>
-          <span>{p.gender}</span>
-          <span>{p.symptom}</span>
-          <span className="waiting">{p.status}</span>
-        </div>
-      ))}
+      {patients.length === 0 ? (
+        <p style={{ fontSize: "12px", color: "#999" }}>Không có bệnh nhân nào</p>
+      ) : (
+      patients.slice(0, 3).map((p) => (
+          <div key={p.id} className="row"
+            onClick={() => {
+              console.log("Click patient:", p);
+              navigate("/visit-info", { state: { p } })}}
+            style={{ cursor: "pointer" }}
+            >
+            <span>
+              <img
+                src={p.gender === "Nam" ? blueLogo : redLogo}
+                alt={p.gender}
+                style={{ width: "22px", height: "22px" }}
+              />
+            </span>
+            <span>{p.name}</span>
+            <span>{p.gender}</span>
+            <span>{p.symptoms.join(", ")}</span>
+            <span className="waiting">{p.status}</span>
+          </div>
+        ))
+      )}
     </div>
   );
 }
