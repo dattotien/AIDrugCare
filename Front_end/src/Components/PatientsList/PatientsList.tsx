@@ -3,53 +3,36 @@ import { useState } from "react";
 import { MoreOutlined, FilterOutlined } from "@ant-design/icons";
 import listDrug from "../../assets/list (1).png";
 import "./PatientsList.css";
-
+import { useEffect } from "react";
+import dayjs from "dayjs";
 // ----------------- Thêm props -----------------
 interface PatientsListProps {
   onSelectPatient?: (patient: any) => void;
 }
-
 export default function PatientsList({ onSelectPatient }: PatientsListProps) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showActionBar, setShowActionBar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
 
-  const [patientList, setPatientList] = useState<any[]>([
-    {
-      _id: "1000",
-      name: "Đinh Phương Tuấn",
-      dob: "1989-04-29",
-      gender: "Nam",
-      symptoms: "Đau bụng, quặn thắt bụng trái",
-      status: "Chờ khám",
-    },
-    {
-      _id: "1001",
-      name: "Nguyễn Ngọc Yến",
-      dob: "1989-04-29",
-      gender: "Nữ",
-      symptoms: "Đau bụng, quặn thắt bụng trái",
-      status: "Đã khám",
-    },
-    {
-      _id: "1002",
-      name: "Phạm Văn Hùng",
-      dob: "1992-10-15",
-      gender: "Nam",
-      symptoms: "Sốt, ho nhiều",
-      status: "Chờ khám",
-    },
-    {
-      _id: "1003",
-      name: "Lê Thị Mai",
-      dob: "1995-03-08",
-      gender: "Nữ",
-      symptoms: "Đau đầu, chóng mặt",
-      status: "Đã khám",
-    },
-  ]);
-
+  const [patientList, setPatientList] = useState<any[]>([])
+  const storedDoctorId = localStorage.getItem("doctorId");
+  const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
+  useEffect(() => {
+  if (!doctorId) return;
+  const fetchPatients = async () => {
+    try {
+      const res = await fetch(`http://localhost:8000/all-patients/${doctorId}`);
+      const json = await res.json();
+      if (json.success) {
+        setPatientList(json.data);
+      }
+    } catch (error) {
+      console.error("Fetch patients error:", error);
+    }
+  };
+  fetchPatients();
+}, [doctorId]);
   // Search filter
   const filteredList = patientList.filter((patient) =>
     Object.values(patient).some((field) =>
@@ -92,11 +75,11 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
   ];
 
   const columns = [
-    { title: <span className="table-header">ID</span>, dataIndex: "_id", key: "_id", width: 80 },
+    { title: <span className="table-header">ID</span>, dataIndex: "id", key: "id", width: 80 },
     { title: <span className="table-header">Tên bệnh nhân</span>, dataIndex: "name", key: "name", width: 200 },
-    { title: <span className="table-header">Ngày sinh</span>, dataIndex: "dob", key: "dob", width: 150 },
+    { title: <span className="table-header">Ngày sinh</span>, dataIndex: "dob", key: "dob", width: 150, render: (dob: string) => dob ? dayjs(dob).format("DD/MM/YYYY") : "-", },
     { title: <span className="table-header">Giới tính</span>, dataIndex: "gender", key: "gender", width: 100 },
-    { title: <span className="table-header">Triệu chứng</span>, dataIndex: "symptoms", key: "symptoms", width: 250 },
+    { title: <span className="table-header">Triệu chứng</span>, dataIndex: "symptoms", key: "symptoms", width: 250, render: (symptoms: string[]) => symptoms?.join(", ") || "-", },
     {
       title: <span className="table-header">Trạng thái</span>,
       dataIndex: "status",

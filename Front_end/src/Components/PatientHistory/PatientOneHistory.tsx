@@ -64,6 +64,22 @@ export default function PatientOneHistory({visitId} : Props){
     }
   ]
     const [showActions, setShowActions] = useState(false);
+    useEffect(() => {
+        const fetchPrescription = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8000/prescription/${visitId}`);
+            const data = res.data.data; 
+            setPatient(data.patient);
+            setVisit(data.visit);
+            setHistory(data.medical_history);
+            setPres(data.prescription);
+        } catch (error) {
+            console.error("Lỗi khi fetch prescription:", error);
+        }
+        };
+        fetchPrescription();
+    }, [visitId]);
+
     const [open, setOpen] = useState(false);
     const handlePrint = () => {
         console.log("print")
@@ -120,7 +136,7 @@ export default function PatientOneHistory({visitId} : Props){
             </div>
 
             <div style={{ marginTop: "-20px", width: "90%" }}>
-                <p><strong>Kiết quả thăm khám:</strong> <span style={{ marginLeft: "10px" }}>{history?.labResult}</span></p>
+                <p><strong>Kết quả thăm khám:</strong> <span style={{ marginLeft: "10px" }}>{history?.labResult}</span></p>
             </div>
 
             <div style={{ marginTop: "5px", width: "90%" }}>
@@ -141,14 +157,22 @@ export default function PatientOneHistory({visitId} : Props){
                 <p><strong>Chi tiết đơn thuốc:</strong></p>
                 <p style={{color: "#043bb3"}}>
                     <strong>Mã đơn thuốc:</strong>
+<<<<<<< Updated upstream
                     <span style={{ marginLeft: "10px" }}>{pres?.id}</span>
+=======
+                    <span style={{ marginLeft: "10px" }}>{prescription.id}</span>
+>>>>>>> Stashed changes
                 </p>
             </div>
 
             <div style={{ marginTop: "-10px", width: "90%" }}>
                 <Table className="custom-row"
                     columns={columns}
+<<<<<<< Updated upstream
                     dataSource={pres?.items}
+=======
+                    dataSource={prescription}
+>>>>>>> Stashed changes
                     pagination={false}
                     bordered
                     rowKey="drug_id"
