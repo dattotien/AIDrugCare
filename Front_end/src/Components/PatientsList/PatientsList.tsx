@@ -77,7 +77,7 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
   const columns = [
     { title: <span className="table-header">ID</span>, dataIndex: "id", key: "id", width: 80 },
     { title: <span className="table-header">Tên bệnh nhân</span>, dataIndex: "name", key: "name", width: 200 },
-    { title: <span className="table-header">Ngày sinh</span>, dataIndex: "dob", key: "dob", width: 150, render: (dob: string) => dob ? dayjs(dob).format("DD/MM/YYYY") : "-", },
+    { title: <span className="table-header">Ngày sinh</span>, dataIndex: "dob", key: "dob", width: 150, render: (dob: Date) => dob ? dayjs(dob).format("DD/MM/YYYY") : "-", },
     { title: <span className="table-header">Giới tính</span>, dataIndex: "gender", key: "gender", width: 100 },
     { title: <span className="table-header">Triệu chứng</span>, dataIndex: "symptoms", key: "symptoms", width: 250, render: (symptoms: string[]) => symptoms?.join(", ") || "-", },
     {
