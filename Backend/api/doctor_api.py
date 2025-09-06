@@ -13,7 +13,7 @@ from services.doctor_service import (
     get_prescription_by_visit,
     get_visited_history_by_doctor,
     get_all_visit_history_by_doctor,
-    get_waiting_patients_by_doctor
+    get_waiting_patients
 )
 
 router = APIRouter()
@@ -35,9 +35,9 @@ async def get_history(patient_id: int):
 async def search_history(keyword: str):
     return await search_patient_history(keyword)
 
-@router.get("/recent-patients", response_model=ResponseModel)
-async def recent_patients():
-    return await get_recent_patients()
+@router.get("/recent-patients/{doctor_id}", response_model=ResponseModel)
+async def recent_patients(doctor_id: int):
+    return await get_recent_patients(doctor_id)
 """
 @router.put("/update-diagnosis/{patient_id}", response_model=ResponseModel)
 async def update_patient_diagnosis(patient_id: int, diagnosis: str):
@@ -76,6 +76,6 @@ async def get_visits_by_doctor(doctor_id: int):
 @router.get("/all-visits-by-doctor/{doctor_id}", response_model=ResponseModel)
 async def get_all_visits_by_doctor(doctor_id: int):
     return await get_all_visit_history_by_doctor(doctor_id)
-@router.get("/waiting-patients-by-doctor/{doctor_id}", response_model=ResponseModel)
-async def get_waiting_patients(doctor_id: int):
-    return await get_waiting_patients_by_doctor(doctor_id)
+@router.get("/waiting-patients/{doctor_id}", response_model=ResponseModel)
+async def get_waiting_patients_endpoint(doctor_id: int):
+    return await get_waiting_patients(doctor_id)
