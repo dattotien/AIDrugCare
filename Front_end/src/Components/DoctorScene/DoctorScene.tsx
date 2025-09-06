@@ -8,7 +8,6 @@ import DrugInteractionChecker from "../DrugInteractionChecker/DrugInteractionChe
 import DrugListScene from "../DrugBank/DrugListScene.tsx";
 import PatientsList from "../PatientsList/PatientsList.tsx";
 import VisitInfor from "../Visit/VisitInfor.tsx";
-import dayjs from "dayjs";
 import DoctorHistoryScene from "../DoctorHistory/DoctorHistoryScene.tsx";
 import Logo from "../../assets/AIDrugCare.png";
 import backgroundImage from "../../assets/background.png";
@@ -28,6 +27,7 @@ import SettingIconDefault from "../../assets/setting_blue.png";
 import SettingIconActive from "../../assets/setting_white.png";
 import LogoutIconDefault from "../../assets/logout_blue.png";
 import LogoutIconActive from "../../assets/logout_white.png";
+import dayjs from "dayjs";
 
 import "./DoctorScene.css";
 import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
@@ -280,7 +280,6 @@ export default function DoctorScene() {
           </div>
 
           <div className="doctor-body">
-            {selectedKey === "1" && <DoctorDashBoard />}
             {selectedKey === "2" && <DrugListScene />}
             {selectedKey === "3" && <DoctorHistoryScene />}
             {selectedKey === "4" && !selectedPatient && (

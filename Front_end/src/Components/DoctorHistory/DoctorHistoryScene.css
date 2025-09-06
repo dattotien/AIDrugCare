@@ -5,8 +5,7 @@
 
 .custom-row .ant-table-cell {
   line-height: 15px !important;
-  margin: 10px !important;
-
+  margin: 2px !important;
   vertical-align: middle !important;
   text-align: center !important; 
   stroke: 2 !important;

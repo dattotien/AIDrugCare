@@ -1,9 +1,14 @@
 import { useState } from "react";
 import moreLogo from "../../assets/more (1).png";
 import { Button, Dropdown, Menu, Modal } from "antd";
+import dayjs from "dayjs";
 import PatientOneHistory from "../PatientHistory/PatientOneHistory";
+interface Props {
+  visit: any; 
+  highlight?: string;
+}
 
-export default function PatientCardHistory({ highlight = "blue" }) {
+export default function PatientCardHistory({ visit, highlight = "blue" } : Props) {
   const [showHistory, setShowHistory] = useState(false);
 
   const menu = (
@@ -12,7 +17,8 @@ export default function PatientCardHistory({ highlight = "blue" }) {
         {
           key: "1",
           label: "More",
-          onClick: () => setShowHistory(true), // khi chọn thì hiển thị PatientHistory
+          onClick: () => 
+            {setShowHistory(true); },
         },
       ]}
     />
@@ -67,13 +73,13 @@ export default function PatientCardHistory({ highlight = "blue" }) {
                 marginBottom: "4px",
               }}
             >
-              Khám ngoại tổng quát
+              ID : {visit._id}
             </span>
             <span style={{ color: "#000000" }}>
-              Bệnh viện đa khoa - cơ sở 3 - 28/8/2025
+              {visit.hospital} - {dayjs(visit.visit_date).format("YYYY/MM/DD")}
             </span>
             <span style={{ color: "#000000" }}>
-              Khoa răng-hàm-mặt: PGS.TS Nguyễn Thị Ngọc Yến
+              Chẩn đoán : {visit.diagnosis}
             </span>
           </div>
 
@@ -88,7 +94,7 @@ export default function PatientCardHistory({ highlight = "blue" }) {
                 bottom: "3px",
                 padding: "0",
                 border: "none",
-                background: "transparent",
+                background: "blue",
                 outline: "none",
               }}
               icon={
@@ -115,7 +121,7 @@ export default function PatientCardHistory({ highlight = "blue" }) {
               overflowY: "auto",
             }}
           >
-            <PatientOneHistory />
+            <PatientOneHistory visitId = {visit._id.toString()}/>
           </div>
         </Modal>
       )}
