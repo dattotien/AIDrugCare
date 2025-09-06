@@ -8,6 +8,7 @@ import DrugInteractionChecker from "../DrugInteractionChecker/DrugInteractionChe
 import DrugListScene from "../DrugBank/DrugListScene.tsx";
 import PatientsList from "../PatientsList/PatientsList.tsx";
 import VisitInfor from "../Visit/VisitInfor.tsx";
+import dayjs from "dayjs";
 import DoctorHistoryScene from "../DoctorHistory/DoctorHistoryScene.tsx";
 import Logo from "../../assets/AIDrugCare.png";
 import backgroundImage from "../../assets/background.png";
@@ -27,7 +28,7 @@ import SettingIconDefault from "../../assets/setting_blue.png";
 import SettingIconActive from "../../assets/setting_white.png";
 import LogoutIconDefault from "../../assets/logout_blue.png";
 import LogoutIconActive from "../../assets/logout_white.png";
-import dayjs from "dayjs";
+import PatientOneHistory from "../PatientHistory/PatientOneHistory.tsx";
 
 import "./DoctorScene.css";
 import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
@@ -96,7 +97,7 @@ export default function DoctorScene() {
       if (!doctorId) return;
 
       try {
-        const res = await axios.get(`http://localhost:8000/doctor-profile/${doctorId}`);
+        const res = await axios.get(http://localhost:8000/doctor-profile/${doctorId});
         console.log("Doctor API response:", res);       // toàn bộ object
         console.log("Doctor API data:", res.data
         );      // dữ liệu trả về
@@ -179,7 +180,7 @@ export default function DoctorScene() {
   return (
     <Layout
       className="doctor-layout"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      style={{ backgroundImage: url(${backgroundImage}) }}
     >
       {/* SIDER */}
       <Sider width={205} className="doctor-sider">
@@ -280,19 +281,28 @@ export default function DoctorScene() {
           </div>
 
           <div className="doctor-body">
+            {selectedKey === "1" && <DoctorDashBoard />}
             {selectedKey === "2" && <DrugListScene />}
             {selectedKey === "3" && <DoctorHistoryScene />}
             {selectedKey === "4" && !selectedPatient && (
-              <PatientsList
-                onSelectPatient={(p: any) => setSelectedPatient(p)}
-              />
+              <PatientsList onSelectPatient={(p: any) => setSelectedPatient(p)} />
             )}
             {selectedKey === "4" && selectedPatient && (
-              <VisitInfor
-                patient={selectedPatient}
-                onBack={() => setSelectedPatient(null)}
-              />
+              <>
+                {selectedPatient.status === "Chưa khám" ? (
+                  <VisitInfor
+                    patient={selectedPatient}
+                    onBack={() => setSelectedPatient(null)}
+                  />
+                ) : (
+                  (() => {
+                    localStorage.setItem("visitId", String(selectedPatient.visitId));
+                    return <PatientOneHistory />;
+                  })()
+                )}
+              </>
             )}
+
             {selectedKey === "5" && <DrugInteractionChecker />}
           </div>
         </Content>
@@ -311,7 +321,7 @@ export default function DoctorScene() {
           />
         </Modal>
 
-        <div className="doctor-footer">Bệnh viện đa khoa A</div>
+        <div className="doctor-footer"></div>
       </Layout>
     </Layout>
   );
