@@ -78,7 +78,7 @@ export default function PatientOneHistory({visitId} : Props){
         <div style ={{
             width: "78vw",  
             minHeight: "100vh",
-            backgroundColor: "rgba(255,255,255,0.8)",
+            backgroundColor: "rgba(255,255,255,0.😎",
             display: "flex",
             alignItems: "center",
             flexDirection: "column",
