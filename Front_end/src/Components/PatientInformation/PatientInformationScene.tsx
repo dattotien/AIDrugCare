@@ -24,7 +24,7 @@ export default function PatientInforScene({patient}:PatientInforProps) {
         </div>
         <div>
           <h2 className="header-name" style = {{position: "absolute", top : "80px", left: "175px"}}>BN: {patient.name}</h2>
-          <p className="header-code" style = {{position : "absolute", top : "112px", left : "175px", color : "black", fontWeight: "bold"}}>Mã bệnh nhân: {patient.code}</p>
+          <p className="header-code" style = {{position : "absolute", top : "112px", left : "175px", color : "black", fontWeight: "bold"}}>Mã bệnh nhân: {patient._id}</p>
         </div>
       </div>
 
@@ -62,7 +62,7 @@ export default function PatientInforScene({patient}:PatientInforProps) {
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item name="hometown" label="Quê quán">
+              <Form.Item name="address" label="Quê quán">
                 <Input />
               </Form.Item>
             </Col>
@@ -73,11 +73,11 @@ export default function PatientInforScene({patient}:PatientInforProps) {
             </Col>
             <Col span={10}>
               <Form.Item name="dob" label="Ngày sinh">
-                <DatePicker format="YYYY-MM-DD"  className="datePicker"/>
+                <Input/>
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item name="bhyt" label="Số BHYT">
+              <Form.Item name="bhyt_code" label="Số BHYT">
                 <Input />
               </Form.Item>
             </Col>

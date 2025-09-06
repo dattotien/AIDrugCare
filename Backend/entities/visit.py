@@ -10,7 +10,7 @@ class Visit(Document):
     patient_id: int
     hospital: str
     visit_date: datetime
-    symptoms: List[str] = []
+    symptoms: str
     diagnosis: Optional[str] = None
     note: Optional[str] = None
     status: str 
@@ -26,7 +26,7 @@ class Visit(Document):
                 "patient_id": 1026,
                 "hospital": "Bệnh viện đa khoa A - Cơ sở 3",
                 "visit_date": "2025-04-25T00:00:56.306107",
-                "symptoms": ["buồn nôn", "chán ăn", "Đau bụng"],
+                "symptoms": "Đau bụng",
                 "diagnosis": "Viêm dạ dày",
                 "note": "Khuyến cáo uống nhiều nước và nghỉ ngơi.",
                 "status": "Đã khám"

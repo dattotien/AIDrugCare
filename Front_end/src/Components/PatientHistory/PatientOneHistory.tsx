@@ -1,47 +1,68 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import dayjs from "dayjs";
 import {Table, Button} from "antd";
 import "./PatientHistory.css";
 import logo from "../../assets/AIDrugCare.png";
 import more from "../../assets/more (2).png";
+import axios from "axios";
 
-export default function PatientOneHistory(){
+interface Props {
+    visitId : string | null;
+}
 
-    const columns = [
-        { title: "ID Thuốc", dataIndex: "drugid", key: "drugid", width: 150 },
-        { title: "Tên thuốc", dataIndex: "drugname", key: "drugname", width: 200 },
-        { title: "Liều dùng", dataIndex: "pre", key: "pre", width: 200 },
-        { title: "Thời gian", dataIndex: "time", key: "time", width: 150 },
-        { title: "Yêu cầu", dataIndex: "more", key: "more", width: 200 },
-    ];
+export default function PatientOneHistory({visitId} : Props){
+    const [patient, setPatient] = useState<any>(null);
+    const [visit, setVisit] = useState<any>(null);
+    const [pres, setPres] = useState<any>(null);
+    const [history, setHistory] = useState<any>(null);
 
-    const data = [
-        { drugid: "DB100002", drugname: "Aspirin", pre: "2 lần / 1 ngày", time: "Sáng / tối", more: "Không có" },
-        { drugid: "DB100003", drugname: "Paracetamol", pre: "3 lần / 1 ngày", time: "Sáng / trưa / tối", more: "Uống sau ăn" },
-        { drugid: "DB100004", drugname: "Omeprazole", pre: "1 lần / 1 ngày", time: "Sáng", more: "Trước ăn sáng" },
-        { drugid: "DB100005", drugname: "Vitamin C", pre: "1 lần / 1 ngày", time: "Tối", more: "Không có" },
-        { drugid: "DB100006", drugname: "Amoxicillin", pre: "2 lần / 1 ngày", time: "Sáng / tối", more: "Đủ liều" },
-    ];
+  useEffect(() => {
+    const fetchPre = async () => {
+      if (!visitId) return;
+      try {
+        const res = await axios.get(`http://127.0.0.1:8000/prescription/${visitId}`);
+        if (res.data.success) {
+          setPatient(res.data.data.patient);
+          setVisit(res.data.data.visit);
+          setPres(res.data.data.prescription);
+          setHistory(res.data.data.medical_history);
+        }
+      } catch (error) {
+        console.error("Lỗi fetch:", error);
+      }
+    };
 
-    const [patient] = useState({
-        code : "1002",
-        email : "namnguyen@gmail.com",
-        name : "Nguyen Xuan Nam",
-        gender : "Nam",
-        hometown: "Hai Duong",
-        dob: dayjs("1978-08-30", "YYYY-MM-DD"),
-        phone: "0978349285",
-        cccd: "03030303008523",
-        bhyt: "QH3412672H1",
-    });
+    fetchPre();
+  }, [visitId]);
 
-    const [history] = useState({
-        result : "Mô tả hình ảnh : ví dụ như thận bình thường, dạ dày có vết loét khoảng 0.3 cm bên gcos trái.",
-        diagnosis: "Bệnh nhân bị viêm dạ dày cấp tính",
-        note: "Ngủ nghỉ đúng giờ, ăn nhiều chất sơ",
-        code_pre: "ABCD1002"
-    });
+  const columns  = [
+    {
+        title: "ID",
+        dataIndex: "drug_id",
+        key: "drug_id",
 
+    },
+    {
+        title: "Tên thuốc",
+        dataIndex : "drug_name",
+        key: "drug_name",
+    },
+    {
+        title: "Liều dùng",
+        dataIndex: "frequency",
+        key : "frequency",
+    },
+    {
+        title: "Thời gian",
+        dataIndex: "time",
+        key: "time",
+    },
+    {
+        title: "Yêu cầu",
+        dataIndex: "requirement",
+        key: "requirement",
+    }
+  ]
     const [showActions, setShowActions] = useState(false);
     const [open, setOpen] = useState(false);
     const handlePrint = () => {
@@ -64,7 +85,7 @@ export default function PatientOneHistory(){
             padding: "20px"
         }}>
             <div style = {{ textAlign : "center"}}>
-                <p  style = {{marginTop : 10, fontWeight: "bold", fontSize : "16px"}}>BỆNH VIỆN ĐA KHOA A - CƠ SỞ - B</p>
+                <p  style = {{marginTop : 10, fontWeight: "bold", fontSize : "16px"}}>BỆNH VIỆN ĐA KHOA A</p>
                 <p style = {{marginTop: -10, fontSize : "12px"}}>Email: ngyen23102005@gmail.com</p>
                 <p style = {{marginTop : -10, fontSize : "12px"}}>Hotline: 0978349285/0986269837</p>
             </div>
@@ -82,9 +103,9 @@ export default function PatientOneHistory(){
                 justifyContent: "space-between",
                 width: "90%",
             }}>
-                <p><strong>Họ và tên:</strong> <span style={{ marginLeft: "10px" }}>{patient.name}</span></p>
-                <p><strong>Giới tính:</strong> <span style={{ marginLeft: "10px" }}>{patient.gender}</span></p>
-                <p><strong>Số điện thoại:</strong> <span style={{ marginLeft: "10px" }}>{patient.phone}</span></p>
+                <p><strong>Họ và tên:</strong> <span style={{ marginLeft: "10px" }}>{patient?.name}</span></p>
+                <p><strong>Giới tính:</strong> <span style={{ marginLeft: "10px" }}>{patient?.gender}</span></p>
+                <p><strong>Số điện thoại:</strong> <span style={{ marginLeft: "10px" }}>{patient?.phone}</span></p>
             </div>
 
             <div style={{ 
@@ -94,20 +115,20 @@ export default function PatientOneHistory(){
                 justifyContent: "space-between",
                 width: "90%",
             }}>
-                <p><strong>Ngày sinh:</strong> <span style={{ marginLeft: "10px" }}>{dayjs(patient.dob).format("DD/MM/YYYY")}</span></p>
-                <p><strong>CCCD:</strong> <span style={{ marginLeft: "10px" }}>{patient.cccd}</span></p>
+                <p><strong>Ngày sinh:</strong> <span style={{ marginLeft: "10px" }}>{dayjs(patient?.dob).format("DD/MM/YYYY")}</span></p>
+                <p><strong>CCCD:</strong> <span style={{ marginLeft: "10px" }}>{patient?.cccd}</span></p>
             </div>
 
             <div style={{ marginTop: "-20px", width: "90%" }}>
-                <p><strong>Kiết quả thăm khám:</strong> <span style={{ marginLeft: "10px" }}>{history.result}</span></p>
+                <p><strong>Kiết quả thăm khám:</strong> <span style={{ marginLeft: "10px" }}>{history?.labResult}</span></p>
             </div>
 
             <div style={{ marginTop: "5px", width: "90%" }}>
-                <p><strong>Chẩn đoán:</strong> <span style={{ marginLeft: "10px" }}>{history.diagnosis}</span></p>
+                <p><strong>Chẩn đoán:</strong> <span style={{ marginLeft: "10px" }}>{visit?.diagnosis}</span></p>
             </div>
 
             <div style={{ marginTop: "5px", width: "90%" }}>
-                <p><strong>Ghi chú:</strong> <span style={{ marginLeft: "10px" }}>{history.note}</span></p>
+                <p><strong>Ghi chú:</strong> <span style={{ marginLeft: "10px" }}>{visit?.note}</span></p>
             </div>
 
             <div style={{
@@ -120,17 +141,17 @@ export default function PatientOneHistory(){
                 <p><strong>Chi tiết đơn thuốc:</strong></p>
                 <p style={{color: "#043bb3"}}>
                     <strong>Mã đơn thuốc:</strong>
-                    <span style={{ marginLeft: "10px" }}>{history.code_pre}</span>
+                    <span style={{ marginLeft: "10px" }}>{pres?.id}</span>
                 </p>
             </div>
 
             <div style={{ marginTop: "-10px", width: "90%" }}>
                 <Table className="custom-row"
                     columns={columns}
-                    dataSource={data}
+                    dataSource={pres?.items}
                     pagination={false}
                     bordered
-                    rowKey="drugid"
+                    rowKey="drug_id"
                     rowClassName={(_, index) =>
                         index % 2 === 0 ? "row-even" : "row-odd"
                     }

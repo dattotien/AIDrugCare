@@ -2,8 +2,12 @@ import React from "react";
 import waitLogo from "../../assets/waiting.png";
 import timeLogo from "../../assets/time-left.png";
 import eventLogo from "../../assets/event.png";
-import "./PatientScene.css";
-export default function PatientCardCount() {
+interface CountProps {
+  total?: any; 
+  last?: any;
+  next?: any;
+}
+export default function PatientCardCount({total, last, next} : CountProps) {
     return (
         <div className = "card-contain">
             <div className = "card">
@@ -16,7 +20,7 @@ export default function PatientCardCount() {
                     </img>
                 </div>
                 <div style = {{marginTop: "19px", marginLeft : "8px"}}>
-                    <p style= {{fontSize: "26px", fontWeight: "bold", color: "#043bb3", margin: 0 }}>7</p>
+                    <p style= {{fontSize: "26px", fontWeight: "bold", color: "#043bb3", margin: 0 }}>{total}</p>
                     <p style = {{margin: 0, fontSize: "14px", color: "#737373" }}>Tổng số lần khám</p>
                 </div>
             </div>
@@ -30,7 +34,7 @@ export default function PatientCardCount() {
                     </img>
                 </div>  
                 <div style = {{marginTop: "21px", marginLeft : "8px"}}>
-                    <p style= {{fontSize: "26px", fontWeight: "bold", color: "#043bb3", margin: 0 }}>28-8-2025</p>
+                    <p style= {{fontSize: "26px", fontWeight: "bold", color: "#043bb3", margin: 0 }}>{last}</p>
                     <p style = {{margin: 0, fontSize: "14px", color: "#737373" }}>Lần khám gần nhất</p> 
                 </div>
             </div>
@@ -44,7 +48,7 @@ export default function PatientCardCount() {
                     </img>
                 </div>
                 <div style = {{marginTop: "21px", marginLeft : "8px"}}>
-                    <p style= {{fontSize: "26px", fontWeight: "bold", color: "#043bb3", margin: 0 }}>28-9-2025</p>
+                    <p style= {{fontSize: "26px", fontWeight: "bold", color: "#043bb3", margin: 0 }}>{next}</p>
                     <p style = {{margin: 0, fontSize: "14px", color: "#737373" }}>Lần khám tiếp theo</p> 
                 </div>
             </div>

@@ -6,24 +6,12 @@ import PatientInforScene from "../PatientInformation/PatientInformationScene";
 import dayjs from "dayjs";
 import arrowLogo from "../../assets/arrow-right (1).png"
 
-export default function PatientColInfor(){
-    const [patient, setPatient] = useState({
-        code : "1002",
-        email : "namnguyen@gmail.com",
-        name : "Nguyen Xuan Nam",
-        gender : "Nam",
-        hometown: "Hai Duong",
-        dob: dayjs("1978-08-30", "YYYY-MM-DD"),
-        phone: "0978349285",
-        cccd: "03030303008523",
-        bhyt: "QH3412672H1",
-    });
-
+interface PatientProps {
+  patient: any; 
+}
+export default function PatientColInfor({patient} : PatientProps){
+    if (!patient) return null;
     const [open, setOpen] = useState(false);
-
-    const handleUpdatePatient = (updatePatient: typeof patient) => {
-        setPatient(updatePatient);
-    }
 
     return (
         <div
@@ -43,7 +31,7 @@ export default function PatientColInfor(){
                 onClick={() => setOpen(true)}>
                     <UserOutlined style={{ fontSize: "100px", color: "#ffffff" }} />
             </Avatar>
-            <p style = {{margin: 0,fontSize : "12px", color: "#737373", textAlign : "center"}}> Mã bênh nhân : {patient.code}</p>
+            <p style = {{margin: 0,fontSize : "12px", color: "#737373", textAlign : "center"}}> Mã bênh nhân : {patient._id}</p>
             <p style={{ margin: 0, fontSize : "12px", color : "#737373", textAlign: "center"}}> Email : {patient.email} </p>
 
             <div
@@ -63,16 +51,16 @@ export default function PatientColInfor(){
                 <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.gender}</p>
 
                 <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>Quê quán:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.hometown}</p>
+                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.address}</p>
 
                 <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>Ngày sinh:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{dayjs(patient.dob).format("DD - MM - YYYY")}</p>
+                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.dob}</p>
 
                 <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>CCCD:</p>
                 <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.cccd}</p>
 
                 <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>Số BHYT:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.bhyt}</p>
+                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.bhyt_code}</p>
             </div>
 
             <Button type="primary" disabled style = {{
@@ -96,8 +84,8 @@ export default function PatientColInfor(){
                     footer={null}
                     width={700}
                     zIndex={2000} >
-                    <PatientInforScene patient={patient}/>
-                </Modal>
+        <PatientInforScene patient={patient}/>
+      </Modal>
         </div>
 
     );

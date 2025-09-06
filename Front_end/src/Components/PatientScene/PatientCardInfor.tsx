@@ -6,12 +6,13 @@ import {UserOutlined} from "@ant-design/icons";
 import "./PatientScene.css";
 import dayjs from "dayjs";
 
+interface PatientProps {
+  patient: any; 
+}
 
-export default function PatientCardInfor() {
-    const [patient] = useState({
-        name: "Nguyen Xuan Nam",
-        email: "namnguyen@gmail.com"
-    })
+export default function PatientCardInfor({patient}: PatientProps) {
+    
+    if (!patient) return null;
     return (
         <div style = {{
             width: "213px",

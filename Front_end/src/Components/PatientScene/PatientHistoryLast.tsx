@@ -1,6 +1,10 @@
 import PatientCardHis from "./PatientCardHistory";
 
-export default function () {
+interface Props {
+  visits: any[];
+}
+
+export default function PatientHistoryMost({ visits }: Props) {
   return (
     <div
       style={{
@@ -20,16 +24,27 @@ export default function () {
           fontWeight: "bold",
           color: "#043bb3",
           margin: 0,
-          marginLeft : "25px",
-          marginTop: "12px"
+          marginLeft: "25px",
+          marginTop: "12px",
         }}
       >
         Lịch sử khám bệnh gần nhất
       </p>
-      <div style = {{marginLeft: "10px", marginTop: "3px"}}>
-        <PatientCardHis highlight="#043bb3"/>
-        <PatientCardHis highlight="#d12316"/>
-        <PatientCardHis highlight="#043bb3"/>
+
+      <div style={{ marginLeft: "10px", marginTop: "3px" }}>
+        {visits.length > 0 ? (
+          visits.map((visit, idx) => (
+            <PatientCardHis
+              key={visit.id || idx}
+              highlight={idx % 2 === 0 ? "#043bb3" : "#d12316"} 
+              visit={visit}
+            />
+          ))
+        ) : (
+          <p style={{ marginLeft: "20px", color: "gray" }}>
+            Chưa có dữ liệu khám bệnh.
+          </p>
+        )}
       </div>
     </div>
   );
