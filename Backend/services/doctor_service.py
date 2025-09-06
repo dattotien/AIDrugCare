@@ -419,4 +419,35 @@ async def get_all_visit_history_by_doctor(doctor_id: int):
         "message": "Lấy lịch sử khám bệnh thành công",
         "data": data
     }
+async def get_all_patients_by_doctor(doctor_id: int):
+    visits = await Visit.find(Visit.doctor_id == doctor_id).to_list()
+    
+    if not visits:
+        return {
+            "success": False,
+            "message": "Chưa có bệnh nhân",
+            "data": None
+        }
+    patient_ids = list({visit.patient_id for visit in visits})
 
+    # Lấy thông tin patient
+    patients = await Patient.find(In(Patient.id, patient_ids)).to_list()
+    patient_map = {str(p.id): p for p in patients}
+    data = []
+    for visit in visits:
+        patient = patient_map.get(str(visit.patient_id))
+        if patient:
+            data.append({
+                "id": str(patient.id),
+                "name": patient.name,
+                "gender": patient.gender,
+                "dob": patient.dob,
+                "symptoms": visit.symptoms,
+                "status": visit.status,
+            })
+
+    return {
+        "success": True,
+        "message": "Lấy danh sách tất cả các bệnh nhân",
+        "data": data
+    }
