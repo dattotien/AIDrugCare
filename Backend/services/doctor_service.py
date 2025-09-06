@@ -65,8 +65,8 @@ async def search_patient_history(keyword: str):
         "data": None
     }
 
-async def get_recent_patients():
-    visits = await Visit.find_all().to_list()  
+async def get_recent_patients(doctor_id: int):
+    visits = await Visit.find(Visit.doctor_id == doctor_id).to_list()
     
     if not visits:
         return {
@@ -227,8 +227,36 @@ async def create_prescription(visit_id: int, items: List[Dict[str, Any]], diagno
         "data": data
     }
        
-        
-    
+async def get_waiting_patients(doctor_id: int):
+    waiting_visits = await Visit.find({
+        "doctor_id": doctor_id,
+        "diagnosis": "Trống"
+        }).sort(Visit.visit_date).to_list()
+
+    if not waiting_visits:
+        return {
+            "success": False,
+            "message": "Không có bệnh nhân đang chờ khám",
+            "data": None
+        }
+
+    data = []
+    for visit in waiting_visits:
+        patient = await Patient.get(visit.patient_id)
+        data.append({
+            "id": patient.id if patient else None,
+            "name": patient.name if patient else None,
+            "age": patient.dob if patient else None,
+            "gender": patient.gender if patient else None,
+            "symptoms": visit.symptoms,
+            "status": visit.status,
+        })
+    return {
+        "success": True,
+        "message": "Lấy bệnh nhân đang chờ khám thành công",
+        "data": data
+    }
+
 async def get_three_previous_visits(doctor_id: int):
     previous_visits = (
         await Visit.find((Visit.doctor_id == doctor_id) & (Visit.diagnosis != "Trống")).to_list()
@@ -392,36 +420,3 @@ async def get_all_visit_history_by_doctor(doctor_id: int):
         "data": data
     }
 
-async def get_waiting_patients_by_doctor(doctor_id: int):
-    visits = await Visit.find({
-        "doctor_id": doctor_id,
-        "diagnosis": "Trống"
-        }).to_list()
-    if not visits:
-        return {
-            "success": False,
-            "message": "Không có bệnh nhân đang chờ khám",
-            "data": None
-        }
-
-    patient_ids = list({v.patient_id for v in visits})
-    patients = await Patient.find(In(Patient.id, patient_ids)).to_list()
-    patient_map = {p.id: p for p in patients}
-
-    data = []
-    for visit in visits:
-        patient = patient_map.get(visit.patient_id)
-        if patient:
-            data.append({
-                "visit_id": str(visit.id),
-                "patient_id": visit.patient_id,
-                "patient_name": patient.name,
-                "gender": patient.gender,
-                "date": visit.visit_date,
-            })
-
-    return {
-        "success": True,
-        "message": "Lấy danh sách bệnh nhân đang chờ khám thành công",
-        "data": data
-    }

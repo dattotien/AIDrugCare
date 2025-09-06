@@ -5,6 +5,7 @@ import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import "./DoctorInformationScene.css";
 import Password from "antd/es/input/Password";
+import axios from "axios";
 
 interface DoctorInforProps {
   doctor: any;
@@ -12,7 +13,7 @@ interface DoctorInforProps {
   onClose : () =>void;
 }
 
-export default function PatientInforScene({doctor, onSave, onClose} : DoctorInforProps) {
+export default function DoctorInforScene({doctor, onSave, onClose} : DoctorInforProps) {
   
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
@@ -48,7 +49,7 @@ export default function PatientInforScene({doctor, onSave, onClose} : DoctorInfo
         </div>
         <div>
           <h2 className="header-name" style = {{position: "absolute", top : "80px", left: "185px"}}>BS: {doctor.name}</h2>
-          <p className="header-code" style = {{position : "absolute", top : "113px", left : "185px", color : "black", fontWeight: "bold"}}>{doctor.dr} : {doctor.department}</p>
+          <p className="header-code" style = {{position : "absolute", top : "113px", left : "185px", color : "black", fontWeight: "bold"}}>{doctor.title} : {doctor.specialty}</p>
         </div>
         {!editing && (
           <Button
@@ -77,7 +78,7 @@ export default function PatientInforScene({doctor, onSave, onClose} : DoctorInfo
             <Form form={form} layout="horizontal" disabled={!editing} className="custom-form" labelCol={{ span: 8}} wrapperCol={{ span: 18 }} style = {{marginTop : "-5px"}}>
           <Row gutter={5}>
             <Col span={10}>
-              <Form.Item name="id" label="ID">
+              <Form.Item name="_id" label="ID">
                 <Input />
               </Form.Item>
             </Col>
@@ -87,12 +88,12 @@ export default function PatientInforScene({doctor, onSave, onClose} : DoctorInfo
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item name="hospital" label="Bệnh viện">
+              <Form.Item name="workplace" label="Bệnh viện">
                 <Input />
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item name="creatAt" label="Ngày tạo">
+              <Form.Item name="created_at" label="Ngày tạo">
                 <Input />
               </Form.Item>
             </Col>
@@ -162,7 +163,7 @@ export default function PatientInforScene({doctor, onSave, onClose} : DoctorInfo
         </div>
       )}
     <div className="profile-footer">
-            Bệnh viện đa khoa A
+            {doctor.workplace}
     </div>
     </div>
   );
