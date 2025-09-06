@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout, Menu, Avatar, Badge, Modal } from "antd";
 import userAvatar from "../../assets/user.png";
 import userMailNoti from "../../assets/envelope.png";
@@ -31,6 +31,7 @@ import LogoutIconActive from "../../assets/logout_white.png";
 
 import "./DoctorScene.css";
 import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
+import axios from "axios";
 
 const { Content, Sider } = Layout;
 
@@ -83,31 +84,60 @@ const extraItems = [
 ];
 
 export default function DoctorScene() {
-  const accountInfo = {
-    name: "Dr. N.T.N Yen",
-    email: "yennguyen@gmail.com",
+  const [accountInfo, setAccountInfo] = useState({
+    name: "",
+    email: "",
     avatar: userAvatar,
-  };
+  });
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      const storedDoctorId = localStorage.getItem("doctorId");
+      const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
+      if (!doctorId) return;
+
+      try {
+        const res = await axios.get(`http://localhost:8000/doctor-profile/${doctorId}`);
+        console.log("Doctor API response:", res);       // toàn bộ object
+        console.log("Doctor API data:", res.data
+        );      // dữ liệu trả về
+        if (res.data.success) {
+          const doc = res.data.data;
+          
+          setDoctor({
+            ...doc,
+            dob: doc.dob ? dayjs(doc.dob) : null,
+          });
+
+          // cập nhật accountInfo từ dữ liệu doctor
+          setAccountInfo({
+            name: doc.title + ": " + doc.name,
+            email: doc.email,
+            avatar: userAvatar, // nếu API trả link avatar thì thay ở đây
+          });
+        } else {
+          console.error("Lỗi lấy profile:", res.data.message);
+        }
+      } catch (err) {
+        console.error("Fetch doctor profile error:", err);
+      }
+    };
+
+    fetchDoctor();
+  }, []);
+
   const [open, setOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState("1");
   const [selectedPatient, setSelectedPatient] = useState<any>(null);
 
-  const [doctor, setDoctor] = useState({
-    name: "Nguyễn Thị Ngọc Yến",
-    dr: "PGS.TS",
-    department: "Khoa Răn - hàm - mặt",
-    email: "ngyen23102005@gmail.com",
-    phone: "0978349285",
-    dob: dayjs("1978-08-30", "YYYY-MM-DD"),
-    cccd: "030305008620",
-    id: "BS23102",
-    password: "ntnynguqua4*!",
-    hospital: "Bệnh viện đa khoa A - Cơ sở 4",
-    creatAt: "2025 - 23 - 1",
-  });
-
-  const handleUpdateDoctor = (updateDoctor: typeof doctor) =>
+  const [doctor, setDoctor] = useState<any>(null);
+  const handleUpdateDoctor = (updateDoctor: any) => {
     setDoctor(updateDoctor);
+    setAccountInfo({
+      name: updateDoctor.title + ": " + updateDoctor.name,
+      email: updateDoctor.email,
+      avatar: userAvatar,
+    });
+  };
 
   const handleMenuSelect = ({ key }: { key: string }) => {
     setSelectedKey(key);
