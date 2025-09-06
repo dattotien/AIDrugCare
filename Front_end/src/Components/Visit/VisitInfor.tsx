@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { Row, Col, Table, Input, Button, Card, Space, Typography } from "antd";
 import DDIsVisit from "./DDIs_visit";
 import "./VisitInfor.css";
-import { useLocation } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -13,10 +12,7 @@ interface VisitInforProps {
 
 type DrugRow = { id: string; name: string; dose: string; time: string; note: string };
 
-export default function VisitInfor() {
-  const location = useLocation();
-  console.log("Location state:", location.state);
-  const { p: patient } = location.state || {};
+export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   if (!patient) return null;
 
   const [showDDIs, setShowDDIs] = useState(false);
