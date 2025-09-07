@@ -1,11 +1,10 @@
 import {Avatar, Button, Modal} from "antd";
 import {useState} from "react";
 import {UserOutlined, } from "@ant-design/icons";
-import "./PatientScene.css";
 import PatientInforScene from "../PatientInformation/PatientInformationScene";
 import dayjs from "dayjs";
 import arrowLogo from "../../assets/arrow-right (1).png"
-
+import "../PatientScene/PatientScene.css";
 interface PatientProps {
   patient: any; 
 }
@@ -16,14 +15,16 @@ export default function PatientColInfor({patient} : PatientProps){
     return (
         <div
             style={{
-                width: "219px",
+                width: "21vw",
                 height: "100vh",
                 backgroundColor:"rgba(255,255,255,0.7)",
                 display: "flex",
                 flexDirection: "column", 
                 overflow: "hidden",
                 alignItems: "center",
-                justifyItems: "center"
+                justifyItems: "center",
+                borderRadius: "5px",
+                paddingTop: "6vh"
             }}>
              <Avatar
                 className="avatar1"
@@ -38,8 +39,8 @@ export default function PatientColInfor({patient} : PatientProps){
                 style={{
                     display: "grid",
                     gridTemplateColumns: "70px 1fr", 
-                    rowGap: "15px", 
-                    columnGap: "0px", 
+                    rowGap: "2.2vh", 
+                    columnGap: "2vw", 
                     padding: "20px",
                     marginTop: "10px"
                     }}
@@ -69,10 +70,10 @@ export default function PatientColInfor({patient} : PatientProps){
                 fontWeight : "bold",
                 backgroundColor : "#043bb3",
                 borderRadius: "10px",
-                width: "160px",
-                height : "30px",
+                width: "15vw",
+                height : "5vh",
                 textAlign: "center",
-                marginTop:  "120px",
+                marginTop: "15vh",
                 borderColor: "#043bb3"
             }}>ĐẶT LỊCH KHÁM
             <img src={arrowLogo} alt="ArrowLogo" style={{ width: "18px", height: "18px" }}></img>
@@ -82,10 +83,10 @@ export default function PatientColInfor({patient} : PatientProps){
                     open={open}
                     onCancel={() => setOpen(false)}
                     footer={null}
-                    width={700}
+                    width={"58vw"}
                     zIndex={2000} >
-        <PatientInforScene patient={patient}/>
-      </Modal>
+                    <PatientInforScene patient={patient}/>
+                </Modal>
         </div>
 
     );

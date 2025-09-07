@@ -1,9 +1,10 @@
 import DoctorCardCount from "./DoctorCardCount";
-import DoctorDoneListCard from "./DoctorDoneListCard";
+import DoctorDoneListCard from "../DoctorDoneList/DoctorDoneListCard";
 import DoctorEventListCard from "./DoctorEventListCard";
 import DoctorNews from "./DoctorNews";
 import DoctorWaitingList from "./DoctorWaitingList";
 import DoctorSchedule from "./DoctorSchedule";
+import DoctorDoneList from "../DoctorDoneList/DoctorDoneList";
 
 export default function DoctorDashboard() {
     return (
@@ -33,16 +34,7 @@ export default function DoctorDashboard() {
                 borderRadius: "10PX"
             }}>
                 <DoctorSchedule></DoctorSchedule>
-                <div>
-                    <div style = {{display : "flex", flexDirection: "row", justifyContent: "space-between"}}>
-                        <p style = {{fontSize : "12px", fontWeight: "bold", color : "#000", margin: 0,  marginTop: 20, marginLeft: 18 , marginBottom: 7}}>Danh sách đã khám</p>
-                        <p style = {{fontSize : "12px", color: "#737373", margin: 0, marginTop: 20, marginRight: 25 , marginBottom: 7}}>Xem tất cả</p>
-                    </div>
-                        <DoctorDoneListCard highlight="#043bb3"></DoctorDoneListCard>
-                        <DoctorDoneListCard highlight="#d12362"></DoctorDoneListCard>
-                        <DoctorDoneListCard highlight="#043bb3"></DoctorDoneListCard>
-                </div>
-
+                <DoctorDoneList></DoctorDoneList>
                 <div style = {{display : "flex", flexDirection: "row", justifyContent: "space-between"}}>
                     <p style = {{fontSize : "12px", fontWeight: "bold", color : "#000", margin: 0 ,  marginTop: 12, marginLeft: 18 , marginBottom: 7}}>Sự kiện</p>
                     <p style = {{fontSize : "12px", color: "#737373", margin: 0, marginTop: 12, marginRight: 25 , marginBottom: 7}}>Xem tất cả</p>

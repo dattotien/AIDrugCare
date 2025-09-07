@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
-import { Breadcrumb, Layout, Menu, Spin } from "antd";
+import { useEffect, useState } from "react";
+import { Breadcrumb, Layout, Menu, Spin , message, Modal} from "antd";
+import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
 const { Content } = Layout;
+
 import Logo from "../../assets/AIDrugCare.png";
 import Sider from "antd/es/layout/Sider";
 import Back from "../../assets/back.png";
@@ -18,12 +20,11 @@ import setLogo from "../../assets/setting.png";
 import setLogo2 from "../../assets/setting2.png";
 import logLogo from "../../assets/logout.png";
 import logLogo2 from "../../assets/logout2.png";
+
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export default function PatientScene() {
-  const [selectedKey, setSelectedKey] = useState("1");
-    const [data, setData] = useState({
+  const [data, setData] = useState<any>({
     profile: null,
     totalVisits: 0,
     latestVisitDay: null,
@@ -34,8 +35,12 @@ export default function PatientScene() {
 
   const patientId = localStorage.getItem("patientId");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // fetch dữ liệu
   useEffect(() => {
     const fetchData = async () => {
+      if (!patientId) return;
       try {
         const [
           profileRes,
@@ -56,29 +61,38 @@ export default function PatientScene() {
           totalVisits: totalVisitsRes.data.data,
           latestVisitDay: latestVisitRes.data.data,
           nextVisitDay: nextVisitRes.data.data,
-          threeLatestRes:  threeLatestRes.data.data
+          threeLatestRes: threeLatestRes.data.data
         });
-
       } catch (error) {
         console.error("Error fetching patient data:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [patientId]);
 
-  const getKeyFromPath = (path:string)=> {
-    if(path.startsWith("/patientDashboard")) return "1";
-    if(path.startsWith("/patientHistory")) return "2";
-    if(path.startsWith("/patientSetting")) return "3";
+  // xác định key menu từ path
+  const getKeyFromPath = (path: string) => {
+    if (path.startsWith("/patientDashboard")) return "1";
+    if (path.startsWith("/patientHistory")) return "2";
+    if (path.startsWith("/patientSetting")) return "3";
     return "1";
-  }
+  };
+
+  const selectedKey = getKeyFromPath(location.pathname);
+
+  // menu item helper
   const makeItem = (key: string, label: string, icon: string, activeIcon: string) => ({
     key,
     label,
-    icon: <img src={selectedKey === key ? activeIcon : icon} alt={label} style={{ width: 20, height: 20, marginLeft: 30 }} />,
+    icon: (
+      <img
+        src={selectedKey === key ? activeIcon : icon}
+        alt={label}
+        style={{ width: 20, height: 20, marginLeft: 30 }}
+      />
+    )
   });
 
   const menuItems = [
@@ -87,84 +101,89 @@ export default function PatientScene() {
     makeItem("3", "Cài đặt", setLogo2, setLogo),
   ];
 
-  const logoutItem = makeItem("4", "Đăng xuất", logLogo2, logLogo);
-
   return (
     <Layout
-      className="layout"
       style={{
         minHeight: "100vh",
         minWidth: "100vw",
         backgroundImage: `url(${Back})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
+        backgroundPosition: "center"
       }}
     >
+      {/* SIDER */}
       <Sider
         style={{
           backgroundColor: "rgba(255,255,255,0.7)",
           borderRadius: "0px 20px 20px 20px",
-          width: "170px",
+          width: "170px"
         }}
       >
-        <div className="logo" style={{ marginRight: 10, padding: 2 }}>
-          <img src={Logo} alt="Logo" style={{ position: "fixed", width: 100, height: 70, marginTop: 20, marginLeft: 40 }} />
-        </div>
+      <div style={{ textAlign: "center", padding: "20px 0" }}>
+          <img src={Logo} alt="Logo" style={{ width: 100, height: 70 }} />
+      </div>
 
-        <Menu
-          className="menu"
+        <Menu className="menu"
           mode="vertical"
           selectedKeys={[selectedKey]}
-          onClick={({ key }) =>{
-            if (key === "1") navigate("/patientDashboard"); 
-            if (key === "2") navigate("/patientHistory"); 
-            if (key === "3") navigate("/patientSetting"); 
-            }
-          }
+          onClick={({ key }) => {
+            if (key === "1") navigate("/patientDashboard");
+            if (key === "2") navigate("/patientHistory");
+            if (key === "3") navigate("/patientSetting");
+          }}
+
           items={menuItems}
           style={{
-            flex: 1,
-            minWidth: 0,
-            marginTop: 240,
+            marginTop: 150,
             backgroundColor: "transparent",
             textAlign: "left",
             fontSize: 14,
-            fontWeight: "bold",
+            fontWeight: "bold"
           }}
         />
-
-        <div style={{ marginTop: "auto", width: "100%" }}>
-          <Menu
-            className="menu"
-            mode="vertical"
-            selectedKeys={[]}
-            items={[logoutItem]}
-            onClick={() => console.log("Logout clicked")}
-            style={{
-              width: "100%",
-              position: "absolute",
-              bottom: 0,
-              backgroundColor: "transparent",
-              textAlign: "left",
-              fontSize: 14,
-              fontWeight: "bold",
-            }}
-          />
+        <div
+          onClick={() => {
+            console.log("clicked");
+            alert("Đăng suất tài khoản");
+            localStorage.removeItem("patientId");
+            navigate("/");
+          }
+          }
+          style={{
+            position: "absolute",
+            bottom: 20,
+            left: 30,
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+            fontWeight: "bold",
+            color: "#043bb3"
+          }}
+        >
+          <img src={logLogo2} alt="Đăng xuất" style={{ width: 20, height: 20, marginRight: 10 }} />
+          Đăng xuất
         </div>
       </Sider>
 
+      {/* MAIN */}
       <Layout style={{ backgroundColor: "transparent" }}>
-        <Content style={{ padding: "0 3vw", backgroundColor: "transparent" }}>
+        <Content style={{ padding: "0 3vw" }}>
           <Breadcrumb
-            style={{ margin: "26px 0", fontSize: 18, fontWeight: "bold", color: "#043bb3" }}
+            style={{
+              margin: "26px 0",
+              fontSize: 18,
+              fontWeight: "bold",
+              color: "#043bb3"
+            }}
             items={
               selectedKey === "1"
-                ? [{ title: "TRANG CHỦ" }]
-                : [
-                    { title: "TRANG CHỦ" },
-                    { title: menuItems.find((item) => item.key === selectedKey)?.label || "..." },
-                  ]
+              ? [{ title: "TRANG CHỦ" }]
+              : selectedKey === "2"
+              ? [{ title: "LỊCH SỬ" }]
+              : selectedKey === "3"
+              ? [{ title: "CÀI ĐẶT" }]
+              : [{ title: "TRANG CHỦ" }]
             }
           />
 
@@ -172,27 +191,45 @@ export default function PatientScene() {
             <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
               <Spin size="large" tip="Đang tải thông tin bệnh nhân..." />
             </div>
-          ) : !data.profile? (
+          ) : !data.profile ? (
             <p>Không tìm thấy thông tin bệnh nhân.</p>
           ) : (
             <>
-              {selectedKey === "1" && (
-                <>
-                  <div style={{ position: "fixed", top: 0, right: 0 }}>
-                    <PatientColInfor patient={data.profile} />
-                  </div>
-                  <PatientCardCount total= {data.totalVisits} last = {data.latestVisitDay} next = {data.nextVisitDay} />
-                  <PatientHistoryMost visits = {data.threeLatestRes} />
-                </> 
-              )}
-              {selectedKey === "2" && <PatientHistory patientId = {patientId}/>}
-              <div style={{ position: "fixed", top: 0, right: 0 }}>
+              <Routes>
+                <Route
+                  path="/patientDashboard"
+                  element={
+                    <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                      <div style={{ flex: 3 , gap: "30px"}}>
+                          <div>
+                            <PatientCardCount
+                                total={data.totalVisits}
+                                last={data.latestVisitDay}
+                                next={data.nextVisitDay}
+                            />
+                          </div>
+                        <PatientHistoryMost visits={data.threeLatestRes} />
+                      </div>
+                      <div style={{ flex: 1 , marginTop: "-12vh"}}>
+                        <PatientColInfor patient={data.profile} />
+                      </div>
+                    </div>
+                  }
+                />
+                <Route
+                  path="/patientHistory"
+                  element={<PatientHistory patientId={patientId} />}
+                />
+                <Route path="/patientSetting" element={<p>Cài đặt</p>} />
+              </Routes>
+
+              {/* Cột phải cố định */}
+              <div style={{ position: "fixed", top: 0, right: "2vw" }}>
                 <PatientCardInfor patient={data.profile} />
               </div>
             </>
           )}
         </Content>
-        <div className="profile-footer">Bệnh viện đa khoa A</div>
       </Layout>
     </Layout>
   );

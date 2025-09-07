@@ -16,8 +16,11 @@ import tphcm from "../../assets/tphcm.jpg";
 import thainguyen from "../../assets/thainguyen.jpg";
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
+import { useNavigate } from "react-router-dom";
 
 function IntroductionScene() {
+  const navigate = useNavigate();
+
   return (
     <Layout
       style={{
@@ -62,6 +65,7 @@ function IntroductionScene() {
               icon={<RightOutlined />}
               iconPosition="end"
               className={styles.login_patient}
+              onClick={() => navigate("/patientLogin")}
             >
               Login as a Patient
             </Button>
