@@ -62,11 +62,6 @@ export default function PatientHistory({patientId} : His) {
     setSearchText(value); 
     setCurrentPage(1);    
   };
-
-  const handleDelete = (record: any) => {
-    setHistory((prev) => prev.filter((d) => d.id !== record.id));
-  };
-
   const handleMore = (record: any) => {
     setSelectedHistory(record);
     setShowHistoryInfoModal(true);
@@ -75,43 +70,23 @@ export default function PatientHistory({patientId} : His) {
 
   const menuItems = (record: any) => [
     {
-      key: "delete",
-      label: (
-        <div
-          style={{
-            color: "#000000",
-            minWidth: 80,
-            textAlign: "center",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "#043bb3";
-            (e.currentTarget as HTMLElement).style.color = "white";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "white";
-            (e.currentTarget as HTMLElement).style.color = "#000000";
-          }}
-          onClick={() => handleDelete(record)}
-        >
-          Delete
-        </div>
-      ),
-    },
-    {
       key: "more",
       label: (
         <div
           style={{
-            color: "#000000",
-            minWidth: 80,
-            textAlign: "center",
+          color: "#043bb3",
+          fontWeight: "bold",
+          textAlign: "center",
+          minWidth: "unset",
+          whiteSpace: "nowrap", 
+          padding: "1px 1px",  
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "#043bb3";
+            (e.currentTarget as HTMLElement).style.backgroundColor = "#043bb3";
             (e.currentTarget as HTMLElement).style.color = "white";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "white";
+            (e.currentTarget as HTMLElement).style.backgroundColor = "white";
             (e.currentTarget as HTMLElement).style.color = "#000000";
           }}
           onClick={() => handleMore(record)}
@@ -282,12 +257,8 @@ export default function PatientHistory({patientId} : His) {
             <span style={{ marginLeft: "8px" }}>
               {selectedRowKeys.length > 1 ? "items selected" : "item selected"}
             </span>
-          <Button className = "btn" type="link" style={{ width: "50px",height: "25px",  fontSize: "12px", color: "#ffffff", backgroundColor: "#737373", borderRadius: "20px" ,marginRight: 5 , marginLeft: 30}}>Print</Button>
-          <Button className = "btn" type="link" style={{ width: "50px",height: "25px",fontSize: "12px",color: "#ffffff", backgroundColor: "#737373", borderRadius: "20px",marginRight: 5 }}>Send</Button>
-          <Button className = "btn" danger type="link" style = {{width: "70px",height: "25px",fontSize: "12px",color : "#ffffff", backgroundColor: "#d12326", borderRadius: "20px", marginRight: 0}}>
-            <img src = {binLogo} alt = "bin" style = {{width: "15px", height: "15px"}} ></img>
-            Delete
-          </Button>
+          <Button disabled className = "btn" type="link" style={{ width: "50px",height: "25px",  fontSize: "12px", color: "#ffffff", backgroundColor: "#737373", borderRadius: "20px" ,marginRight: 5 , marginLeft: 30}}>Print</Button>
+          <Button disabled className = "btn" type="link" style={{ width: "50px",height: "25px",fontSize: "12px",color: "#ffffff", backgroundColor: "#d12326", borderRadius: "20px",marginRight: 5 }}>Send</Button>
           <Button className = "btn"
             type="link"
             style={{

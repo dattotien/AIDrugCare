@@ -1,0 +1,131 @@
+/* Tabs */
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  position: absolute;
+  top: 113px;
+  cursor: pointer;
+}
+
+.tabAll {
+  left: 270px;
+}
+
+.tabDone {
+  left: 370px;
+}
+
+.tabPending {
+  left: 490px;
+}
+
+.tabCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+/* Background area */
+.background {
+  width: 1320px;
+  height: 500px;
+  margin-left: 25px;
+  margin-top: 3px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-items: center;
+}
+
+/* Action bar */
+.actionBar {
+  height: 45px;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 37px;
+  margin-left: 80px;
+}
+
+.actionCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #737373;
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.actionBtn {
+  width: 50px;
+  height: 25px;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #737373;
+  border-radius: 20px;
+  margin-right: 5px;
+}
+
+.actionBtnDelete {
+  width: 70px;
+  height: 25px;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #d12326;
+  border-radius: 20px;
+  margin-right: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.closeBtn {
+  color: #fff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+  margin-left: 5px;
+  margin-right: 0;
+  cursor: pointer;
+}
+
+/* Table */
+.tableTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  width: 250px;
+  border-radius: 20px;
+  border-color: #737373;
+}

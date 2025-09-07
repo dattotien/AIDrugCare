@@ -1,6 +1,6 @@
-import "./DoctorDashboard.css";
+import styles from "./DoctorDashboard.module.css";
 import blueLogo from "../../assets/blue.png"; // icon nam
-import redLogo from "../../assets/red.png";   // icon nữ
+import redLogo from "../../assets/red.png"; // icon nữ
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -20,31 +20,30 @@ export default function DoctorWaitingList() {
   const navigate = useNavigate();
   const storedDoctorId = localStorage.getItem("doctorId");
   const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
-    useEffect(() => {
-      const fetchWaitingList = async () => {
-        try {
-          const res = await axios.get(
-            'http://localhost:8000/waiting-patients/${doctorId}'
-          );
-          setPatients(res.data.data || res.data || []);
-        } catch (err: any) {
-          console.error(
-            "Error fetching waiting list:",
-            err.response?.data || err.message
-          );
-        }
-      };
-
-      if (doctorId !== null && !isNaN(doctorId)) {
-        fetchWaitingList();
-      } else {
-        console.warn("doctorId không hợp lệ:", doctorId);
+  useEffect(() => {
+    const fetchWaitingList = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8000/waiting-patients/${doctorId}`
+        );
+        setPatients(res.data.data || res.data || []);
+      } catch (err: any) {
+        console.error(
+          "Error fetching waiting list:",
+          err.response?.data || err.message
+        );
       }
-    }, [doctorId]);
+    };
 
+    if (doctorId !== null && !isNaN(doctorId)) {
+      fetchWaitingList();
+    } else {
+      console.warn("doctorId không hợp lệ:", doctorId);
+    }
+  }, [doctorId]);
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       {/* Header */}
       <div
         style={{
@@ -52,8 +51,6 @@ export default function DoctorWaitingList() {
           flexDirection: "row",
           justifyContent: "space-between",
           marginBottom: "0px",
-          margin: 0
-
         }}
       >
         <p
@@ -62,7 +59,6 @@ export default function DoctorWaitingList() {
             color: "#043bb3",
             fontWeight: "bold",
             margin: 0,
-            marginBottom: -20
           }}
         >
           DANH SÁCH CHƯA KHÁM
@@ -78,21 +74,22 @@ export default function DoctorWaitingList() {
         </p>
       </div>
       {patients.length === 0 ? (
-        <p style={{ fontSize: "12px", color: "#999" }}>Không có bệnh nhân nào</p>
+        <p style={{ fontSize: "12px", color: "#999" }}>
+          Không có bệnh nhân nào
+        </p>
       ) : (
-      patients.slice(0, 3).map((p) => (
-          <div key={p.id} className="row">
+        patients.slice(0, 3).map((p) => (
+          <div key={p.id} className={styles.row}>
             <span>
               <img
                 src={p.gender === "Nam" ? blueLogo : redLogo}
                 alt={p.gender}
-                style={{ width: "22px", height: "22px" }}
               />
             </span>
-            <span>{p.name}</span>
+            <span style={{ fontWeight: "bold" }}>{p.name}</span>
             <span>{p.gender}</span>
-            <span>{p.symptoms.join(", ")}</span>
-            <span className="waiting">{p.status}</span>
+            <span>{p.symptoms}</span>
+            <span className={styles.waiting}>{p.status}</span>
           </div>
         ))
       )}
