@@ -41,39 +41,7 @@
   background-color: #737373!important;
 }
 
-.card-contain{
-    width: 790px !important;
-    height: 111px;
-    background-color: transparent;
-    justify-content: space-between;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-items: center;
-    margin-top: 50px;
-}
 
-.card {
-  width: 244px;
-  height: 107px;
-  background-color: #ffffff;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: row;
-  margin: 0;
-  margin-right:20px;
-}
-
-.circle {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%; 
-  background-color: #ffffff;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
-  margin-top: 26px;
-  margin-left: 20px;
-}
 
 .profile-footer {
   width: 100%;
@@ -85,5 +53,18 @@
   left: 10px;
 }
 
+.doctor-body {
+  flex: 1 1 auto;
+  padding-top: 12px;
+  border-radius: 20px;
+  overflow: auto;
+}
 
-
+.ant-dropdown-menu .ant-dropdown-menu-item:hover {
+  background-color: #043bb3!important; /* nền xanh nhạt khi hover */
+  color: #ffffff !important;
+}
+.ant-dropdown-menu {
+  width: 80px;
+  text-align: center;
+}

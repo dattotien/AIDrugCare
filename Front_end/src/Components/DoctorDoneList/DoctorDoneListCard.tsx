@@ -3,9 +3,13 @@ import moreLogo from "../../assets/arrow-right.png";
 import evenLogo from "../../assets/event.png";
 import PatientOneHistory from "../PatientHistory/PatientOneHistory";
 import { Modal } from "antd";
+import dayjs from "dayjs";
 
-export default function DoctorDoneListCard({ highlight = "#043bb3" }) {
-  const [open, setOpen] = useState(false);
+interface Props {
+  visit : any;
+  highlight?: string; 
+}
+export default function DoctorDoneListCard({ visit, highlight = "#043bb3" }: Props) {
 
   return (
     <div
@@ -48,7 +52,7 @@ export default function DoctorDoneListCard({ highlight = "#043bb3" }) {
         }}
       >
         <p style={{ fontSize: "12px", color: "#737373", margin: 0, marginTop: -8}}>
-          Tuổi : 30 - Nữ 
+          {dayjs(visit.age).format("YYYY-MM-DD")} - {visit.dob} 
         </p>
         <img
           src={moreLogo}
@@ -59,7 +63,6 @@ export default function DoctorDoneListCard({ highlight = "#043bb3" }) {
             cursor: "pointer",
             flexShrink: 0,
           }}
-          onClick={() => setOpen(true)}
         />
       </div>
 
@@ -72,7 +75,7 @@ export default function DoctorDoneListCard({ highlight = "#043bb3" }) {
           marginTop: -6
         }}
       >
-        Đau bụng, đầy hơi, khó tiêu
+        {visit.diagnosis}
       </p>
 
       <div
@@ -91,7 +94,7 @@ export default function DoctorDoneListCard({ highlight = "#043bb3" }) {
             marginTop: 2
           }}
         >
-          ID : 1004
+          ID : {visit.patient_id}
         </p>
 
         <div
@@ -114,27 +117,10 @@ export default function DoctorDoneListCard({ highlight = "#043bb3" }) {
               margin: 0,
             }}
           >
-            20, tháng 8
+            28, tháng 8
           </p>
         </div>
       </div>
-
-      <Modal
-        open={open}
-        centered
-        width={1100}
-        onCancel={() => setOpen(false)}
-        footer={null}
-      >
-        <div
-          style={{
-            height: "500px",
-            overflowY: "auto",
-          }}
-        >
-          <PatientOneHistory />
-        </div>
-      </Modal>
     </div>
   );
 }

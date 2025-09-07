@@ -127,7 +127,7 @@ async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
     patient = await Patient.get(visit.patient_id)
 
     medical_history = await Medical_History.find_one(
-        Medical_History.patient_id == visit.patient_id
+        Medical_History.visit_id == visit_id
     )
 
     prescription_detail = await PrescriptionDetail.find_one(

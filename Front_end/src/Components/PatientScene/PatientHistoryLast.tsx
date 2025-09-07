@@ -8,11 +8,11 @@ export default function PatientHistoryMost({ visits }: Props) {
   return (
     <div
       style={{
-        width: "775px",
-        height: "385px",
+        width: "58vw",
+        height: "65vh",
         backgroundColor: "rgba(255,255,255,0.7)",
         borderRadius: "20px",
-        marginTop: "30px",
+        marginTop: "4vh",
         display: "flex",
         flexDirection: "column",
         boxSizing: "border-box",

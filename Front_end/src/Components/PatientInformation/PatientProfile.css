@@ -1,28 +1,17 @@
 
-.profile-container {
-  position: relative;
-  width: 840px !important;
-  height: 407px;
-  background-image: url("/src/assets/background.png");
-  background-size: cover;      
-  background-position: center;
-  background-repeat: no-repeat;
-  overflow: hidden;
-  flex-direction: column;       
-}
-
 
 /* Header */
 .profile-header {
   background: linear-gradient(90deg, #043bb3, #000000);
   font-family: sans-serif;
-  width: 830px !important;
-  height: 70px;
+  width: 52vw;
+  height: 50vh;
   color: white;
   padding: 20px;
   align-items: center;
   position: relative;
   gap: 16px;
+  display: flex
 }
 
 .avatar {
@@ -114,14 +103,6 @@
 }
 
 
-.profile-footer {
-  width: 100%;
-  text-align: center;
-  font-size: 12px;
-  color: #ffffff;
-  position: absolute; 
-  bottom: 3px;
-}
 .saveBtn:hover {
   background-color: #595959 !important;
   border-color: #595959 !important;
