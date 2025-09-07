@@ -24,7 +24,7 @@ export default function DoctorWaitingList() {
       const fetchWaitingList = async () => {
         try {
           const res = await axios.get(
-            'http://localhost:8000/waiting-patients/${doctorId}'
+            `http://localhost:8000/waiting-patients/${doctorId}`
           );
           setPatients(res.data.data || res.data || []);
         } catch (err: any) {
@@ -91,7 +91,7 @@ export default function DoctorWaitingList() {
             </span>
             <span>{p.name}</span>
             <span>{p.gender}</span>
-            <span>{p.symptoms.join(", ")}</span>
+            <span>{p.symptoms}</span>
             <span className="waiting">{p.status}</span>
           </div>
         ))

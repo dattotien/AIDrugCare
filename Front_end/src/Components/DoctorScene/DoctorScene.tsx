@@ -28,7 +28,6 @@ import SettingIconDefault from "../../assets/setting_blue.png";
 import SettingIconActive from "../../assets/setting_white.png";
 import LogoutIconDefault from "../../assets/logout_blue.png";
 import LogoutIconActive from "../../assets/logout_white.png";
-import PatientOneHistory from "../PatientHistory/PatientOneHistory.tsx";
 
 import "./DoctorScene.css";
 import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
@@ -97,7 +96,7 @@ export default function DoctorScene() {
       if (!doctorId) return;
 
       try {
-        const res = await axios.get(`http://localhost:8000/doctor-profile/${doctorId}`);
+        const res = await axios.get(`http://localhost:8000/doctor-profile/${doctorId}`)
         console.log("Doctor API response:", res);       // toàn bộ object
         console.log("Doctor API data:", res.data
         );      // dữ liệu trả về
@@ -285,7 +284,9 @@ export default function DoctorScene() {
             {selectedKey === "2" && <DrugListScene />}
             {selectedKey === "3" && <DoctorHistoryScene />}
             {selectedKey === "4" && !selectedPatient && (
-              <PatientsList onSelectPatient={(p: any) => setSelectedPatient(p)} />
+              <PatientsList
+                onSelectPatient={(p: any) => setSelectedPatient(p)}
+              />
             )}
             {selectedKey === "4" && selectedPatient && (
               <>
@@ -299,7 +300,6 @@ export default function DoctorScene() {
                 )}
               </>
             )}
-
             {selectedKey === "5" && <DrugInteractionChecker />}
           </div>
         </Content>

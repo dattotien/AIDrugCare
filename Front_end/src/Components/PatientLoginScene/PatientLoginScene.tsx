@@ -34,7 +34,12 @@ export default function PatientLoginScene() {
       console.log("Login response:", data);
 
       if (data.success && data.data) {
-        localStorage.setItem("patientId", data.data.id);
+      console.log("data.data:", data.data._id);
+
+       localStorage.setItem("patientId", data.data._id);
+       console.log("Saved patientId:", localStorage.getItem("patientId"));
+
+
         navigate("/patientDashboard");
       } else {
         message.error("CCCD hoặc mật khẩu không đúng");

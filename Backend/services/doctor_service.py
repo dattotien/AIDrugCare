@@ -258,12 +258,10 @@ async def get_waiting_patients(doctor_id: int):
     }
 
 async def get_three_previous_visits(doctor_id: int):
-    previous_visits = (
-        await Visit.find((Visit.doctor_id == doctor_id) & (Visit.diagnosis != "Trống")).to_list()
-        .sort(-Visit.visit_date)
-        .limit(3)
-        .to_list()
-    )
+    previous_visits = await Visit.find({
+        "doctor_id": doctor_id,
+        "diagnosis": {"$ne": "Trống"}
+        }).to_list()
 
     if not previous_visits:
         return {
@@ -300,7 +298,7 @@ async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
     patient = await Patient.get(visit.patient_id)
 
     medical_history = await Medical_History.find_one(
-        Medical_History.patient_id == visit.patient_id
+        Medical_History.visit_id == visit_id
     )
 
     prescription_detail = await PrescriptionDetail.find_one(
@@ -420,7 +418,10 @@ async def get_all_visit_history_by_doctor(doctor_id: int):
         "data": data
     }
 async def get_all_patients_by_doctor(doctor_id: int):
-    visits = await Visit.find(Visit.doctor_id == doctor_id).to_list()
+    visits = await Visit.find(
+        Visit.doctor_id == doctor_id,
+        Visit.status == "Chưa khám"
+        ).to_list()
     
     if not visits:
         return {
@@ -438,6 +439,7 @@ async def get_all_patients_by_doctor(doctor_id: int):
         patient = patient_map.get(str(visit.patient_id))
         if patient:
             data.append({
+                "visit_id": visit.id,
                 "id": str(patient.id),
                 "name": patient.name,
                 "gender": patient.gender,

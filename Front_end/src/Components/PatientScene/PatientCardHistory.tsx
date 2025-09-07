@@ -3,16 +3,17 @@ import moreLogo from "../../assets/more (1).png";
 import { Button, Dropdown, Menu, Modal } from "antd";
 import dayjs from "dayjs";
 import PatientOneHistory from "../PatientHistory/PatientOneHistory";
+import "./PatientScene.css"
 interface Props {
   visit: any; 
   highlight?: string;
 }
 
-export default function PatientCardHistory({ visit, highlight = "blue" } : Props) {
+export default function PatientCardHistory({ visit, highlight = "#043bb3" } : Props) {
   const [showHistory, setShowHistory] = useState(false);
 
   const menu = (
-    <Menu
+    <Menu className="ant-dropdown-menu"
       items={[
         {
           key: "1",
@@ -29,8 +30,8 @@ export default function PatientCardHistory({ visit, highlight = "blue" } : Props
       {!showHistory ? (
         <div
           style={{
-            width: "740px",
-            height: "98px",
+            width: "55vw",
+            height: "15vh",
             backgroundColor: "#ffffff",
             borderRadius: "12px",
             display: "flex",
@@ -94,7 +95,7 @@ export default function PatientCardHistory({ visit, highlight = "blue" } : Props
                 bottom: "3px",
                 padding: "0",
                 border: "none",
-                background: "blue",
+                background: "transparent",
                 outline: "none",
               }}
               icon={
