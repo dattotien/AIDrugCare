@@ -9,7 +9,7 @@ interface Patient {
   id: number;
   name: string;
   gender: string;
-  symptoms: string[];
+  symptoms: string;
   status: string;
 }
 interface DoctorWaitingListProps {

@@ -9,7 +9,7 @@ class Visit(Document):
     doctor_id: int
     patient_id: int
     hospital: str
-    visit_date: datetime
+    visit_date: str
     symptoms: str
     diagnosis: Optional[str] = None
     note: Optional[str] = None
