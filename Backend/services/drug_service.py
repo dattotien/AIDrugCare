@@ -107,3 +107,30 @@ async def predict_one_drug_interaction(drug_nameA: str, drug_nameB: str, hmgrl_s
         "message": "Dự đoán thành công",
         "data": label
     }
+async def get_all_interactions(drug_list: list[str], hmgrl_service):
+    results = []
+    n = len(drug_list)
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            drugA = drug_list[i]
+            drugB = drug_list[j]
+
+            interaction = await predict_one_drug_interaction(drugA, drugB, hmgrl_service)
+ 
+            # Nếu predict thành công nhưng không có nhãn tương tác, ta gán "Không có tương tác"
+            if interaction["success"] and not interaction["data"]:
+                interaction["data"] = f"{drugA} và {drugB}: Không có tương tác"
+
+            # Ghi thêm cặp thuốc vào kết quả
+            results.append({
+                "drug1": drugA,
+                "drug2": drugB,
+                "interation": interaction
+            })
+
+    return {
+        "success": True,
+        "message": f"Tìm thấy {len(results)} cặp tương tác",
+        "data": results
+    }

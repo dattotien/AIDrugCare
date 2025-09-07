@@ -68,7 +68,7 @@ class PrescriptionRequest(BaseModel):
 @router.post("/create-prescription", response_model=ResponseModel)
 async def create_prescription_endpoint(request: PrescriptionRequest):
     items = [item.dict() for item in request.items]
-    return await create_prescription(request.visit_id, items, request.diagnosis, request.note)
+    return await create_prescription(request.visit_id, items, request.diagnosis)
 @router.get("/prescription/{visit_id}", response_model=ResponseModel)
 async def get_prescription(visit_id: int):
     return await get_prescription_by_visit(visit_id)
@@ -84,6 +84,10 @@ async def get_waiting_patients_endpoint(doctor_id: int):
 @router.get("/all-patients/{doctor_id}", response_model=ResponseModel)
 async def get_all_patients(doctor_id: int):
     return await get_all_patients_by_doctor(doctor_id)
+@router.get("/previous-patients/{doctor_id}", response_model=ResponseModel)
+async def get_previous_patients(doctor_id: int):
+    return await get_three_previous_visits(doctor_id)
+
 @router.get("/previous-patients/{doctor_id}", response_model=ResponseModel)
 async def get_previous_patients(doctor_id: int):
     return await get_three_previous_visits(doctor_id)
