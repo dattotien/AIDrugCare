@@ -179,7 +179,7 @@ export default function DoctorScene() {
   return (
     <Layout
       className="doctor-layout"
-      style={{ backgroundImage: 'url(${backgroundImage})' }}
+      style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       {/* SIDER */}
       <Sider width={205} className="doctor-sider">
