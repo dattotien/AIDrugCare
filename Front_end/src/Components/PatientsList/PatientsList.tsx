@@ -79,18 +79,17 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
     { title: <span className="table-header">Tên bệnh nhân</span>, dataIndex: "name", key: "name", width: 200 },
     { title: <span className="table-header">Ngày sinh</span>, dataIndex: "dob", key: "dob", width: 150, render: (dob: Date) => dob ? dayjs(dob).format("DD/MM/YYYY") : "-", },
     { title: <span className="table-header">Giới tính</span>, dataIndex: "gender", key: "gender", width: 100 },
-    { title: <span className="table-header">Triệu chứng</span>, dataIndex: "symptoms", key: "symptoms", width: 250, render: (symptoms: string[]) => symptoms?.join(", ") || "-", },
+    { title: <span className="table-header">Triệu chứng</span>, dataIndex: "symptoms", key: "symptoms", width: 250 },
     {
       title: <span className="table-header">Trạng thái</span>,
       dataIndex: "status",
       key: "status",
       width: 120,
-      render: (text: string) => (
-        <span className={text === "Chờ khám" ? "status-pending" : "status-done"}>
-          {text}
-        </span>
-      ),
-    },
+      render: (text: string) => {
+        let color = text === "Chưa khám" ? "#043bb3" : text === "Đã khám" ? "#d12362" : "black";
+        return <span style={{ color, fontWeight: "bold" }}>{text}</span>;
+        },
+      },
     {
       title: "",
       key: "actions",

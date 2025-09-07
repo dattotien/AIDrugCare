@@ -9,7 +9,7 @@ class Patient(Document):
     name: str
     email: Optional[EmailStr] = None
     password: str
-    dob: Optional[datetime] = None
+    dob: Optional[str] = None
     phone: Optional[str] = None
     gender: Optional[str] = None
     cccd: Optional[str] = None
