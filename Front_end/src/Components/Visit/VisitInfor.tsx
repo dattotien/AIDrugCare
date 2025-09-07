@@ -78,7 +78,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
 
   return (
     <div className="visit-panel">
-      {/* ===== HEADER bệnh viện ===== */}
       <div className="visit-header">
         <div className="hospital-title">
           <Title level={4}>BỆNH VIỆN ĐA KHOA A - CƠ SỞ 4</Title>
