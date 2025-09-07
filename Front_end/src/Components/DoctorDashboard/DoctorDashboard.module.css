@@ -1,0 +1,197 @@
+.cardContain {
+  background-color: transparent;
+  display: flex;
+  gap: 2vw;
+}
+
+.card1 {
+  width: 15vw;
+  height: 15vh;
+  background-color: #ffffff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  display: flex;
+  gap: 1vw;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+}
+.cardText {
+  margin: 0;
+  font-weight: bold;
+}
+.cardHeader {
+  font-size: 30px;
+  margin: 0;
+  font-weight: bold;
+  color: #043bb3;
+}
+.cardSmall {
+  margin-left: 17vw;
+  width: 6vw;
+  height: 15vh;
+  gap: 2vh;
+  background-color: #ffffff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.circleSmall {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 40%;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.calendar_weekdays,
+.calendar_days {
+  display: grid;
+  grid-template-columns: repeat(7, 41px); /* 7 cột chia đều */
+  text-align: center;
+  gap: 5px;
+}
+
+.calendar_weekdays div {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.calendar_days div {
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 2;
+}
+
+.calendar_days .active {
+  background-color: #043bb3;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.day_name {
+  font-size: 12px;
+  margin-bottom: 4px; /* khoảng cách giữa tên ngày và số */
+}
+
+.container {
+  width: 96%;
+  height: 40%;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 0.2fr 1.5fr 0.5fr 5fr 0.8fr; /* Chia cột */
+  align-items: center;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 5px 10px 5px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  height: 6vh;
+}
+
+.waiting {
+  color: #043bb3;
+  border-radius: 2px;
+  border-color: #043bb3;
+}
+
+.news-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.news-scroll::-webkit-scrollbar-thumb {
+  background: #737373;
+  border-radius: 10px;
+}
+.news-scroll::-webkit-scrollbar-track {
+  background: #fff0f0;
+  border-radius: 10px;
+}
+
+.row span {
+  display: block; /* ép span xuống dòng */
+  text-align: left; /* căn trái */
+  margin-left: 12px;
+}
+
+.symptom {
+  max-width: 220px; /* giới hạn chiều rộng */
+  white-space: nowrap; /* không xuống dòng */
+  overflow: hidden; /* ẩn phần thừa */
+  text-overflow: ellipsis; /* hiện dấu ... */
+}
+.dashboard {
+  background-color: transparent;
+  width: 97%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.leftPanel {
+  width: 100%;
+  background-color: transparent;
+}
+
+.rightPanel {
+  width: 340px;
+  height: 570px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+}
+
+.eventHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.eventTitle {
+  font-size: 12px;
+  font-weight: bold;
+  color: #000;
+  margin: 0;
+  margin-top: 12px;
+  margin-left: 18px;
+  margin-bottom: 7px;
+}
+
+.eventSeeAll {
+  font-size: 12px;
+  color: #737373;
+  margin: 0;
+  margin-top: 12px;
+  margin-right: 25px;
+  margin-bottom: 7px;
+}

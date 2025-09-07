@@ -28,7 +28,7 @@ import SettingIconDefault from "../../assets/setting_blue.png";
 import SettingIconActive from "../../assets/setting_white.png";
 import LogoutIconDefault from "../../assets/logout_blue.png";
 import LogoutIconActive from "../../assets/logout_white.png";
-
+import PatientOneHistory from "../PatientHistory/PatientOneHistory.tsx";
 import "./DoctorScene.css";
 import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
 import axios from "axios";
@@ -96,13 +96,14 @@ export default function DoctorScene() {
       if (!doctorId) return;
 
       try {
-        const res = await axios.get(`http://localhost:8000/doctor-profile/${doctorId}`)
-        console.log("Doctor API response:", res);       // toàn bộ object
-        console.log("Doctor API data:", res.data
-        );      // dữ liệu trả về
+        const res = await axios.get(
+          `http://localhost:8000/doctor-profile/${doctorId}`
+        );
+        console.log("Doctor API response:", res); // toàn bộ object
+        console.log("Doctor API data:", res.data); // dữ liệu trả về
         if (res.data.success) {
           const doc = res.data.data;
-          
+
           setDoctor({
             ...doc,
             dob: doc.dob ? dayjs(doc.dob) : null,
@@ -153,7 +154,11 @@ export default function DoctorScene() {
         }`}
       >
         <div
-          style={{ display: "flex", alignItems: "center", paddingLeft: "20px" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: "0.8vw",
+          }}
         >
           <img
             src={selectedKey === item.key ? item.iconActive : item.iconDefault}
@@ -181,23 +186,19 @@ export default function DoctorScene() {
       className="doctor-layout"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* SIDER */}
-      <Sider width={205} className="doctor-sider">
-        <div>
-          <img src={Logo} alt="Logo" className="doctor-logo" />
+      <Sider min-width={"13.5vw"} className="doctor-sider">
+        <div className="doctor-logo-container">
+          <img src={Logo} alt="logo" className="doctor-logo" />
         </div>
-        <div style={{ flex: 1 }}>
-          <Menu
-            mode="inline"
-            selectedKeys={[selectedKey]}
-            onSelect={handleMenuSelect}
-            className="doctor-menu"
-          >
-            {renderMenuItems(mainItems)}
-          </Menu>
-        </div>
-        <div className="doctor-divider" />
-        <div>
+        <Menu
+          mode="inline"
+          selectedKeys={[selectedKey]}
+          onSelect={handleMenuSelect}
+          className="doctor-menu"
+        >
+          {renderMenuItems(mainItems)}
+        </Menu>
+        <div className="doctor-divider">
           <Menu
             mode="inline"
             selectedKeys={[selectedKey]}
@@ -208,118 +209,103 @@ export default function DoctorScene() {
           </Menu>
         </div>
       </Sider>
-
-      {/* CONTENT */}
-      <Layout className="doctor-content">
-        <Content>
-          <div style={{ padding: 20, position: "relative" }}>
-            {/* Header */}
-            <div className="doctor-header">
-              <h2 className="doctor-header-title">
-                {selectedKey === "1" && "Dashboard"}
-                {selectedKey === "2" && "Drugbank"}
-                {selectedKey === "3" && "History"}
-                {selectedKey === "4" && (
-                  <>
-                    <span
-                      className={`doctor-header-patients ${
-                        selectedPatient ? "clickable" : ""
-                      }`}
-                      onClick={() =>
-                        selectedPatient && setSelectedPatient(null)
-                      }
-                    >
-                      PATIENTS
-                    </span>
-                    {selectedPatient && (
-                      <>
-                        <span className="doctor-header-divider">/ </span>
-                        <span className="doctor-header-patient-name">
-                          {selectedPatient.name}
-                        </span>
-                      </>
-                    )}
-                  </>
-                )}
-                {selectedKey === "5" && "DRUG-DRUG INTERACTIONS"}
-              </h2>
-
-              <div className="doctor-header-right">
-                <Badge size="small">
-                  <img
-                    src={userMailNoti}
-                    alt="mail"
-                    style={{ width: 20, cursor: "pointer" }}
-                  />
-                </Badge>
-                <Badge size="small">
-                  <img
-                    src={userNoti}
-                    alt="noti"
-                    style={{ width: 20, cursor: "pointer" }}
-                  />
-                </Badge>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Avatar
-                    src={accountInfo.avatar}
-                    size={30}
-                    style={{ marginRight: "10px" }}
-                    onClick={() => setOpen(true)}
-                  />
-                  <div>
-                    <div className="doctor-account-name">
-                      {accountInfo.name}
-                    </div>
-                    <div className="doctor-account-email">
-                      {accountInfo.email}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="doctor-body">
-            {selectedKey === "1" && <DoctorDashBoard />}
-            {selectedKey === "2" && <DrugListScene />}
-            {selectedKey === "3" && <DoctorHistoryScene />}
-            {selectedKey === "4" && !selectedPatient && (
-              <PatientsList
-                onSelectPatient={(p: any) => setSelectedPatient(p)}
-              />
-            )}
-            {selectedKey === "4" && selectedPatient && (
+      <Content className="doctor-content">
+        <div className="doctor-header-container">
+          <h2 className="doctor-header-title">
+            {selectedKey === "1" && "Dashboard"}
+            {selectedKey === "2" && "Drugbank"}
+            {selectedKey === "3" && "History"}
+            {selectedKey === "4" && (
               <>
-                {selectedPatient.status === "Chưa khám" ? (
-                  <VisitInfor
-                    patient={selectedPatient}
-                    onBack={() => setSelectedPatient(null)}
-                  />
-                ) : (
-                  <PatientOneHistory visitId={selectedPatient.visitId}/>
+                <span
+                  className={`doctor-header-patients ${
+                    selectedPatient ? "clickable" : ""
+                  }`}
+                  onClick={() => selectedPatient && setSelectedPatient(null)}
+                >
+                  PATIENTS
+                </span>
+                {selectedPatient && (
+                  <>
+                    <span className="doctor-header-divider">/ </span>
+                    <span className="doctor-header-patient-name">
+                      {selectedPatient.name}
+                    </span>
+                  </>
                 )}
               </>
             )}
-            {selectedKey === "5" && <DrugInteractionChecker />}
+            {selectedKey === "5" && "DRUG-DRUG INTERACTIONS"}
+          </h2>
+
+          <div className="doctor-header-right">
+            <Badge size="small">
+              <img
+                src={userMailNoti}
+                alt="mail"
+                style={{ width: 20, cursor: "pointer" }}
+              />
+            </Badge>
+            <Badge size="small">
+              <img
+                src={userNoti}
+                alt="noti"
+                style={{ width: 20, cursor: "pointer" }}
+              />
+            </Badge>
+            <div
+              style={{ display: "flex", alignItems: "center" }}
+              onClick={() => setOpen(true)}
+            >
+              <Avatar
+                src={accountInfo.avatar}
+                size={30}
+                style={{ marginRight: "10px" }}
+              />
+              <div>
+                <div className="doctor-account-name">{accountInfo.name}</div>
+                <div className="doctor-account-email">{accountInfo.email}</div>
+              </div>
+            </div>
           </div>
-        </Content>
+        </div>
 
-        <Modal
-          open={open}
-          onCancel={() => setOpen(false)}
-          footer={null}
-          width={890}
-          zIndex={2000}
-        >
-          <DoctorInformationScene
-            doctor={doctor}
-            onSave={handleUpdateDoctor}
-            onClose={() => setOpen(false)}
-          />
-        </Modal>
+        <div className="doctor-body">
+          {selectedKey === "1" && <DoctorDashBoard />}
+          {selectedKey === "2" && <DrugListScene />}
+          {selectedKey === "3" && <DoctorHistoryScene />}
+          {selectedKey === "4" && !selectedPatient && (
+            <PatientsList onSelectPatient={(p: any) => setSelectedPatient(p)} />
+          )}
+          {selectedKey === "4" && selectedPatient && (
+            <>
+              {selectedPatient.status === "Chưa khám" ? (
+                <VisitInfor
+                  patient={selectedPatient}
+                  onBack={() => setSelectedPatient(null)}
+                />
+              ) : (
+                <PatientOneHistory visitId={selectedPatient.visitId} />
+              )}
+            </>
+          )}
+          {selectedKey === "5" && <DrugInteractionChecker />}
+        </div>
+      </Content>
 
-        <div className="doctor-footer"></div>
-      </Layout>
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        footer={null}
+        width={890}
+        zIndex={2000}
+      >
+        <DoctorInformationScene
+          doctor={doctor}
+          onSave={handleUpdateDoctor}
+          onClose={() => setOpen(false)}
+        />
+      </Modal>
     </Layout>
   );
 }
