@@ -13,7 +13,8 @@ from services.doctor_service import (
     get_prescription_by_visit,
     get_visited_history_by_doctor,
     get_all_visit_history_by_doctor,
-    get_waiting_patients
+    get_waiting_patients,
+    get_all_patients_by_doctor
 )
 
 router = APIRouter()
@@ -79,3 +80,6 @@ async def get_all_visits_by_doctor(doctor_id: int):
 @router.get("/waiting-patients/{doctor_id}", response_model=ResponseModel)
 async def get_waiting_patients_endpoint(doctor_id: int):
     return await get_waiting_patients(doctor_id)
+@router.get("/all-patients/{doctor_id}", response_model=ResponseModel)
+async def get_all_patients(doctor_id: int):
+    return await get_all_patients_by_doctor(doctor_id)

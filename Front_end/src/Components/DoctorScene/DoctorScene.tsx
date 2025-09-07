@@ -97,7 +97,7 @@ export default function DoctorScene() {
       if (!doctorId) return;
 
       try {
-        const res = await axios.get(http://localhost:8000/doctor-profile/${doctorId});
+        const res = await axios.get(`http://localhost:8000/doctor-profile/${doctorId}`);
         console.log("Doctor API response:", res);       // toàn bộ object
         console.log("Doctor API data:", res.data
         );      // dữ liệu trả về
@@ -180,7 +180,7 @@ export default function DoctorScene() {
   return (
     <Layout
       className="doctor-layout"
-      style={{ backgroundImage: url(${backgroundImage}) }}
+      style={{ backgroundImage: 'url(${backgroundImage})' }}
     >
       {/* SIDER */}
       <Sider width={205} className="doctor-sider">
@@ -295,10 +295,7 @@ export default function DoctorScene() {
                     onBack={() => setSelectedPatient(null)}
                   />
                 ) : (
-                  (() => {
-                    localStorage.setItem("visitId", String(selectedPatient.visitId));
-                    return <PatientOneHistory />;
-                  })()
+                  <PatientOneHistory visitId={selectedPatient.visitId}/>
                 )}
               </>
             )}

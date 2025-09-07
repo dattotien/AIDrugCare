@@ -11,7 +11,7 @@ import {
   Typography,
 } from "antd";
 import { useEffect, useState } from "react";
-import { MoreOutlined, FilterOutlined, PlusOutlined } from "@ant-design/icons";
+import { MoreOutlined, FilterOutlined } from "@ant-design/icons";
 import axios from "axios";
 import type { ColumnsType } from "antd/es/table";
 
@@ -21,19 +21,24 @@ import "./DrugListScene.css";
 
 const { Text } = Typography;
 
+interface BrandName {
+  name: string;
+  route?: string;
+  strength?: string;
+  dosage_form?: string;
+  country?: string;
+}
+
+interface Manufacturer {
+  name: string;
+}
+
 interface Drug {
   _id: string;
   generic_name: string;
   description?: string;
-  brand_names?: string[];
-  categories?: string[];
-  dosage_forms?: string[];
-  atc_code?: string[];
-  chemical_formula?: string;
-  molecular_formula?: string;
-  drug_interaction?: string[];
-  synonyms?: string[];
-  manufacturers?: string[];
+  brand_names?: BrandName[];
+  manufacturers?: Manufacturer[];
 }
 
 export default function DrugListScene() {
@@ -41,20 +46,57 @@ export default function DrugListScene() {
   const [showActionBar, setShowActionBar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
-  const [showAddDrugModal, setShowAddDrugModal] = useState(false);
   const [showDrugInfoModal, setShowDrugInfoModal] = useState(false);
   const [selectedDrug, setSelectedDrug] = useState<Drug | null>(null);
 
   const [drugList, setDrugList] = useState<Drug[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Gọi API lấy danh sách thuốc
+  // Gọi API lấy danh sách thuốc (có thêm fetch chi tiết để hiển thị 1 ít brand_names & manufacturers)
   const fetchDrugs = async () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:8000/drugs");
       if (res.data.success && Array.isArray(res.data.data)) {
-        setDrugList(res.data.data);
+        const baseList = res.data.data;
+
+        // Gọi thêm chi tiết cho từng thuốc, chỉ lấy vài trường cần
+        const detailed = await Promise.all(
+          baseList.map(async (drug: any) => {
+            try {
+              const detailRes = await axios.get(`http://localhost:8000/drugs/${drug._id}`);
+              if (detailRes.data.success && detailRes.data.data) {
+                const detail = detailRes.data.data;
+                return {
+                  ...drug,
+                  brand_names: Array.isArray(detail.brand_names)
+                    ? detail.brand_names.slice(0, 5).map((b: any) => ({
+                        name: b?.name ?? "",
+                        route: b?.route ?? "",
+                        strength: b?.strength ?? "",
+                        dosage_form: b?.dosage_form ?? "",
+                        country: b?.country ?? "",
+                      }))
+                    : [],
+                  manufacturers: Array.isArray(detail.manufacturers)
+                    ? detail.manufacturers.slice(0, 5).map((m: any) =>
+                        typeof m === "string" ? { name: m } : { name: m?.name ?? "" }
+                      )
+                    : [],
+                };
+              }
+            } catch (err) {
+              console.error("Lỗi fetch chi tiết thuốc:", err);
+            }
+            return {
+              ...drug,
+              brand_names: [],
+              manufacturers: [],
+            };
+          })
+        );
+
+        setDrugList(detailed);
       } else {
         setDrugList([]);
         message.error(res.data.message || "Không lấy được danh sách thuốc");
@@ -66,6 +108,7 @@ export default function DrugListScene() {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchDrugs();
@@ -83,18 +126,6 @@ export default function DrugListScene() {
     setCurrentPage(1);
   };
 
-  // Xóa thuốc
-  const handleDelete = async (record: Drug) => {
-    try {
-      await axios.delete(`http://localhost:8000/drugs/${record._id}`);
-      message.success("Xóa thuốc thành công");
-      setDrugList((prev) => prev.filter((d) => d._id !== record._id));
-    } catch (err) {
-      console.error(err);
-      message.error("Lỗi khi xóa thuốc");
-    }
-  };
-
   // Xem chi tiết
   const handleMore = (record: Drug) => {
     setSelectedDrug(record);
@@ -103,14 +134,6 @@ export default function DrugListScene() {
 
   // Menu hành động
   const menuItems = (record: Drug) => [
-    {
-      key: "delete",
-      label: (
-        <div className="menu-item" onClick={() => handleDelete(record)}>
-          Delete
-        </div>
-      ),
-    },
     {
       key: "more",
       label: (
@@ -121,184 +144,72 @@ export default function DrugListScene() {
     },
   ];
 
-  // Cột table
+  const renderEllipsis = (value?: string | string[], maxWidth?: number) => {
+    if (!value) return <Text>-</Text>;
+
+    const text = Array.isArray(value)
+      ? value.join(", ") 
+      : value;
+
+    return (
+      <Text
+        ellipsis={{ tooltip: text }}
+        style={{
+          display: "inline-block",
+          maxWidth: maxWidth || "100%",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text}
+      </Text>
+    );
+  };
+
   const columns: ColumnsType<Drug> = [
     {
       title: <span className="table-header">ID</span>,
       dataIndex: "_id",
       key: "_id",
       width: 120,
-      align: "left",
-      render: (text) => (
-        <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 110, display: "block", textAlign: "left" }}>
-          {text}
-        </Text>
-      ),
+      render: (text) => renderEllipsis(text, 120),
     },
     {
       title: <span className="table-header">Tên thuốc</span>,
       dataIndex: "generic_name",
       key: "generic_name",
       width: 200,
-      align: "left",
-      render: (text) => (
-        <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
-          {text}
-        </Text>
-      ),
+      render: (text) => renderEllipsis(text, 200),
     },
     {
       title: <span className="table-header">Mô tả</span>,
       dataIndex: "description",
       key: "description",
       width: 400,
-      ellipsis: true, // ép cột này cắt bớt
-      align: "left",
-      render: (text) => (
-        <Text
-          ellipsis={{ tooltip: text }}
-          style={{
-            width: "100%",           // chiếm full ô
-            maxWidth: "380px",       // không cho vượt quá
-            display: "inline-block",
-            textAlign: "left",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {text}
-        </Text>
-      ),
+      render: (text) => renderEllipsis(text, 400),
     },
     {
-      title: <span className="table-header">Tên thị trường</span>,
+      title: "Tên thị trường",
       dataIndex: "brand_names",
       key: "brand_names",
       width: 200,
-      align: "left",
-      render: (brands) => {
-        const content = brands?.join(", ") || "";
-        return (
-          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
-            {content}
-          </Text>
-        );
-      },
+      render: (brands?: BrandName[]) =>
+        renderEllipsis(
+          brands && brands.length ? brands.map(b => b.name) : "-",
+          200
+        ),
     },
     {
-      title: <span className="table-header">Phân loại</span>,
-      dataIndex: "categories",
-      key: "categories",
-      width: 200,
-      align: "left",
-      render: (cats) => {
-        const content = cats?.join(", ") || "";
-        return (
-          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
-            {content}
-          </Text>
-        );
-      },
-    },
-    {
-      title: <span className="table-header">Dạng liều</span>,
-      dataIndex: "dosage_forms",
-      key: "dosage_forms",
-      width: 200,
-      align: "left",
-      render: (forms) => {
-        const content = forms?.join(", ") || "";
-        return (
-          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
-            {content}
-          </Text>
-        );
-      },
-    },
-    {
-      title: <span className="table-header">ATC Code</span>,
-      dataIndex: "atc_code",
-      key: "atc_code",
-      width: 150,
-      align: "left",
-      render: (codes) => {
-        const content = codes?.join(", ") || "";
-        return (
-          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 140, display: "block", textAlign: "left" }}>
-            {content}
-          </Text>
-        );
-      },
-    },
-    {
-      title: <span className="table-header">CTHH</span>,
-      dataIndex: "chemical_formula",
-      key: "chemical_formula",
-      width: 150,
-      align: "left",
-      render: (text) => (
-        <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 140, display: "block", textAlign: "left" }}>
-          {text}
-        </Text>
-      ),
-    },
-    {
-      title: <span className="table-header">CTPT</span>,
-      dataIndex: "molecular_formula",
-      key: "molecular_formula",
-      width: 200,
-      align: "left",
-      render: (text) => (
-        <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
-          {text}
-        </Text>
-      ),
-    },
-    {
-      title: <span className="table-header">Tương tác</span>,
-      dataIndex: "drug_interaction",
-      key: "drug_interaction",
-      width: 300,
-      align: "left",
-      render: (interactions) => {
-        const content = interactions?.join(", ") || "";
-        return (
-          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 290, display: "block", textAlign: "left" }}>
-            {content}
-          </Text>
-        );
-      },
-    },
-    {
-      title: <span className="table-header">Tên đồng nghĩa</span>,
-      dataIndex: "synonyms",
-      key: "synonyms",
-      width: 200,
-      align: "left",
-      render: (syns) => {
-        const content = syns?.join(", ") || "";
-        return (
-          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
-            {content}
-          </Text>
-        );
-      },
-    },
-    {
-      title: <span className="table-header">Nhà sản xuất</span>,
+      title: "Nhà sản xuất",
       dataIndex: "manufacturers",
       key: "manufacturers",
       width: 200,
-      align: "left",
-      render: (mans) => {
-        const content = mans?.join(", ") || "";
-        return (
-          <Text ellipsis={{ tooltip: content }} style={{ maxWidth: 190, display: "block", textAlign: "left" }}>
-            {content}
-          </Text>
-        );
-      },
+      render: (mans?: Manufacturer[]) =>
+        renderEllipsis(
+          mans && mans.length ? mans.map(m => m.name) : "-",
+          200
+        ),
     },
     {
       title: "",
@@ -380,13 +291,6 @@ export default function DrugListScene() {
                 allowClear
                 onSearch={handleSearch}
                 onPressEnter={(e) => handleSearch(e.currentTarget.value)}
-              />
-              <Button
-                type="primary"
-                shape="circle"
-                icon={<PlusOutlined />}
-                className="add-button"
-                onClick={() => setShowAddDrugModal(true)}
               />
             </div>
           </div>
