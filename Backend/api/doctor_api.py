@@ -14,7 +14,8 @@ from services.doctor_service import (
     get_visited_history_by_doctor,
     get_all_visit_history_by_doctor,
     get_waiting_patients,
-    get_all_patients_by_doctor
+    get_all_patients_by_doctor,
+    get_three_previous_visits
 )
 
 router = APIRouter()
@@ -83,3 +84,6 @@ async def get_waiting_patients_endpoint(doctor_id: int):
 @router.get("/all-patients/{doctor_id}", response_model=ResponseModel)
 async def get_all_patients(doctor_id: int):
     return await get_all_patients_by_doctor(doctor_id)
+@router.get("/previous-patients/{doctor_id}", response_model=ResponseModel)
+async def get_previous_patients(doctor_id: int):
+    return await get_three_previous_visits(doctor_id)

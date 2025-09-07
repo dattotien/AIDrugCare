@@ -21,7 +21,18 @@ export default function PatientInforScene({patient}:PatientInforProps) {
     }
   }, [patient, form]);
   return (
-    <div className="profile-container">
+    <div  style={{
+    position: "relative",
+    width: "100%",
+    height: "60vh",
+    backgroundImage: "url('/src/assets/background.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    overflow: "hidden",
+    flexDirection: "column",
+    display: "flex",
+  }}>
       <div className="profile-header">
         <div className="avatar">
           <UserOutlined style={{ fontSize: "60px", color: "#ffffff", top : "100px"}} />
@@ -36,8 +47,8 @@ export default function PatientInforScene({patient}:PatientInforProps) {
       <div className="profile-body">
         <Card 
         style = {{
-            width : "656px",
-            height : "200px",
+            width : "100%",
+            height : "30vh",
             backgroundColor: "rgba(255,255,255,0.7)",
             top : "50px",
             left : "-1px",
@@ -89,7 +100,14 @@ export default function PatientInforScene({patient}:PatientInforProps) {
         </Form>
         </Card>
       </div>
-    <div className="profile-footer">
+    <div   style={{
+    width: "100%",
+    textAlign: "center",
+    fontSize: "12px",
+    color: "#ffffff",
+    position: "absolute",
+    bottom: "3px",
+  }}>
             Bệnh viện đa khoa A
     </div>
     </div>
