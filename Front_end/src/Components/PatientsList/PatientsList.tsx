@@ -59,7 +59,7 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
     {
       key: "delete",
       label: (
-        <div className="menu-item" onClick={() => handleDelete(record)}>
+        <div onClick={() => handleDelete(record)}>
           Delete
         </div>
       ),
@@ -67,7 +67,7 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
     {
       key: "more",
       label: (
-        <div className="menu-item" onClick={() => handleMore(record)}>
+        <div onClick={() => handleMore(record)}>
           More
         </div>
       ),
@@ -118,7 +118,6 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
 
   return (
     <div>
-      {/* Tabs */}
       <Tabs
         defaultActiveKey="1"
         items={[
