@@ -88,7 +88,7 @@ async def predict_one_drug_interaction(drug_nameA: str, drug_nameB: str, hmgrl_s
 
     if idxA is None or idxB is None:
         return {
-            "success": True,
+            "success": False,
             "message": "Không tìm thấy thuốc trong mô hình",
             "data": ""
         }
@@ -126,7 +126,7 @@ async def get_all_interactions(drug_list: list[str], hmgrl_service):
             results.append({
                 "drug1": drugA,
                 "drug2": drugB,
-                "interation": interaction
+                "interaction": interaction["data"]
             })
 
     return {
