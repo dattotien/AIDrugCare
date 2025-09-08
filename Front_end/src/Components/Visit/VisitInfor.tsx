@@ -376,7 +376,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
                         value={formName}
                         onChange={(value) => setFormName(value)}
                         onSearch={fetchDrugSuggestions}
-                        placeholder="Tên thuốc (DrugBank)"
+                        placeholder="Tên thuốc"
                         style={{ width: "100%" }}
                         notFoundContent={loadingDrugs ? "Đang tải..." : "Không có kết quả"}
                       />
@@ -409,8 +409,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
           </Col>
         </Row>
       </Card>
-
-      <DDIsVisit open={showDDIs} onClose={() => setShowDDIs(false)} />
+      <DDIsVisit open={showDDIs} onClose={()  => setShowDDIs(false)} drugs={drugs} />
     </div>
   );
 }
