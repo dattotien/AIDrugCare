@@ -100,16 +100,6 @@ export default function PatientInforScene({patient}:PatientInforProps) {
         </Form>
         </Card>
       </div>
-    <div   style={{
-    width: "100%",
-    textAlign: "center",
-    fontSize: "12px",
-    color: "#ffffff",
-    position: "absolute",
-    bottom: "3px",
-  }}>
-            Bệnh viện đa khoa A
-    </div>
     </div>
   );
 }

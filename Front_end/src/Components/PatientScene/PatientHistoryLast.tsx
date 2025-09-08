@@ -1,4 +1,5 @@
 import PatientCardHis from "./PatientCardHistory";
+import "./PatientScene.css";
 
 interface Props {
   visits: any[];
@@ -6,28 +7,8 @@ interface Props {
 
 export default function PatientHistoryMost({ visits }: Props) {
   return (
-    <div
-      style={{
-        width: "58vw",
-        height: "65vh",
-        backgroundColor: "rgba(255,255,255,0.7)",
-        borderRadius: "20px",
-        marginTop: "4vh",
-        display: "flex",
-        flexDirection: "column",
-        boxSizing: "border-box",
-      }}
-    >
-      <p
-        style={{
-          fontSize: "20px",
-          fontWeight: "bold",
-          color: "#043bb3",
-          margin: 0,
-          marginLeft: "25px",
-          marginTop: "12px",
-        }}
-      >
+    <div className="patient-his-container">
+      <p className = "patient-his-title">
         Lịch sử khám bệnh gần nhất
       </p>
 

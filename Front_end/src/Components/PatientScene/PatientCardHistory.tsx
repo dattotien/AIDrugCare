@@ -28,33 +28,18 @@ export default function PatientCardHistory({ visit, highlight = "#043bb3" } : Pr
   return (
     <>
       {!showHistory ? (
-        <div
-          style={{
-            width: "55vw",
-            height: "15vh",
-            backgroundColor: "#ffffff",
-            borderRadius: "12px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            padding: "10px 20px",
-            boxSizing: "border-box",
-            margin: "8px",
-            position: "relative",
-          }}
-        >
+        <div className = "patient-card-his">
           {/* Thanh màu bên trái */}
-          <div
-            style={{
-              position: "absolute",
-              left: "0px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: "3px",
-              height: "56px",
-              backgroundColor: highlight,
-              borderRadius: "20px",
-            }}
+          <div style={{
+            position: "absolute",
+            left: "0px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: "3px",
+            height: "56px",
+            backgroundColor: highlight,
+             borderRadius: "20px",
+          }}
           />
 
           {/* Nội dung */}

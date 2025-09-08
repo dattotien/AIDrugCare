@@ -28,8 +28,9 @@ import SettingIconDefault from "../../assets/setting_blue.png";
 import SettingIconActive from "../../assets/setting_white.png";
 import LogoutIconDefault from "../../assets/logout_blue.png";
 import LogoutIconActive from "../../assets/logout_white.png";
-import PatientOneHistory from "../PatientHistory/PatientOneHistory.tsx";
 import { useNavigate } from "react-router-dom";
+import PatientOneHistory from "../PatientHistory/PatientOneHistory.tsx";
+
 import "./DoctorScene.css";
 import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
 import axios from "axios";
@@ -85,7 +86,7 @@ const extraItems = [
 ];
 
 export default function DoctorScene() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const [accountInfo, setAccountInfo] = useState({
     name: "",
     email: "",
@@ -143,15 +144,12 @@ export default function DoctorScene() {
   };
 
   const handleMenuSelect = ({ key }: { key: string }) => {
-    if (key === "logout") {
-      // Xóa dữ liệu lưu trữ
+    if(key === "logout") {
+      console.log("clicked");
+      alert("Đăng xuất thành công");
       localStorage.removeItem("doctorId");
-      localStorage.removeItem("token");
-
       navigate("/");
-      return;
     }
-
     setSelectedKey(key);
     setSelectedPatient(null);
   };

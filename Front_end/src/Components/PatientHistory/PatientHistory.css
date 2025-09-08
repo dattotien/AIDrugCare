@@ -85,3 +85,180 @@ btn:focus,
     background-color: #595959 !important;
     border-color: #595959 !important;
 }
+
+.flex-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #043bb3;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.patient-circle-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #043bb3;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+.patient-fixed-footer {
+  height: 6.5vh;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 37px;
+}
+.circle-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #737373;
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.patient-history-container {
+  width: 96%;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.patient-history-header {
+  text-align: center;
+}
+
+.patient-history-header p {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.patient-history-header p.small {
+  margin-top: -10px;
+  font-size: 12px;
+}
+
+.patient-history-date {
+  width: 90%;
+  text-align: right;
+}
+
+.patient-history-title {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.patient-history-title p {
+  margin: 0;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.patient-info-row {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.patient-info-row.small {
+  margin-top: -20px;
+}
+
+.patient-info-field {
+  margin-left: 10px;
+}
+
+.patient-history-section {
+  margin-top: 5px;
+  width: 90%;
+}
+
+.prescription-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: -20px;
+}
+
+.prescription-header .pres-id {
+  color: #043bb3;
+  margin-left: 10px;
+}
+
+.table-container {
+  margin-top: -10px;
+  width: 90%;
+}
+
+.footer-button {
+  text-align: center;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.footer-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  background: #000;
+  color: #fff;
+  border-radius: 30px;
+  padding: 8px 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.footer-actions .print {
+  border-radius: 20px;
+  background-color: #d12326;
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.footer-actions .send {
+  border-radius: 20px;
+  background-color: #737373;
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.footer-actions .close {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.more-button {
+  padding: 0 22px;
+  background-color: black;
+  border-radius: 20px;
+}
+
+.more-button img {
+  width: 12px;
+  height: 15px;
+}
