@@ -82,7 +82,15 @@ async def predict_one_drug_interaction(drug_nameA: str, drug_nameB: str, hmgrl_s
             "message": "Không tìm thấy thuốc trong cơ sở dữ liệu",
             "data": ""
         }
-
+    key = "-".join(sorted([str(drug_idA), str(drug_idB)]))
+    if(key in hmgrl_service.inter_dict):
+        label = hmgrl_service.inter_dict[key]
+        label = label.replace("[drug1]", drug_nameA).replace("[drug2]", drug_nameB)
+        return{
+            "success": True,
+            "message": "Dự đoán thành công",
+            "data": label
+        }
     idxA = hmgrl_service.drugbankid2id.get(drug_idA, [None])[0]
     idxB = hmgrl_service.drugbankid2id.get(drug_idB, [None])[0]
 
@@ -111,22 +119,76 @@ async def get_all_interactions(drug_list: list[str], hmgrl_service):
     results = []
     n = len(drug_list)
 
+    drug_info = {}
+    for drug in drug_list:
+        candidates = [drug, drug.lower()]
+        drug_id = next((hmgrl_service.name_to_dbid[name] 
+                        for name in candidates if name in hmgrl_service.name_to_dbid), None)
+        if drug_id is None:
+            drug_info[drug] = {"id": None, "idx": None}
+            continue
+
+        idx = hmgrl_service.drugbankid2id.get(drug_id, [None])[0]
+        drug_info[drug] = {"id": drug_id, "idx": idx}
+
+    # --- B2: sinh cặp và gom batch ---
+    drug_pairs = []
+    pair_meta = []
+
     for i in range(n):
         for j in range(i + 1, n):
-            drugA = drug_list[i]
-            drugB = drug_list[j]
+            drugA, drugB = drug_list[i], drug_list[j]
+            infoA, infoB = drug_info[drugA], drug_info[drugB]
 
-            interaction = await predict_one_drug_interaction(drugA, drugB, hmgrl_service)
- 
-            # Nếu predict thành công nhưng không có nhãn tương tác, ta gán "Không có tương tác"
-            if interaction["success"] and not interaction["data"]:
-                interaction["data"] = f"{drugA} và {drugB}: Không có tương tác"
+            # Nếu không có trong DB
+            if infoA["id"] is None or infoB["id"] is None:
+                results.append({
+                    "drug1": drugA,
+                    "drug2": drugB,
+                    "interaction": "Không tìm thấy thuốc trong cơ sở dữ liệu"
+                })
+                continue
 
-            # Ghi thêm cặp thuốc vào kết quả
+            # Check dict tĩnh trước
+            key = "-".join(sorted([str(infoA["id"]), str(infoB["id"])]))
+            if key in hmgrl_service.inter_dict:
+                label = hmgrl_service.inter_dict[key]
+                label = label.replace("[drug1]", drugA).replace("[drug2]", drugB)
+                results.append({
+                    "drug1": drugA,
+                    "drug2": drugB,
+                    "interaction": label
+                })
+                continue
+
+            # Nếu không có trong dict, chuẩn bị batch
+            if infoA["idx"] is None or infoB["idx"] is None:
+                results.append({
+                    "drug1": drugA,
+                    "drug2": drugB,
+                    "interaction": "Không có tương tác thuốc"
+                })
+                continue
+
+            drug_pairs.append([int(infoA["idx"]), int(infoB["idx"])])
+            pair_meta.append((drugA, drugB))
+
+    # --- B3: predict batch ---
+    if drug_pairs:
+        label_indices = hmgrl_service.predict(drug_pairs)
+
+        if isinstance(label_indices, (list, np.ndarray)):
+            label_indices = [int(x) for x in label_indices]
+        else:
+            label_indices = label_indices.cpu().numpy().tolist()
+
+        for (drugA, drugB), label_idx in zip(pair_meta, label_indices):
+            label = hmgrl_service.label_mapping[str(label_idx)]
+            label = label.replace("[drug1]", drugA).replace("[drug2]", drugB)
             results.append({
                 "drug1": drugA,
                 "drug2": drugB,
-                "interaction": interaction["data"]
+                "interaction": label
             })
 
     return {
