@@ -1,11 +1,11 @@
 .container {
-  width: 80vw;
+  width: 98%;
   padding-top: 0;
   background-color: rgba(255, 255, 255, 0.501);
 }
 
 .header {
-  padding-top:2vh;
+  padding-top: 2vh;
   text-align: center;
 }
 
@@ -29,9 +29,9 @@
 }
 .card {
   border-radius: 20px;
-  width: 70vw;
+  width: 80%;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
-  margin: 0 auto; /* tự động căn giữa ngang */
+  margin: 0px auto;
 }
 .searchRow {
   display: flex;
@@ -40,17 +40,19 @@
   justify-content: center;
 }
 
-.searchInput :global(.ant-input) {
-  min-width: 20vw !important;
-  min-height: 7vh !important;
+.searchInput {
+  width: 20vw !important;
 }
 
-.searchInput :global(.ant-input-search-button) {
-  min-height: 7vh !important;
+.searchInput :global(.ant-select-selector) {
+  height: 6vh !important;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .button {
-  width: 20vw;
+  min-width: 20vw;
   border-radius: 40px;
   background-color: #043bb3 !important;
   color: white !important;
@@ -67,28 +69,28 @@
 }
 
 .noteSection {
-  background-color: #C6E2FD;
+  background-color: #c6e2fd;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
 }
 
 .interactionCard {
-  background-color: #C6E2FD;
+  background-color: #c6e2fd;
 }
 .noInteractionCard {
   background-color: #fdc6c6;
 }
-.interactionBody  {
+.interactionBody {
   display: flex;
   flex-direction: row;
   gap: 2vw;
 }
-.interactionCard :global(.ant-card-body){
-  padding: 0px
+.interactionCard :global(.ant-card-body) {
+  padding: 0px;
 }
-.noInteractionCard :global(.ant-card-body){
-  padding: 0px
+.noInteractionCard :global(.ant-card-body) {
+  padding: 0px;
 }
 .interactionHeader {
   padding-top: 2vh;
@@ -115,13 +117,13 @@
   margin-top: 0px;
 }
 .warningCard {
-  background-color: #C6E2FD;
+  background-color: #c6e2fd;
   border-radius: 5px;
   border-color: transparent;
   margin: 2vh;
 }
 
-.warningBody  {
+.warningBody {
   display: flex;
   flex-direction: row;
   gap: 0.9vw;

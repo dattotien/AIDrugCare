@@ -106,7 +106,7 @@ export default function DrugListScene() {
     {
       key: "more",
       label: (
-        <div className="menu-item" onClick={() => handleMore(record)}>
+        <div onClick={() => handleMore(record)}>
           More
         </div>
       ),
@@ -174,7 +174,6 @@ export default function DrugListScene() {
 
   return (
     <div>
-      {/* Tabs */}
       <Tabs
         defaultActiveKey="1"
         items={[
@@ -193,8 +192,6 @@ export default function DrugListScene() {
           },
         ]}
       />
-
-      {/* Table */}
       <Table
         className="drug-table"
         scroll={{ x: "max-content" }}

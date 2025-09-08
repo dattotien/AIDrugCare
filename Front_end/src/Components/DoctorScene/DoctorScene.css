@@ -15,11 +15,7 @@
   flex-direction: column;
   padding: 2vh 0;
   box-shadow: 6px 0 8px rgba(0, 0, 0, 0.08);
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  min-height: 100vh;
+  max-height: 100vh;
 }
 .doctor-body {
   background-color: transparent;
@@ -63,7 +59,6 @@
 }
 
 .doctor-content {
-  margin-left: 13.5vw;
   width: 100%;
   padding-left: 2vw;
   min-height: 100vh;

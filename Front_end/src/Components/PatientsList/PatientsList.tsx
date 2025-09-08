@@ -97,7 +97,6 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
 
   return (
     <div>
-      {/* Tabs */}
       <Tabs
         defaultActiveKey="1"
         items={[

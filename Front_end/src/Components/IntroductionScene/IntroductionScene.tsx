@@ -57,6 +57,7 @@ function IntroductionScene() {
               icon={<RightOutlined />}
               iconPosition="end"
               className={styles.login_doctor}
+              onClick={() => navigate("/doctor/login")}
             >
               Login as a Doctor
             </Button>
@@ -65,7 +66,7 @@ function IntroductionScene() {
               icon={<RightOutlined />}
               iconPosition="end"
               className={styles.login_patient}
-              onClick={() => navigate("/patientLogin")}
+              onClick={() => navigate("/patient/login")}
             >
               Login as a Patient
             </Button>

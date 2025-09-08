@@ -11,22 +11,26 @@ export default function DoctorLoginScence() {
   const navigate = useNavigate();
   const handleOnLogin = async () => {
     try {
-        const result = await axios.post("http://localhost:8000/login-doctor", null, {
+      const result = await axios.post(
+        "http://localhost:8000/login-doctor",
+        null,
+        {
           params: {
             email: username,
             password: password,
           },
-        });
-        if (result.data.success) {
-          const doctorId = result.data.data._id;
-          console.log("Saving doctorId to localStorage:", doctorId);
-          localStorage.setItem("doctorId", String(doctorId)); 
-          navigate("/dashboard");
         }
-      } catch (error: any) {
-        console.error("Login failed:", error.response?.data || error.message);
+      );
+      if (result.data.success) {
+        const doctorId = result.data.data._id;
+        console.log("Saving doctorId to localStorage:", doctorId);
+        localStorage.setItem("doctorId", String(doctorId));
+        navigate("/doctor/dashboard");
       }
-    };
+    } catch (error: any) {
+      console.error("Login failed:", error.response?.data || error.message);
+    }
+  };
 
   return (
     <div
@@ -86,7 +90,7 @@ export default function DoctorLoginScence() {
         </div>
 
         <div>
-          <Button className={styles.button1}>
+          <Button className={styles.button1} onClick={() => navigate("/")}>
             <span
               style={{ display: "flex", alignItems: "center", gap: "10px" }}
             >
@@ -95,7 +99,7 @@ export default function DoctorLoginScence() {
             </span>
           </Button>
 
-          <Button className={styles.button2}>
+          <Button className={styles.button2} onClick={() => navigate("/")}>
             <span
               style={{ display: "flex", alignItems: "center", gap: "10px" }}
             >
@@ -111,16 +115,24 @@ export default function DoctorLoginScence() {
           <h2 className={styles.title}>TRY TO SIGN IN</h2>
           <p></p>
           <p className={styles.text}>Tên đăng nhập</p>
-          <Input className={styles.input} value={username} onChange={(e) => setUsername(e.target.value)}></Input>
+          <Input
+            className={styles.input}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          ></Input>
           <p className={styles.text}>Mật khẩu</p>
-          <Input.Password className={styles.input} value={password} onChange={(e) => setPassword(e.target.value)}></Input.Password>
+          <Input.Password
+            className={styles.input}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          ></Input.Password>
           <div style={{ marginTop: "2vh", marginLeft: "1vw" }}>
             <Checkbox style={{ color: "#043BB3" }}>Nhớ mật khẩu</Checkbox>
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button className={styles.button} onClick={
-              handleOnLogin
-            }>LOGIN</Button>
+            <Button className={styles.button} onClick={handleOnLogin}>
+              LOGIN
+            </Button>
           </div>
         </Card>
       </div>
