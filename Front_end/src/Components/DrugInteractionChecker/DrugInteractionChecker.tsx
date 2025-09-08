@@ -85,22 +85,28 @@ export default function DrugInteractionChecker() {
             <div>
               <p>Thuốc thứ nhất</p>
               <AutoComplete
-                style={{ width: 300 }}
                 options={optionsA}
+                className={styles.searchInput}
                 value={drugA}
                 onSearch={(val) => fetchDrugOptions(val, setOptionsA)}
-                onChange={(val) => setDrugA(val)}
+                onChange={(val) => {
+                  setDrugA(val);
+                  setResult(null);
+                }}
                 placeholder="Nhập tên thuốc"
               />
             </div>
             <div>
               <p>Thuốc thứ hai</p>
               <AutoComplete
-                style={{ width: 300 }}
+                className={styles.searchInput}
                 options={optionsB}
                 value={drugB}
                 onSearch={(val) => fetchDrugOptions(val, setOptionsB)}
-                onChange={(val) => setDrugB(val)}
+                onChange={(val) => {
+                  setDrugB(val);
+                  setResult(null);
+                }}
                 placeholder="Nhập tên thuốc"
               />
             </div>
