@@ -8,7 +8,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<IntroductionScene />} />
-        <Route path="/patientLogin" element={<PatientLoginScene />} />
+        <Route path="/patient/login" element={<PatientLoginScene />} />
         <Route path="/*" element={<PatientScene />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

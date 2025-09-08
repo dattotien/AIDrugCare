@@ -409,8 +409,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
           </Col>
         </Row>
       </Card>
-
-      <DDIsVisit open={showDDIs} onClose={() => setShowDDIs(false)} />
+      <DDIsVisit open={showDDIs} onClose={()  => setShowDDIs(false)} drugs={drugs} />
     </div>
   );
 }
