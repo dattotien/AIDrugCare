@@ -300,7 +300,7 @@ async def get_three_previous_visits(doctor_id: int):
             "diagnosis": visit.diagnosis,
             "patient_id": visit.patient_id,
             "visit_date": visit.visit_date,
-            "visit_id":visit.id,
+            "visit_id": visit.id,
         })
 
     return {
