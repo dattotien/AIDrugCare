@@ -4,7 +4,7 @@ import json
 import torch.nn.functional as F
 from .model import HMGRL, gcnnormalization, adj_Heter_gene, args
 from fastapi import Request
-device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def get_hmgrl_service(request: Request):
     return request.app.state.hmgrl_service
@@ -22,6 +22,8 @@ class HMGRLService:
             self.N_three_attribute = torch.tensor(
             [2033, 1589, 285], dtype=torch.long, device="cpu"
         )
+        with open(data_path + "/drug_interaction.json", "r") as f:
+            self.inter_dict = json.load(f)
         self.load_model(model_path)
         self.load_data(data_path)
         with open(data_path + "/label_mapping.json", "r") as f:

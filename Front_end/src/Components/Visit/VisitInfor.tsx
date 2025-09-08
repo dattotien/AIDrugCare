@@ -36,6 +36,25 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const [doctorwork, setDoctorWork] = useState<string>("");
   const [patientHistory, setPatientHistory] = useState<string>("");
 
+  // ---- diagnosis ----
+  const [diagnosis, setDiagnosis] = useState("");
+  const [diagnosisSaved, setDiagnosisSaved] = useState(false);
+  const [editingDiagnosis, setEditingDiagnosis] = useState(false);
+
+  const handleSaveDiagnosis = () => {
+    if (!diagnosis.trim()) {
+      alert("Vui lòng nhập chẩn đoán trước khi ghi nhận!");
+      return;
+    }
+    setDiagnosisSaved(true);
+    setEditingDiagnosis(false);
+  };
+
+  const handleEditDiagnosis = () => {
+    setEditingDiagnosis(true);
+  };
+
+  // ---- fetch doctor ----
   useEffect(() => {
     const storedDoctorId = localStorage.getItem("doctorId");
     const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
@@ -56,6 +75,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     fetchDoctor();
   }, []);
 
+  // ---- fetch history ----
   useEffect(() => {
     const fetchHistory = async () => {
       try {
@@ -96,7 +116,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     { title: "Ngày tạo", dataIndex: "date", key: "date", width: 140 },
   ];
 
-  // ---- đơn thuốc ----
+  // ---- prescription ----
   const [drugs, setDrugs] = useState<DrugRow[]>([]);
 
   const removeDrug = (id: string) => {
@@ -136,7 +156,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const [formTime, setFormTime] = useState("");
   const [formNote, setFormNote] = useState("");
 
-  // gợi ý từ drugbank
   const [options, setOptions] = useState<{ value: string }[]>([]);
   const [loadingDrugs, setLoadingDrugs] = useState(false);
 
@@ -170,14 +189,16 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     if (!formName.trim()) return;
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/search?name=${encodeURIComponent(formName)}`);
+      const res = await fetch(
+        `http://127.0.0.1:8000/search?name=${encodeURIComponent(formName)}`
+      );
       const json = await res.json();
 
       if (json.success && json.data.length > 0) {
-        const drug = json.data[0]; 
+        const drug = json.data[0];
         const next: DrugRow = {
-          id: drug._id,   
-          name: drug.generic_name,    
+          id: drug._id,
+          name: drug.generic_name,
           dose: formDose.trim() || "1 viên / ngày",
           time: formTime.trim() || "Sáng",
           note: formNote.trim() || "Không có",
@@ -199,7 +220,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
 
   const todayVN = useMemo(() => {
     const d = new Date();
-    return `Ngày ${d.getDate()} tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
+    return `ngày ${d.getDate()} tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
   }, []);
 
   return (
@@ -277,24 +298,54 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
         />
       </Card>
 
-      {/* Chuẩn đoán + tiền sử */}
+      {/* Chẩn đoán + tiền sử */}
       <Card bordered className="bottom-card">
         <Row gutter={16}>
           {/* Trái */}
           <Col xs={24} lg={16}>
             <div className="diagnosis-box">
-              <Text style={{ fontWeight: 600 }}>Chuẩn đoán:</Text>
-              <Input.TextArea
-                rows={4}
-                placeholder="Nhập thông tin tại đây"
-                className="input-radius"
-              />
-              <div className="btn-row">
-                <Button type="primary">Ghi nhận</Button>
-                <Button type="primary" onClick={() => setShowPrescription(true)}>
-                  Kê đơn
-                </Button>
-              </div>
+              <Text style={{ fontWeight: 600 }}>Chẩn đoán:</Text>
+
+              {!diagnosisSaved || editingDiagnosis ? (
+                <>
+                  <Input.TextArea
+                    rows={4}
+                    placeholder="Nhập thông tin tại đây"
+                    className="input-radius"
+                    value={diagnosis}
+                    onChange={(e) => setDiagnosis(e.target.value)}
+                  />
+                  <div className="btn-row">
+                    <Button type="primary" onClick={handleSaveDiagnosis}>
+                      {diagnosisSaved ? "Cập nhật" : "Ghi nhận"}
+                    </Button>
+                    {diagnosisSaved && (
+                      <Button onClick={() => setEditingDiagnosis(false)}>Hủy</Button>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p
+                    style={{
+                      minHeight: "60px",
+                      border: "1px solid #d9d9d9",
+                      borderRadius: 8,
+                      padding: 8,
+                    }}
+                  >
+                    {diagnosis}
+                  </p>
+                  <div className="btn-row">
+                    <Button onClick={handleEditDiagnosis}>Sửa</Button>
+                    {!showPrescription && (
+                      <Button type="primary" onClick={() => setShowPrescription(true)}>
+                        Kê đơn
+                      </Button>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Đơn thuốc */}
@@ -376,7 +427,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
                         value={formName}
                         onChange={(value) => setFormName(value)}
                         onSearch={fetchDrugSuggestions}
-                        placeholder="Tên thuốc (DrugBank)"
+                        placeholder="Tên thuốc"
                         style={{ width: "100%" }}
                         notFoundContent={loadingDrugs ? "Đang tải..." : "Không có kết quả"}
                       />
@@ -409,7 +460,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
           </Col>
         </Row>
       </Card>
-      <DDIsVisit open={showDDIs} onClose={()  => setShowDDIs(false)} drugs={drugs} />
+      <DDIsVisit open={showDDIs} onClose={() => setShowDDIs(false)} drugs={drugs} />
     </div>
   );
 }
