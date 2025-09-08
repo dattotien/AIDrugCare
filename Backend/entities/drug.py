@@ -11,8 +11,9 @@ class BrandName(BaseModel):
     country: Optional[str] = None
 
 class DrugInteraction(BaseModel):
-    drug_id: Optional[str] = None
+    drugbank_id: Optional[str] = None
     name: Optional[str] = None
+    description: Optional[str] = None
 
 class Drug(Document):
     id: str = Field(alias="_id")
@@ -50,12 +51,14 @@ class Drug(Document):
             "molecular_formula": "C6484H10042N173202O2023S36",
             "drug_interaction": [
                 {
-                    "drug_id": "DB00316",
-                    "name": "Infliximab"
+                    "drugbank_id": "DB00316",
+                    "name": "Infliximab",
+                    "description": "Infliximab có thể làm giảm hiệu quả của Cetuximab"
                 },
                 {
-                    "drug_id": "DB00945",
-                    "name": "Warfarin"
+                    "drugbank_id": "DB00945",
+                    "name": "Warfarin",
+                    "description": "Nguy cơ chảy máu tăng khi dùng chung với Cetuximab"
                 }
             ],
             "synonyms": ["Cetuximab", "Cétuximabum"],
