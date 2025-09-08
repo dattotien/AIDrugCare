@@ -1,4 +1,13 @@
-import { Button, Dropdown, Table, Input, Modal, Pagination } from "antd";
+import {
+  Button,
+  Dropdown,
+  Table,
+  Input,
+  Modal,
+  Pagination,
+  Tabs,
+  Badge,
+} from "antd";
 import { useState, useEffect } from "react";
 import { MoreOutlined, FilterOutlined } from "@ant-design/icons";
 import styles from "./DoctorHistoryScene.module.css";
@@ -7,7 +16,7 @@ import backPic from "../../assets/Group3.png";
 import axios from "axios";
 import PatientOneHistory from "../PatientHistory/PatientOneHistory";
 import type { ColumnsType } from "antd/es/table";
-
+import listDrug from "../../assets/list (1).png";
 interface History {
   id: string;
   patientId: string;
@@ -92,7 +101,6 @@ export default function DoctorHistory() {
         <div
           style={{
             color: "#000000",
-            minWidth: 80,
             textAlign: "center",
           }}
           onMouseEnter={(e) => {
@@ -149,66 +157,67 @@ export default function DoctorHistory() {
 
   return (
     <div className={styles.container}>
-      <div
-        className={styles.tabAll}
-        style={{ color: "#1c57d5ff" }}
-      >
-        <span>Đã khám</span>
-        <div
-          className={styles.tabCount}
-          style={{
-            backgroundColor: "#043bb3",
-          }}
-        >
-          {filteredList.length}
-        </div>
-      </div>
-
-      <div
-        className={styles.background}
-        style={{ backgroundImage: `url(${backPic})` }}
-      >
-        <div style={{ width: "950px", borderRadius: 0 }}>
-          <Table
-            size="small"
-            style={{ overflow: "hidden", marginLeft: 10, marginTop: 40 }}
-            rowKey="id"
-            columns={columns}
-            dataSource={paginatedData}
-            rowSelection={{
-              selectedRowKeys,
-              onChange: (newSelectedRowKeys) => {
-                setSelectedRowKeys(newSelectedRowKeys);
-                setShowActionBar(newSelectedRowKeys.length > 0);
-              },
-              preserveSelectedRowKeys: true,
-            }}
-            pagination={false}
-            title={() => (
-              <div className={styles.tableTitle}>
-                <Button icon={<FilterOutlined />}>Filter</Button>
-
-                <Pagination
-                  current={currentPage}
-                  pageSize={pageSize}
-                  total={filteredList.length}
-                  onChange={(page) => setCurrentPage(page)}
-                  showSizeChanger={false}
+      <Tabs
+        defaultActiveKey="1"
+        items={[
+          {
+            key: "1",
+            label: (
+              <span className="tab-label">
+                <img src={listDrug} alt="list" className="tab-icon" />
+                <b>Đã khám</b>
+                <Badge
+                  count={
+                    filteredList.length > 1000 ? "1000+" : filteredList.length
+                  }
+                  style={{ backgroundColor: "var(--primary-color)" }}
                 />
+              </span>
+            ),
+          },
+        ]}
+      />
 
-                <div className={styles.searchBox}>
-                  <Input.Search
-                    placeholder="Tìm lịch sử khám tại đây"
-                    style={{ width: 250 }}
-                    allowClear
-                    onSearch={handleSearch}
-                    onPressEnter={(e) => handleSearch(e.currentTarget.value)}
-                  />
-                </div>
+      <div className={styles.background}>
+        <Table
+          size="small"
+          className={styles.table}
+          rowKey="id"
+          columns={columns}
+          dataSource={paginatedData}
+          rowSelection={{
+            selectedRowKeys,
+            onChange: (newSelectedRowKeys) => {
+              setSelectedRowKeys(newSelectedRowKeys);
+              setShowActionBar(newSelectedRowKeys.length > 0);
+            },
+            preserveSelectedRowKeys: true,
+          }}
+          pagination={false}
+          title={() => (
+            <div className={styles.tableTitle}>
+              <Button icon={<FilterOutlined />}>Filter</Button>
+
+              <Pagination
+                current={currentPage}
+                pageSize={pageSize}
+                total={filteredList.length}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger={false}
+              />
+
+              <div className={styles.searchBox}>
+                <Input.Search
+                  placeholder="Tìm lịch sử khám tại đây"
+                  style={{ width: 250 }}
+                  allowClear
+                  onSearch={handleSearch}
+                  onPressEnter={(e) => handleSearch(e.currentTarget.value)}
+                />
               </div>
-            )}
-          />
-        </div>
+            </div>
+          )}
+        />
       </div>
 
       {/* Action Bar */}
@@ -255,7 +264,12 @@ export default function DoctorHistory() {
           onCancel={() => setShowHistoryInfoModal(false)}
           footer={null}
         >
-          <div style={{ height: "500px", overflowY: "auto" }}>
+          <div
+            style={{
+              height: "85vh",
+              overflowY: "auto",
+            }}
+          >
             <PatientOneHistory visitId={selectedHistory.id} />
           </div>
         </Modal>

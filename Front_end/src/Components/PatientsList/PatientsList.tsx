@@ -10,7 +10,6 @@ interface PatientsListProps {
   onSelectPatient?: (patient: any) => void;
 }
 export default function PatientsList({ onSelectPatient }: PatientsListProps) {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showActionBar, setShowActionBar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
@@ -45,10 +44,6 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
     setCurrentPage(1);
   };
 
-  const handleDelete = (record: any) => {
-    setPatientList((prev) => prev.filter((d) => d._id !== record._id));
-  };
-
   const handleMore = (record: any) => {
     if (onSelectPatient) {
       onSelectPatient(record); // gọi ra DoctorScene
@@ -57,18 +52,10 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
 
   const menuItems = (record: any) => [
     {
-      key: "delete",
-      label: (
-        <div className="menu-item" onClick={() => handleDelete(record)}>
-          Delete
-        </div>
-      ),
-    },
-    {
       key: "more",
       label: (
         <div className="menu-item" onClick={() => handleMore(record)}>
-          More
+          Khám
         </div>
       ),
     },
@@ -102,14 +89,6 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
     },
   ];
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (newSelectedRowKeys: React.Key[]) => {
-      setSelectedRowKeys(newSelectedRowKeys);
-      setShowActionBar(newSelectedRowKeys.length > 0);
-    },
-  };
-
   const pageSize = 10;
   const paginatedData = filteredList.slice(
     (currentPage - 1) * pageSize,
@@ -118,7 +97,6 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
 
   return (
     <div>
-      {/* Tabs */}
       <Tabs
         defaultActiveKey="1"
         items={[
@@ -145,7 +123,6 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
         rowKey="_id"
         columns={columns}
         dataSource={paginatedData}
-        rowSelection={rowSelection}
         pagination={false}
         title={() => (
           <div className="table-header-bar">
