@@ -61,10 +61,138 @@
 }
 
 .ant-dropdown-menu .ant-dropdown-menu-item:hover {
-  background-color: #043bb3!important; /* nền xanh nhạt khi hover */
+  background-color: #043bb3!important; 
   color: #ffffff !important;
 }
 .ant-dropdown-menu {
   width: 80px;
   text-align: center;
+}
+
+.patient-his-container {
+  width: 58vw;
+  height: 65vh;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  margin-top: 4vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+.patient-his-title{
+    font-size: 20px;
+  font-weight: bold;
+  color: #043bb3;
+  margin: 0;
+  margin-left: 25px;
+  margin-top: 12px;
+}
+
+.patient-col-container {
+  width: 21vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  align-items: center;
+  justify-items: center;
+  border-radius: 5px;
+  padding-top: 6vh;
+}
+
+.patient-col-label {
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.patient-col-input {
+  font-size: 12px;
+  margin: 0;
+  text-align: right;
+}
+
+.patient-col-btn {
+  color: #ffffff !important;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #043bb3 !important;
+  border-radius: 10px;
+  width: 15vw;
+  height: 5vh;
+  text-align: center;
+  margin-top: 15vh;
+  border: 1px solid #043bb3; 
+  cursor: pointer;
+}
+
+
+.patient-card-his {
+  width: 55vw;
+  height: 15vh;
+  background-color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  margin: 8px;
+  position: relative;
+}
+
+/* Container chung */
+.patient-card-count-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 2vw;
+  margin-top: 2vw;
+  width: 58vw;
+}
+
+.patient-card-count-box {
+  flex: 1;
+  height: 15vh;
+  background-color: #fff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.patient-card-count-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+  margin-top: 2.2vw;
+  margin-left: 4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.patient-card-count-img {
+  width: 28px;
+  height: 28px;
+}
+
+.patient-card-count-text {
+  margin-top: 20px; 
+  margin-left: 8px;
+}
+
+.patient-card-count-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #043bb3;
+  margin: 0;
+}
+
+.patient-card-count-label {
+  margin: 0;
+  font-size: 14px;
+  color: #737373;
 }

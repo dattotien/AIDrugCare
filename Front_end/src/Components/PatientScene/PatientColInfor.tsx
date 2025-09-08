@@ -4,7 +4,7 @@ import {UserOutlined, } from "@ant-design/icons";
 import PatientInforScene from "../PatientInformation/PatientInformationScene";
 import dayjs from "dayjs";
 import arrowLogo from "../../assets/arrow-right (1).png"
-import "../PatientScene/PatientScene.css";
+import "./PatientScene.css";
 interface PatientProps {
   patient: any; 
 }
@@ -13,19 +13,7 @@ export default function PatientColInfor({patient} : PatientProps){
     const [open, setOpen] = useState(false);
 
     return (
-        <div
-            style={{
-                width: "21vw",
-                height: "100vh",
-                backgroundColor:"rgba(255,255,255,0.7)",
-                display: "flex",
-                flexDirection: "column", 
-                overflow: "hidden",
-                alignItems: "center",
-                justifyItems: "center",
-                borderRadius: "5px",
-                paddingTop: "6vh"
-            }}>
+        <div className = "patient-col-container">
              <Avatar
                 className="avatar1"
                 style={{ marginBottom: "6px", cursor: "pointer" }}
@@ -45,37 +33,26 @@ export default function PatientColInfor({patient} : PatientProps){
                     marginTop: "10px"
                     }}
                 >
-                <p style={{ fontSize : "12px", fontWeight: "bold", margin: 0 }}>Họ và tên:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.name}</p>
+                <p className= "patient-col-label">Họ và tên:</p>
+                <p className= "patient-col-input">{patient.name}</p>
 
-                <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>Giới tính:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.gender}</p>
+                <p className= "patient-col-label">Giới tính:</p>
+                <p className= "patient-col-input">{patient.gender}</p>
 
-                <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>Quê quán:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.address}</p>
+                <p className= "patient-col-label">Quê quán:</p>
+                <p className= "patient-col-input">{patient.address}</p>
 
-                <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>Ngày sinh:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{dayjs(patient.dob).format("YYYY/MM/DD")}</p>
+                <p className= "patient-col-label">Ngày sinh:</p>
+                <p className= "patient-col-input">{dayjs(patient.dob).format("YYYY/MM/DD")}</p>
 
-                <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>CCCD:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.cccd}</p>
+                <p className= "patient-col-label">CCCD:</p>
+                <p className= "patient-col-input">{patient.cccd}</p>
 
-                <p style={{ fontSize : "12px",fontWeight: "bold", margin: 0 }}>Số BHYT:</p>
-                <p style={{ fontSize : "12px",margin: 0 , textAlign: "right"}}>{patient.bhyt_code}</p>
+                <p className= "patient-col-label">Số BHYT:</p>
+                <p className= "patient-col-input">{patient.bhyt_code}</p>
             </div>
 
-            <Button type="primary" disabled style = {{
-                color : "#ffffff",
-                fontSize : "12px",
-                fontWeight : "bold",
-                backgroundColor : "#043bb3",
-                borderRadius: "10px",
-                width: "15vw",
-                height : "5vh",
-                textAlign: "center",
-                marginTop: "15vh",
-                borderColor: "#043bb3"
-            }}>ĐẶT LỊCH KHÁM
+            <Button type="primary" disabled className = "patient-col-btn">ĐẶT LỊCH KHÁM
             <img src={arrowLogo} alt="ArrowLogo" style={{ width: "18px", height: "18px" }}></img>
             </Button>
 

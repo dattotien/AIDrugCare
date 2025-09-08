@@ -6,7 +6,8 @@ from entities.prescription_detail import PrescriptionDetail
 from entities.medical_history import Medical_History
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
-
+from datetime import datetime
+from dateutil.parser import parse
 async def get_profile_by_id(profile_id: int):
     profile = await Patient.find_one(Patient.id == profile_id)
     if profile:
@@ -103,19 +104,30 @@ async def get_latest_visit_day(patient_id: int):
 
 async def get_next_visit_day(patient_id: int):
     latest_visit = await Visit.find(Visit.patient_id == patient_id).sort(-Visit.visit_date).first_or_none()
-    if latest_visit:
-        next_visit_day = latest_visit.visit_date + timedelta(days=30)  # khám định kỳ theo tháng
-        return {
-            "success": True,
-            "message": "Lấy ngày tái khám thành công",
-            "data": next_visit_day
-        }
+    if latest_visit and latest_visit.visit_date:
+        try:
+            visit_date = (
+                latest_visit.visit_date
+                if isinstance(latest_visit.visit_date, datetime)
+                else parse(str(latest_visit.visit_date))
+            )
+            next_visit_day = visit_date + timedelta(days=30)
+            return {
+                "success": True,
+                "message": "Lấy ngày tái khám thành công",
+                "data": next_visit_day.strftime("%Y-%m-%d")  # format đẹp
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "message": f"Lỗi xử lý ngày khám: {str(e)}",
+                "data": None
+            }
     return {
         "success": False,
-        "message": "Không tìm thấy lịch sử khám bệnh",
+        "message": "Không tìm thấy lịch sử khám bệnh hoặc ngày khám không hợp lệ",
         "data": None
     }
-    
 async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
     visit = await Visit.get(visit_id)
     if not visit:
