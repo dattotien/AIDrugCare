@@ -280,7 +280,14 @@ export default function DoctorScene() {
         </div>
 
         <div className="doctor-body">
-          {selectedKey === "1" && <DoctorDashBoard />}
+          {selectedKey === "1" && <DoctorDashBoard 
+            onSelectPatient={(patient: any) => 
+            {
+                setSelectedKey("4");          // chuyển sang Patients tab
+                setSelectedPatient(patient);  // mở VisitInfor hoặc History
+            }} 
+            onSeeAllPatients={() => setSelectedKey("4")}  // chuyển sang Patients tab
+            />}
           {selectedKey === "2" && <DrugListScene />}
           {selectedKey === "3" && <DoctorHistoryScene />}
           {selectedKey === "4" && !selectedPatient && (
