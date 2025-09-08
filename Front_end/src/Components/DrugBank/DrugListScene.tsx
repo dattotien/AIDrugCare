@@ -41,6 +41,8 @@ export default function DrugListScene() {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:8000/drugs");
+      console.log("API /drugs response:", res.data);
+
       if (res.data.success && Array.isArray(res.data.data)) {
         setDrugList(res.data.data);
       } else {
@@ -86,6 +88,7 @@ export default function DrugListScene() {
     setLoadingDetail(true);
     try {
       const res = await axios.get(`http://localhost:8000/drugs/${record._id}`);
+      console.log(`API /drugs/${record._id} response:`, res.data);
       const data = res.data.data || res.data; 
 
       if (data) {
