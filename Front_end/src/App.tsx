@@ -6,6 +6,7 @@ import PatientScene from "./Components/PatientScene/PatientScene";
 import PatientLoginScence from "./Components/PatientLoginScene/PatientLoginScene";
 import VisitInfor from "./Components/Visit/VisitInfor.tsx";
 import DoctorScene from "./Components/DoctorScene/DoctorScene.tsx";
+import PatientApp from "./PatientApp.tsx";
 const App: React.FC = () => {
   return (
     <Router>

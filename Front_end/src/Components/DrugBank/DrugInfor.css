@@ -3,6 +3,9 @@
   overflow: hidden;
 }
 
+.white-text {
+  color: #fff !important;
+}
 
 .drug-header {
   background: linear-gradient(90deg, #245bafff, #042f6fff);
@@ -30,7 +33,7 @@
 
 .drug-info h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: 30px;
 }
 
 .drug-info p {
@@ -40,7 +43,7 @@
 
 .drug-tags {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -86,4 +89,22 @@
 .table-header {
   color: #ffffff;
   font-weight: bold;
+}
+
+.interaction-table-wrapper {
+  max-height: 260px; 
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+}
+
+.ant-table-thead > tr > th {
+  background: #245baf !important;
+  color: #fff !important;
+  font-weight: bold;
+  text-align: center;
+}
+
+.ant-table-tbody > tr > td {
+  text-align: center;
 }

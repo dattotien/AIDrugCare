@@ -1,3 +1,4 @@
+// DrugListScene.tsx
 import {
   Button,
   Dropdown,
@@ -9,37 +10,19 @@ import {
   Pagination,
   message,
   Typography,
+  Spin,
 } from "antd";
 import { useEffect, useState } from "react";
 import { MoreOutlined, FilterOutlined } from "@ant-design/icons";
 import axios from "axios";
 import type { ColumnsType } from "antd/es/table";
+import type { Drug } from "./drug.types.ts";
 
 import DrugInfor from "./DrugInfor.tsx";
 import listDrug from "../../assets/list (1).png";
 import "./DrugListScene.css";
 
 const { Text } = Typography;
-
-interface BrandName {
-  name: string;
-  route?: string;
-  strength?: string;
-  dosage_form?: string;
-  country?: string;
-}
-
-interface Manufacturer {
-  name: string;
-}
-
-interface Drug {
-  _id: string;
-  generic_name: string;
-  description?: string;
-  brand_names?: BrandName[];
-  manufacturers?: Manufacturer[];
-}
 
 export default function DrugListScene() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -51,52 +34,15 @@ export default function DrugListScene() {
 
   const [drugList, setDrugList] = useState<Drug[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingDetail, setLoadingDetail] = useState(false);
 
-  // Gọi API lấy danh sách thuốc (có thêm fetch chi tiết để hiển thị 1 ít brand_names & manufacturers)
+  // fetch danh sách cơ bản
   const fetchDrugs = async () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:8000/drugs");
       if (res.data.success && Array.isArray(res.data.data)) {
-        const baseList = res.data.data;
-
-        // Gọi thêm chi tiết cho từng thuốc, chỉ lấy vài trường cần
-        const detailed = await Promise.all(
-          baseList.map(async (drug: any) => {
-            try {
-              const detailRes = await axios.get(`http://localhost:8000/drugs/${drug._id}`);
-              if (detailRes.data.success && detailRes.data.data) {
-                const detail = detailRes.data.data;
-                return {
-                  ...drug,
-                  brand_names: Array.isArray(detail.brand_names)
-                    ? detail.brand_names.slice(0, 5).map((b: any) => ({
-                        name: b?.name ?? "",
-                        route: b?.route ?? "",
-                        strength: b?.strength ?? "",
-                        dosage_form: b?.dosage_form ?? "",
-                        country: b?.country ?? "",
-                      }))
-                    : [],
-                  manufacturers: Array.isArray(detail.manufacturers)
-                    ? detail.manufacturers.slice(0, 5).map((m: any) =>
-                        typeof m === "string" ? { name: m } : { name: m?.name ?? "" }
-                      )
-                    : [],
-                };
-              }
-            } catch (err) {
-              console.error("Lỗi fetch chi tiết thuốc:", err);
-            }
-            return {
-              ...drug,
-              brand_names: [],
-              manufacturers: [],
-            };
-          })
-        );
-
-        setDrugList(detailed);
+        setDrugList(res.data.data);
       } else {
         setDrugList([]);
         message.error(res.data.message || "Không lấy được danh sách thuốc");
@@ -109,30 +55,53 @@ export default function DrugListScene() {
     }
   };
 
-
   useEffect(() => {
     fetchDrugs();
   }, []);
 
-  // Lọc theo search
-  const filteredList = drugList.filter((drug) =>
-    Object.values(drug).some((field) =>
-      String(field).toLowerCase().includes(searchText.toLowerCase())
-    )
-  );
+  // Search chỉ trong field text
+  const filteredList = drugList.filter((drug) => {
+    const search = searchText.toLowerCase();
+    return (
+      drug.generic_name?.toLowerCase().includes(search) ||
+      drug.description?.toLowerCase().includes(search) ||
+      drug.synonyms?.some((s) => s.toLowerCase().includes(search)) ||
+      drug.categories?.some((c) => c.toLowerCase().includes(search)) ||
+      drug.atc_code?.some((a) => a.toLowerCase().includes(search)) ||
+      drug.brand_names?.some((b) =>
+        b.name?.toLowerCase().includes(search)
+      ) ||
+      drug.manufacturers?.some((m) =>
+        m.toLowerCase().includes(search)
+      )
+    );
+  });
 
   const handleSearch = (value: string) => {
     setSearchText(value);
     setCurrentPage(1);
   };
 
-  // Xem chi tiết
-  const handleMore = (record: Drug) => {
-    setSelectedDrug(record);
-    setShowDrugInfoModal(true);
+  const handleMore = async (record: Drug) => {
+    setLoadingDetail(true);
+    try {
+      const res = await axios.get(`http://localhost:8000/drugs/${record._id}`);
+      const data = res.data.data || res.data; 
+
+      if (data) {
+        setSelectedDrug(data);
+        setShowDrugInfoModal(true);
+      } else {
+        message.error("Không lấy được chi tiết thuốc");
+      }
+    } catch (err) {
+      console.error(err);
+      message.error("Lỗi khi gọi API chi tiết thuốc");
+    } finally {
+      setLoadingDetail(false);
+    }
   };
 
-  // Menu hành động
   const menuItems = (record: Drug) => [
     {
       key: "more",
@@ -146,11 +115,7 @@ export default function DrugListScene() {
 
   const renderEllipsis = (value?: string | string[], maxWidth?: number) => {
     if (!value) return <Text>-</Text>;
-
-    const text = Array.isArray(value)
-      ? value.join(", ") 
-      : value;
-
+    const text = Array.isArray(value) ? value.join(", ") : value;
     return (
       <Text
         ellipsis={{ tooltip: text }}
@@ -169,52 +134,30 @@ export default function DrugListScene() {
 
   const columns: ColumnsType<Drug> = [
     {
-      title: <span className="table-header">ID</span>,
+      title: "ID",
       dataIndex: "_id",
       key: "_id",
-      width: 120,
-      render: (text) => renderEllipsis(text, 120),
-    },
-    {
-      title: <span className="table-header">Tên thuốc</span>,
-      dataIndex: "generic_name",
-      key: "generic_name",
       width: 200,
       render: (text) => renderEllipsis(text, 200),
     },
     {
-      title: <span className="table-header">Mô tả</span>,
+      title: "Tên thuốc",
+      dataIndex: "generic_name",
+      key: "generic_name",
+      width: 300,
+      render: (text) => renderEllipsis(text, 300),
+    },
+    {
+      title: "Mô tả",
       dataIndex: "description",
       key: "description",
-      width: 400,
-      render: (text) => renderEllipsis(text, 400),
-    },
-    {
-      title: "Tên thị trường",
-      dataIndex: "brand_names",
-      key: "brand_names",
-      width: 200,
-      render: (brands?: BrandName[]) =>
-        renderEllipsis(
-          brands && brands.length ? brands.map(b => b.name) : "-",
-          200
-        ),
-    },
-    {
-      title: "Nhà sản xuất",
-      dataIndex: "manufacturers",
-      key: "manufacturers",
-      width: 200,
-      render: (mans?: Manufacturer[]) =>
-        renderEllipsis(
-          mans && mans.length ? mans.map(m => m.name) : "-",
-          200
-        ),
+      width: 600,
+      render: (text) => renderEllipsis(text, 600),
     },
     {
       title: "",
       key: "actions",
-      width: 50,
+      width: 30,
       render: (_, record) => (
         <Dropdown menu={{ items: menuItems(record) }} trigger={["click"]}>
           <MoreOutlined className="more-icon" />
@@ -272,7 +215,6 @@ export default function DrugListScene() {
           <div className="table-header-bar">
             <Button icon={<FilterOutlined />}>Filter</Button>
 
-            {/* Pagination center */}
             <div className="pagination-center">
               <Pagination
                 current={currentPage}
@@ -283,7 +225,6 @@ export default function DrugListScene() {
               />
             </div>
 
-            {/* Search + Add */}
             <div className="search-add">
               <Input.Search
                 placeholder="Tìm thuốc tại đây"
@@ -297,7 +238,7 @@ export default function DrugListScene() {
         )}
       />
 
-      {/* Modal hiển thị thông tin thuốc */}
+      {/* Modal chi tiết */}
       <Modal
         open={showDrugInfoModal}
         footer={null}
@@ -310,7 +251,11 @@ export default function DrugListScene() {
         title={null}
         closeIcon={<div className="close-btn">X</div>}
       >
-        {selectedDrug && <DrugInfor drug={selectedDrug} />}
+        {loadingDetail ? (
+          <Spin />
+        ) : (
+          selectedDrug && <DrugInfor drug={selectedDrug} />
+        )}
       </Modal>
 
       {/* Action Bar */}
@@ -325,9 +270,6 @@ export default function DrugListScene() {
           </Button>
           <Button type="link" className="action-btn">
             Send
-          </Button>
-          <Button danger type="link">
-            Delete
           </Button>
           <Button
             type="link"
