@@ -1,17 +1,15 @@
-import { Button, Dropdown, Table, Badge, Input, Modal, Form, Tabs, Pagination } from "antd";
+import { Button, Dropdown, Table, Input, Modal, Pagination } from "antd";
 import { useState, useEffect } from "react";
-import { MoreOutlined, FilterOutlined, PlusOutlined } from "@ant-design/icons";
+import { MoreOutlined, FilterOutlined } from "@ant-design/icons";
 import "./PatientHistory.css";
-import binLogo from "../../assets/bin.png";
 import backPic from "../../assets/Group 68.png";
 import listDrug from "../../assets/list (1).png";
 import PatientOneHistory from "./PatientOneHistory";
 import type { ColumnsType } from "antd/es/table";
-import Back from "../../assets/back.png";
 import axios from "axios";
 import dayjs from "dayjs";
 
-interface His{
+interface His {
   patientId: string | null;
 }
 
@@ -22,36 +20,40 @@ interface History {
   doctor_specialty: string;
   diagnosis: string;
 }
-export default function PatientHistory({patientId} : His) {
+
+export default function PatientHistory({ patientId }: His) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showActionBar, setShowActionBar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [showHistoryInfoModal, setShowHistoryInfoModal] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState<any | null>(null);
-  const [history, setHistory] = useState<any[]> ([]);
+  const [history, setHistory] = useState<any[]>([]);
   const [selectVisitId, setSelectVisitId] = useState<string | null>(null);
 
- useEffect(() => {
-  const fetchHistory = async () => {
-    try {
-      const res = await axios.get(`http://127.0.0.1:8000/visit-history/${patientId}`);
-      if (res.data && Array.isArray(res.data)) {
-        setHistory(res.data);
-      } else if (res.data?.data && Array.isArray(res.data.data)) {
-        setHistory(res.data.data);
-      } else {
-        console.warn("Dữ liệu trả về không hợp lệ:", res.data);
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await axios.get(
+          `http://127.0.0.1:8000/visit-history/${patientId}`
+        );
+        if (res.data && Array.isArray(res.data)) {
+          setHistory(res.data);
+        } else if (res.data?.data && Array.isArray(res.data.data)) {
+          setHistory(res.data.data);
+        } else {
+          console.warn("Dữ liệu trả về không hợp lệ:", res.data);
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy lịch sử khám:", error);
       }
-    } catch (error) {
-      console.error("Lỗi khi lấy lịch sử khám:", error);
-    }
-  };
+    };
 
-  if (patientId) {
-    fetchHistory();
-  }
-}, [patientId]);
+    if (patientId) {
+      fetchHistory();
+    }
+  }, [patientId]);
+
   const filteredList = history.filter((history) =>
     Object.values(history).some((field) =>
       String(field).toLowerCase().includes(searchText.toLowerCase())
@@ -59,9 +61,10 @@ export default function PatientHistory({patientId} : His) {
   );
 
   const handleSearch = (value: string) => {
-    setSearchText(value); 
-    setCurrentPage(1);    
+    setSearchText(value);
+    setCurrentPage(1);
   };
+
   const handleMore = (record: any) => {
     setSelectedHistory(record);
     setShowHistoryInfoModal(true);
@@ -74,12 +77,11 @@ export default function PatientHistory({patientId} : His) {
       label: (
         <div
           style={{
-          color: "#043bb3",
-          fontWeight: "bold",
-          textAlign: "center",
-          minWidth: "unset",
-          whiteSpace: "nowrap", 
-          padding: "1px 1px",  
+            color: "#043bb3",
+            fontWeight: "bold",
+            textAlign: "center",
+            whiteSpace: "nowrap",
+            padding: "1px 1px",
           }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLElement).style.backgroundColor = "#043bb3";
@@ -98,22 +100,44 @@ export default function PatientHistory({patientId} : His) {
   ];
 
   const columns: ColumnsType<History> = [
-  { title: "ID", dataIndex: "visit_id", key: "visit_id", align: "left" },
-  { title: "Tên bác sĩ", dataIndex: "doctor_name", key: "doctor_name", align: "left" },
-  { title: "Ngày khám", dataIndex: "date", key: "date", align: "left",render: (date: string) => date ? dayjs(date).format("YYYY/MM/DD") : "", },
-  { title: "Khoa", dataIndex: "doctor_specialty", key: "doctor_specialty", align: "left" },
-  { title: "Chẩn đoán", dataIndex: "diagnosis", key: "diagnosis", align: "center" },
-  {
-    title: "",
-    key: "actions",
-    align: "center",
-    render: (_, record) => (
-      <Dropdown menu={{ items: menuItems(record) }} trigger={["click"]}>
-        <MoreOutlined style={{ fontSize: 16, cursor: "pointer" }} />
-      </Dropdown>
-    ),
-  },
-];
+    { title: "ID", dataIndex: "visit_id", key: "visit_id", align: "left" },
+    {
+      title: "Tên bác sĩ",
+      dataIndex: "doctor_name",
+      key: "doctor_name",
+      align: "left",
+    },
+    {
+      title: "Ngày khám",
+      dataIndex: "date",
+      key: "date",
+      align: "left",
+      render: (date: string) =>
+        date ? dayjs(date).format("YYYY/MM/DD") : "",
+    },
+    {
+      title: "Khoa",
+      dataIndex: "doctor_specialty",
+      key: "doctor_specialty",
+      align: "left",
+    },
+    {
+      title: "Chẩn đoán",
+      dataIndex: "diagnosis",
+      key: "diagnosis",
+      align: "center",
+    },
+    {
+      title: "",
+      key: "actions",
+      align: "center",
+      render: (_, record) => (
+        <Dropdown menu={{ items: menuItems(record) }} trigger={["click"]}>
+          <MoreOutlined style={{ fontSize: 16, cursor: "pointer" }} />
+        </Dropdown>
+      ),
+    },
+  ];
 
   const rowSelection = {
     selectedRowKeys,
@@ -123,143 +147,163 @@ export default function PatientHistory({patientId} : His) {
     },
   };
 
-  const pageSize = 8;
+  const pageSize = 7;
   const paginatedData = filteredList.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
 
-  
-
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#043bb3", fontWeight: "bold" , position: "absolute", top: 120, left: 260}}>
-        <img src={listDrug} alt="list" style={{ width: "15px", height: "15px" }} />
-        <span>Items</span>
       <div
         style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "20px",
-        height: "20px",
-        borderRadius: "50%",
-        backgroundColor: "#043bb3",
-        color: "#fff",
-        fontSize: "12px",
-        fontWeight: "bold"
+          width: "75vw",
+          height: "70vh",
+          backgroundColor: "transparent",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 10,
+          backgroundImage: `url(${backPic})`,
+          backgroundSize: "cover",
+          marginTop: "10vh",
+          backgroundPosition: "center",
+          padding: "1vw",
         }}
       >
-        {history.length}
-      </div>
-    </div>
-
-      <div style={{width: "1320x", height: "500px", backgroundColor: "transparent", 
-      display: "flex",  justifyItems: "center",
-      marginLeft: 7,marginTop: 50, borderRadius: 10,  backgroundImage: `url(${backPic})`,    
-      backgroundSize: "cover",
-      backgroundPosition: "center",}}>
-        <div style={{width : "950px", borderRadius: "0"}}>
-          <Table   size="small"
-        style={{
-          overflow: "hidden",
-          marginLeft: 30,
-          marginTop: 50,
-
-        }}
-        rowKey="id"
-        columns={columns}
-        dataSource={paginatedData}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: (newSelectedRowKeys) => {
-            setSelectedRowKeys(newSelectedRowKeys);
-            setShowActionBar(newSelectedRowKeys.length > 0);
-          },
-          preserveSelectedRowKeys: true,
-        }}
-        rowClassName={(_, index) => {
-          let classes = "custom-row ";
-          classes += index % 2 === 0 ? "row-even" : "row-odd";
-          return classes;
-        }}
-        pagination={false}
-        title={() => (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <Button icon={<FilterOutlined />}>Filter</Button>
-
-            <div style={{ flex: 1, display: "flex", justifyContent: "center", justifyItems: "center", alignItems: "center", marginLeft: "100px"}}>
-              <Pagination
-                current={currentPage}
-                pageSize={pageSize}
-                total={filteredList.length}
-                onChange={(page) => setCurrentPage(page)}
-                showSizeChanger={false}
-              />
-            </div>
-
-            <div className="custom-search" style={{ display: "flex", alignItems: "center", width: "250px", borderColor: "#737373", borderRadius: "20px"  }}>
-              <Input.Search
-                placeholder="Tìm lịch sử khám tại đây"
-                style={{ width: 250}}
-                allowClear
-                onSearch={handleSearch}
-                onPressEnter={(e) => handleSearch(e.currentTarget.value)}
-              />
-            </div>
+        <div className="flex-title">
+          <img
+            src={listDrug}
+            alt="list"
+            style={{ width: "15px", height: "15px" }}
+          />
+          <span>Items</span>
+          <div className="patient-circle-badge">
+            {history.length}
           </div>
-        )}
-      />
-      </div>
+        </div>
+
+        {/* Table */}
+        <div style={{ flex: 1, width: "100%" }}>
+          <Table
+            size="small"
+            style={{
+              overflow: "hidden",
+            }}
+            rowKey="id"
+            columns={columns}
+            dataSource={paginatedData}
+            rowSelection={{
+              selectedRowKeys,
+              onChange: (newSelectedRowKeys) => {
+                setSelectedRowKeys(newSelectedRowKeys);
+                setShowActionBar(newSelectedRowKeys.length > 0);
+              },
+              preserveSelectedRowKeys: true,
+            }}
+            rowClassName={(_, index) => {
+              let classes = "custom-row ";
+              classes += index % 2 === 0 ? "row-even" : "row-odd";
+              return classes;
+            }}
+            pagination={false}
+            title={() => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Button icon={<FilterOutlined />}>Filter</Button>
+
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={filteredList.length}
+                    onChange={(page) => setCurrentPage(page)}
+                    showSizeChanger={false}
+                  />
+                </div>
+
+                <div
+                  className="custom-search"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "250px",
+                    borderColor: "#737373",
+                    borderRadius: "20px",
+                  }}
+                >
+                  <Input.Search
+                    placeholder="Tìm lịch sử khám tại đây"
+                    style={{ width: 250 }}
+                    allowClear
+                    onSearch={handleSearch}
+                    onPressEnter={(e) =>
+                      handleSearch(e.currentTarget.value)
+                    }
+                  />
+                </div>
+              </div>
+            )}
+          />
+        </div>
       </div>
 
       {showActionBar && (
-        <div
-          style={{
-            height: "45px",
-            position: "fixed",
-            bottom: 20,
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: "#000",
-            color: "#fff",
-            padding: "10px 20px",
-            borderRadius: 30,
-            display: "flex",
-            alignItems: "center",
-            marginBottom: 37,
-            marginLeft: 80
-          }}
-        >
-          <div
+        <div className="patient-fixed-footer">
+          <div className="circle-badge">
+            {selectedRowKeys.length}
+          </div>
+          <span style={{ marginLeft: "8px" }}>
+            {selectedRowKeys.length > 1
+              ? "items selected"
+              : "item selected"}
+          </span>
+          <Button
+            disabled
+            className="btn"
+            type="link"
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "24px",
-              height: "24px",
-              backgroundColor: "#737373",
-              color: "#ffffff",
-              borderRadius: "50%", 
-              fontWeight: "bold",
+              width: "4vw",
+              height: "4vh",
               fontSize: "12px",
+              color: "#ffffff",
+              backgroundColor: "#737373",
+              borderRadius: "20px",
+              marginLeft: 30,
             }}
           >
-          {selectedRowKeys.length}
-          </div>
-            <span style={{ marginLeft: "8px" }}>
-              {selectedRowKeys.length > 1 ? "items selected" : "item selected"}
-            </span>
-          <Button disabled className = "btn" type="link" style={{ width: "50px",height: "25px",  fontSize: "12px", color: "#ffffff", backgroundColor: "#737373", borderRadius: "20px" ,marginRight: 5 , marginLeft: 30}}>Print</Button>
-          <Button disabled className = "btn" type="link" style={{ width: "50px",height: "25px",fontSize: "12px",color: "#ffffff", backgroundColor: "#d12326", borderRadius: "20px",marginRight: 5 }}>Send</Button>
-          <Button className = "btn"
+            Print
+          </Button>
+          <Button
+            disabled
+            className="btn"
+            type="link"
+            style={{
+              width: "4vw",
+              height: "4vh",
+              fontSize: "12px",
+              color: "#ffffff",
+              backgroundColor: "#d12326",
+              borderRadius: "20px",
+              marginRight: 5,
+            }}
+          >
+            Send
+          </Button>
+          <Button
+            className="btn"
             type="link"
             style={{
               color: "#fff",
@@ -270,11 +314,10 @@ export default function PatientHistory({patientId} : His) {
               alignItems: "center",
               justifyContent: "center",
               transition: "background 0.3s",
-              marginLeft: 5,
-              marginRight: 0
             }}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.background = "rgba(255,255,255,0.2)")
+              (e.currentTarget.style.background =
+                "rgba(255,255,255,0.2)")
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.background = "transparent")
@@ -288,23 +331,25 @@ export default function PatientHistory({patientId} : His) {
           </Button>
         </div>
       )}
-      {showHistoryInfoModal&& selectedHistory && selectVisitId && (
+
+      {showHistoryInfoModal && selectedHistory && selectVisitId && (
         <Modal
           open={showHistoryInfoModal}
           centered
-          width={1100}
+          width={"90%"}
           onCancel={() => setShowHistoryInfoModal(false)}
           footer={null}
         >
-        <div style={{ 
-          height: "500px", 
-          overflowY: "auto",
-          }}>
-          <PatientOneHistory visitId = {selectVisitId}/>
-        </div>
+          <div
+            style={{
+              height: "500px",
+              overflowY: "auto",
+            }}
+          >
+            <PatientOneHistory visitId={selectVisitId} />
+          </div>
         </Modal>
       )}
     </div>
-    
   );
 }

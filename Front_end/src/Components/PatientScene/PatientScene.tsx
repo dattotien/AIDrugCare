@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Breadcrumb, Layout, Menu, Spin , message, Modal} from "antd";
+import { Breadcrumb, Layout, Menu, Spin } from "antd";
 import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
 const { Content } = Layout;
 
@@ -18,10 +18,10 @@ import hisLogo from "../../assets/history.png";
 import hisLogo2 from "../../assets/history2.png";
 import setLogo from "../../assets/setting.png";
 import setLogo2 from "../../assets/setting2.png";
-import logLogo from "../../assets/logout.png";
 import logLogo2 from "../../assets/logout2.png";
 
 import axios from "axios";
+import "./PatientScene.css";
 
 export default function PatientScene() {
   const [data, setData] = useState<any>({
@@ -37,7 +37,6 @@ export default function PatientScene() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // fetch dữ liệu
   useEffect(() => {
     const fetchData = async () => {
       if (!patientId) return;
@@ -72,17 +71,14 @@ export default function PatientScene() {
     fetchData();
   }, [patientId]);
 
-  // xác định key menu từ path
   const getKeyFromPath = (path: string) => {
-    if (path.startsWith("/patientDashboard")) return "1";
-    if (path.startsWith("/patientHistory")) return "2";
-    if (path.startsWith("/patientSetting")) return "3";
+    if (path.includes("/dashboard/history")) return "2";
+    if (path.includes("/dashboard/setting")) return "3";
     return "1";
   };
 
   const selectedKey = getKeyFromPath(location.pathname);
 
-  // menu item helper
   const makeItem = (key: string, label: string, icon: string, activeIcon: string) => ({
     key,
     label,
@@ -112,7 +108,6 @@ export default function PatientScene() {
         backgroundPosition: "center"
       }}
     >
-      {/* SIDER */}
       <Sider
         style={{
           backgroundColor: "rgba(255,255,255,0.7)",
@@ -120,19 +115,19 @@ export default function PatientScene() {
           width: "170px"
         }}
       >
-      <div style={{ textAlign: "center", padding: "20px 0" }}>
+        <div style={{ textAlign: "center", padding: "20px 0" }}>
           <img src={Logo} alt="Logo" style={{ width: 100, height: 70 }} />
-      </div>
+        </div>
 
-        <Menu className="menu"
+        <Menu
+          className="menu"
           mode="vertical"
           selectedKeys={[selectedKey]}
           onClick={({ key }) => {
-            if (key === "1") navigate("/patientDashboard");
-            if (key === "2") navigate("/patientHistory");
-            if (key === "3") navigate("/patientSetting");
+            if (key === "1") navigate("/patient/dashboard");
+            if (key === "2") navigate("/patient/dashboard/history");
+            if (key === "3") navigate("/patient/dashboard/setting");
           }}
-
           items={menuItems}
           style={{
             marginTop: 150,
@@ -142,14 +137,13 @@ export default function PatientScene() {
             fontWeight: "bold"
           }}
         />
+
         <div
           onClick={() => {
-            console.log("clicked");
             alert("Đăng suất tài khoản");
             localStorage.removeItem("patientId");
             navigate("/");
-          }
-          }
+          }}
           style={{
             position: "absolute",
             bottom: 20,
@@ -166,7 +160,6 @@ export default function PatientScene() {
         </div>
       </Sider>
 
-      {/* MAIN */}
       <Layout style={{ backgroundColor: "transparent" }}>
         <Content style={{ padding: "0 3vw" }}>
           <Breadcrumb
@@ -178,12 +171,12 @@ export default function PatientScene() {
             }}
             items={
               selectedKey === "1"
-              ? [{ title: "TRANG CHỦ" }]
-              : selectedKey === "2"
-              ? [{ title: "LỊCH SỬ" }]
-              : selectedKey === "3"
-              ? [{ title: "CÀI ĐẶT" }]
-              : [{ title: "TRANG CHỦ" }]
+                ? [{ title: "TRANG CHỦ" }]
+                : selectedKey === "2"
+                ? [{ title: "LỊCH SỬ" }]
+                : selectedKey === "3"
+                ? [{ title: "CÀI ĐẶT" }]
+                : [{ title: "TRANG CHỦ" }]
             }
           />
 
@@ -197,33 +190,27 @@ export default function PatientScene() {
             <>
               <Routes>
                 <Route
-                  path="/patientDashboard"
+                  path=""
                   element={
-                    <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-                      <div style={{ flex: 3 , gap: "30px"}}>
-                          <div>
-                            <PatientCardCount
-                                total={data.totalVisits}
-                                last={data.latestVisitDay}
-                                next={data.nextVisitDay}
-                            />
-                          </div>
+                    <div style={{ display: "flex", flexDirection: "row", gap: "2vw" }}>
+                      <div style={{ flex: 3 }}>
+                        <PatientCardCount
+                          total={data.totalVisits}
+                          last={data.latestVisitDay}
+                          next={data.nextVisitDay}
+                        />
                         <PatientHistoryMost visits={data.threeLatestRes} />
                       </div>
-                      <div style={{ flex: 1 , marginTop: "-12vh"}}>
+                      <div style={{ flex: 1, position: "absolute", top: 0, right: 0 }}>
                         <PatientColInfor patient={data.profile} />
                       </div>
                     </div>
                   }
                 />
-                <Route
-                  path="/patientHistory"
-                  element={<PatientHistory patientId={patientId} />}
-                />
-                <Route path="/patientSetting" element={<p>Cài đặt</p>} />
+                <Route path="history" element={<PatientHistory patientId={patientId} />} />
+                <Route path="setting" element={<p>Cài đặt</p>} />
               </Routes>
 
-              {/* Cột phải cố định */}
               <div style={{ position: "fixed", top: 0, right: "2vw" }}>
                 <PatientCardInfor patient={data.profile} />
               </div>
