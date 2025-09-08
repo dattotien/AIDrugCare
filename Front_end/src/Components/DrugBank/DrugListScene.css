@@ -9,9 +9,11 @@
 
 /* Table */
 .drug-table {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
   overflow: hidden;
+  width: 98%;
+  max-height: 79vh;
 }
 
 /* Table header */
@@ -30,9 +32,8 @@
 .menu-item {
   color: var(--primary-hover);
   font-weight: bold;
-  min-width: 80px;
   text-align: center;
-  padding: 4px 0;
+  width: 100%;
   cursor: pointer;
 }
 
@@ -137,7 +138,7 @@
 }
 
 .action-close:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Modal thêm thuốc */
