@@ -1,9 +1,9 @@
-import { Button, Card, Checkbox, Input, message  } from "antd";
+import { Button, Card, Checkbox, Input, message } from "antd";
 import login_back from "../../assets/test.png";
 import { RightCircleOutlined, CaretRightOutlined } from "@ant-design/icons";
 import styles from "./PatientLoginScene.module.css";
 import PatientScene from "../PatientScene/PatientScene";
-import {useState} from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function PatientLoginScene() {
@@ -24,23 +24,22 @@ export default function PatientLoginScene() {
 
     try {
       const res = await fetch("http://127.0.0.1:8000/login-patient", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: new URLSearchParams({ cccd, password }).toString()
-    });
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({ cccd, password }).toString(),
+      });
       const data = await res.json();
       console.log("Login response:", data);
 
       if (data.success && data.data) {
-      console.log("data.data:", data.data._id);
+        console.log("data.data:", data.data._id);
 
-       localStorage.setItem("patientId", data.data._id);
-       console.log("Saved patientId:", localStorage.getItem("patientId"));
+        localStorage.setItem("patientId", data.data._id);
+        console.log("Saved patientId:", localStorage.getItem("patientId"));
 
-
-        navigate("/patientDashboard");
+        navigate("/patient/dashboard");
       } else {
         message.error("CCCD hoặc mật khẩu không đúng");
       }
@@ -109,7 +108,7 @@ export default function PatientLoginScene() {
         </div>
 
         <div>
-          <Button className={styles.button1}>
+          <Button className={styles.button1} onClick={() => navigate("/")}>
             <span
               style={{ display: "flex", alignItems: "center", gap: "10px" }}
             >
@@ -118,7 +117,7 @@ export default function PatientLoginScene() {
             </span>
           </Button>
 
-          <Button className={styles.button2}>
+          <Button className={styles.button2} onClick={() => navigate("/")}>
             <span
               style={{ display: "flex", alignItems: "center", gap: "10px" }}
             >
@@ -140,7 +139,7 @@ export default function PatientLoginScene() {
             onChange={(e) => setCccd(e.target.value)}
           />
           <p className={styles.text}>Mật khẩu</p>
-                    <Input.Password
+          <Input.Password
             className={styles.input}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
