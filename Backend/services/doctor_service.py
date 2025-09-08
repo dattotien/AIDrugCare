@@ -23,12 +23,34 @@ async def get_profile_by_id(profile_id: int):
     }
 
 async def get_patient_history(patient_id: int):
-    visits = await Visit.find(Visit.patient_id == patient_id).to_list()
+    visits = await Visit.find(
+        {"patient_id": patient_id, 
+         "diagnosis": {"$ne": "Trống"}}
+        ).to_list()
+    result = []
+    for v in visits:
+        medical_history = await Medical_History.find_one(
+            Medical_History.visit_id == v.id
+        )
+        doctor = await Doctor.find_one(
+            Doctor.id == v.doctor_id
+        )
+        result.append({
+            "visit": v.id,
+            "doctor": doctor.name,
+            "conclusion": v.diagnosis,
+            "lab_result": medical_history.labResult,
+            "fam_hist": medical_history.family_history,
+            "surg": medical_history.surgeries,
+            "chronic": medical_history.chronic_diseases,
+            "visit_date": v.visit_date
+        })
+
     if visits:
         return {
             "success": True,
             "message": "Lấy lịch sử khám bệnh thành công",
-            "data": visits
+            "data": result
         }
     return {
         "success": False,
@@ -139,7 +161,7 @@ async def get_number_visited_today(doctor_id: int):
         "data": count
     }
 
-async def create_prescription(visit_id: int, items: List[Dict[str, Any]], diagnosis: str, note: str):
+async def create_prescription(visit_id: int, items: List[Dict[str, Any]], diagnosis: str):
     visit = await Visit.get(visit_id)
     if not visit:
         return {
@@ -148,7 +170,6 @@ async def create_prescription(visit_id: int, items: List[Dict[str, Any]], diagno
             "data": None
         }
     visit.diagnosis = diagnosis
-    visit.note = note
     await visit.save()
 
     patient = await Patient.get(visit.patient_id)
@@ -210,8 +231,8 @@ async def create_prescription(visit_id: int, items: List[Dict[str, Any]], diagno
             "labResult": medical_history.labResult if medical_history else None,
         },
         "visit": {
+            "visit": visit.id,
             "diagnosis": visit.diagnosis,
-            "note": visit.note,
         },
         "prescription": {
             "id": str(new_prescription.id),
@@ -446,6 +467,8 @@ async def get_all_patients_by_doctor(doctor_id: int):
                 "dob": patient.dob,
                 "symptoms": visit.symptoms,
                 "status": visit.status,
+                "cccd": patient.cccd,
+                "phone": patient.phone,
             })
 
     return {

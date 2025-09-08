@@ -16,7 +16,7 @@ class Doctor(Document):
     workplace: Optional[str] = None
     specialty: Optional[str] = None
     title: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: str 
 
     class Config:
         json_schema_extra = {

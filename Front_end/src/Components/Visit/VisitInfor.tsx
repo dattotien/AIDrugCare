@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
-import { Row, Col, Table, Input, Button, Card, Space, Typography } from "antd";
+import { Row, Col, Table, Input, Button, Card, Space, Typography, Result, AutoComplete } from "antd";
 import DDIsVisit from "./DDIs_visit";
 import "./VisitInfor.css";
+import { useEffect } from "react";
+
 
 const { Title, Text } = Typography;
 
@@ -14,31 +16,84 @@ type DrugRow = { id: string; name: string; dose: string; time: string; note: str
 
 export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   if (!patient) return null;
-
+  console.log("Patient data:", patient);
   const [showDDIs, setShowDDIs] = useState(false);
+  const [historyData, setHistoryData] = useState<any[]>([]);
+  const [labResult, setLabResult] = useState<string>("");
+  const [doctorName, setDoctorName] = useState<string>("");
+  const [doctorwork, setDoctorWork] = useState<string>("");
+  const [patientHistory, setPatientHistory] = useState<string>("");
+
+  
+  useEffect(() => {
+    const storedDoctorId = localStorage.getItem("doctorId");
+    const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
+    if (!doctorId) return;
+
+    const fetchDoctor = async () => {
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/doctor-profile/${doctorId}`);
+        const json = await res.json();
+
+        if (json.success && json.data?.name) {
+          setDoctorName(json.data.name);
+          setDoctorWork(json.data.workplace)
+        }
+      } catch (err) {
+        console.error("Error fetching doctor:", err);
+      }
+    };
+
+    fetchDoctor();
+  }, []);
+  
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/doctor-visit-history/${patient.id}`);
+
+        const json = await res.json();
+
+        if (json.success && Array.isArray(json.data)) {
+          const mapped = json.data.map((v: any) => {
+            const historyParts = [v.chronic, v.surg, v.fam_hist]
+              .filter(
+                (item) =>
+                  item && item.trim() !== "" && item.trim().toLowerCase() !== "không có"
+              );
+
+            return {
+              id: v.visit,
+              doctor_name: v.doctor || "Không rõ",
+              result: v.conclusion || "Chưa có",
+              labResult: v.lab_result || "Chưa có",
+              date: v.visit_date,
+              history: historyParts.length > 0 ? historyParts.join(", ") : "Không có",
+            };
+          });
+          setHistoryData(mapped);
+          console.log("Mapped history:", mapped);
+          if (mapped.length > 0) {
+          setLabResult(mapped[0].labResult);
+          setPatientHistory(mapped[0].history);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching history:", err);
+      }
+    };
+    fetchHistory();
+  }, [patient.id]);
 
   // ---- data mẫu ----
   const historyColumns = [
     { title: "ID", dataIndex: "id", key: "id", width: 100 },
-    { title: "Bác sĩ", dataIndex: "doctor", key: "doctor" },
+    { title: "Bác sĩ", dataIndex: "doctor_name", key: "doctor_name" },
     { title: "Kết luận", dataIndex: "result", key: "result" },
     { title: "Ngày tạo", dataIndex: "date", key: "date", width: 140 },
   ];
 
-  const historyData = [
-    { id: "10000", doctor: "Nguyễn Thị Ngọc Huyền", result: "Đau dạ dày cấp 2", date: "23/5/2025" },
-    { id: "10001", doctor: "Nguyễn Văn A", result: "Viêm họng", date: "12/6/2025" },
-    { id: "10002", doctor: "Nguyễn Văn B", result: "Viêm xoang", date: "20/6/2025" },
-  ];
-
-  const [drugs, setDrugs] = useState<DrugRow[]>([
-    { id: "DB10004", name: "Aspirin", dose: "2 viên / ngày", time: "Sáng - tối", note: "Không có" },
-    { id: "DB10005", name: "Paracetamol", dose: "1 viên / ngày", time: "Trưa", note: "Không uống khi đói" },
-    { id: "DB10004", name: "Aspirin", dose: "2 viên / ngày", time: "Sáng - tối", note: "Không có" },
-    { id: "DB10005", name: "Paracetamol", dose: "1 viên / ngày", time: "Trưa", note: "Không uống khi đói" },
-    { id: "DB10004", name: "Aspirin", dose: "2 viên / ngày", time: "Sáng - tối", note: "Không có" },
-    { id: "DB10005", name: "Paracetamol", dose: "1 viên / ngày", time: "Trưa", note: "Không uống khi đói" },
-  ]);
+  const [drugs, setDrugs] = useState<DrugRow[]>([]);
 
   const drugColumns = [
     { title: "ID", dataIndex: "id", key: "id", width: 110 },
@@ -73,21 +128,21 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   // ---- tiện ích hiển thị ngày ----
   const todayVN = useMemo(() => {
     const d = new Date();
-    return `Hà Nội, ngày ${d.getDate()} tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
+    return `Ngày ${d.getDate()} tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
   }, []);
 
   return (
     <div className="visit-panel">
       <div className="visit-header">
         <div className="hospital-title">
-          <Title level={4}>BỆNH VIỆN ĐA KHOA A - CƠ SỞ 4</Title>
+          <Title level={4}>{doctorwork}</Title>
           <div>
             <Text>Email: nguyena@gmail.com</Text><br />
             <Text>Hotline: 0978349285 / 0978349285</Text>
           </div>
         </div>
         <div className="date-right">
-          <Text>{todayVN}</Text>
+          <Text>Hà Nội, {todayVN}</Text>
         </div>
       </div>
 
@@ -98,14 +153,14 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
         <Row gutter={[16, 8]}>
           <Col span={12}><Text><b>Họ và tên:</b> {patient.name}</Text></Col>
           <Col span={6}><Text><b>Giới tính:</b> {patient.gender}</Text></Col>
-          <Col span={6}><Text><b>SĐT:</b> 0978349285</Text></Col>
+          <Col span={6}><Text><b>SĐT:</b> {patient.phone}</Text></Col>
         </Row>
         <Row gutter={[16, 8]} style={{ marginTop: 8 }}>
           <Col span={12}><Text><b>Ngày sinh:</b> {patient.dob}</Text></Col>
-          <Col span={12}><Text><b>CCCD:</b> 0203405007654</Text></Col>
+          <Col span={12}><Text><b>CCCD:</b> {patient.cccd}</Text></Col>
         </Row>
         <Row style={{ marginTop: 8 }}>
-          <Col span={24}><Text><b>Kết quả xét nghiệm:</b> {patient.symptoms}</Text></Col>
+          <Col span={24}><Text><b>Kết quả xét nghiệm:</b> {labResult}</Text></Col>
         </Row>
       </Card>
 
@@ -151,10 +206,10 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
               <Col>
                 <Space direction="vertical" size={0}>
                   <Text><b>Mã đơn thuốc:</b> ANC8124</Text>
-                  <Text><b>Bác sĩ:</b> Nguyễn Thị Ngọc Yến</Text>
+                  <Text><b>Bác sĩ:</b> {doctorName}</Text>
                 </Space>
               </Col>
-              <Col><Text><b>Ngày tạo:</b> 28 - 8 - 2025</Text></Col>
+              <Col><Text><b>Ngày tạo: </b>{ todayVN }</Text></Col>
             </Row>
 
             <Card className="drug-table-wrapper">
@@ -185,11 +240,9 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
               <Space direction="vertical" size={12} style={{ width: "100%" }}>
                 <div>
                   <Text style={{ fontWeight: 600 }}>Tiền sử:</Text>
-                  <Input.TextArea
-                    rows={6}
-                    placeholder="VD: Bệnh nhân có tiền sử tiểu đường, dị ứng..."
-                    className="input-radius"
-                  />
+                  <div style={{width: "16vw", height: "20vh", overflowY: "auto",overflowWrap: "break-word", backgroundColor: "transparent", border :"1px solid #d9d9d9", borderRadius : "10px"}}>
+                    <p style = {{margin : 0, fontSize :"12px", color: "#737373"}}>{patientHistory}</p>
+                  </div>
                 </div>
 
                 <Input.Search placeholder="Tìm thuốc tại đây" allowClear />
