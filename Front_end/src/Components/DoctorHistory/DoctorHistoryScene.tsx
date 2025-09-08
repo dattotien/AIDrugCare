@@ -148,11 +148,10 @@ export default function DoctorHistory() {
   );
 
   return (
-    <div>
-      {/* Tabs */}
+    <div className={styles.container}>
       <div
-        className={`${styles.tab} ${styles.tabAll}`}
-        style={{ color: "#043bb3" }}
+        className={styles.tabAll}
+        style={{ color: "#1c57d5ff" }}
       >
         <span>Đã khám</span>
         <div

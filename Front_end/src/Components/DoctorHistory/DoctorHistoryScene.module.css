@@ -1,24 +1,7 @@
-/* Tabs */
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: bold;
-  position: absolute;
-  top: 113px;
-  cursor: pointer;
-}
-
-.tabAll {
-  left: 270px;
-}
-
-.tabDone {
-  left: 370px;
-}
-
-.tabPending {
-  left: 490px;
+.container {
+  background-color: transparent;
+  width: 98%;
+  height: 86vh;
 }
 
 .tabCount {
