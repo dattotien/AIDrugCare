@@ -9,6 +9,7 @@ export interface BrandName {
 export interface DrugInteraction {
   drugbank_id: string;
   name: string;
+  description: string;
 }
 
 export interface Drug {

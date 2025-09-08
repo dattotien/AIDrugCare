@@ -131,7 +131,7 @@ export default function DrugInfor({ drug }: DrugInforProps) {
             columns={[
               {
                 title: <span className="table-header">ID</span>,
-                dataIndex: "drug_id",
+                dataIndex: "drugbank_id",
                 width: "20%",
               },
               {
@@ -141,7 +141,7 @@ export default function DrugInfor({ drug }: DrugInforProps) {
               },
               {
                 title: <span className="table-header">Loại tương tác</span>,
-                dataIndex: "interaction_type",
+                dataIndex: "description",
                 width: "40%",
                 render: (text: string) => text || "-",
               },
