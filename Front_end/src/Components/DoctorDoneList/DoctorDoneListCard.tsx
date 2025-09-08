@@ -10,6 +10,7 @@ interface Props {
   highlight?: string; 
 }
 export default function DoctorDoneListCard({ visit, highlight = "#043bb3" }: Props) {
+  const [showHistory, setShowHistory] = useState(false);
 
   return (
     <div
@@ -55,6 +56,7 @@ export default function DoctorDoneListCard({ visit, highlight = "#043bb3" }: Pro
           {dayjs(visit.age).format("YYYY-MM-DD")} - {visit.dob} 
         </p>
         <img
+        onClick={() => setShowHistory(true)}
           src={moreLogo}
           alt="more"
           style={{
@@ -94,7 +96,7 @@ export default function DoctorDoneListCard({ visit, highlight = "#043bb3" }: Pro
             marginTop: 2
           }}
         >
-          ID : {visit.patient_id}
+          ID : {visit.visit_id}
         </p>
 
         <div
@@ -121,6 +123,24 @@ export default function DoctorDoneListCard({ visit, highlight = "#043bb3" }: Pro
           </p>
         </div>
       </div>
+      {showHistory && (
+        <Modal
+          open={showHistory}
+          centered
+          width={1100}
+          onCancel={() => setShowHistory(false)}
+          footer={null}
+        >
+          <div
+            style={{
+              height: "500px",
+              overflowY: "auto",
+            }}
+          >
+            <PatientOneHistory visitId = {visit.visit_id.toString()}/>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
