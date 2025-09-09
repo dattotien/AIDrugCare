@@ -81,7 +81,7 @@ async def get_three_latest_visits(patient_id: int):
 async def get_total_visits(patient_id: int):
     total_visited = await Visit.find({
         "patient_id": patient_id,
-        "diagnosis": {"$ne": None}}).count()
+        "diagnosis": "Trống"}).count()
     return {
         "success": True,
         "message": "Tổng số lần đã khám",
