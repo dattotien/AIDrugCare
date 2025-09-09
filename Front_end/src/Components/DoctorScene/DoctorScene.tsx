@@ -1,19 +1,16 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Layout, Menu, Avatar, Badge, Modal } from "antd";
+import { Layout, Menu, Avatar, Badge, Modal, message } from "antd";
+import { useNavigate, Routes, Route, useLocation } from "react-router-dom";
+import dayjs from "dayjs";
+import axios from "axios";
+
 import userAvatar from "../../assets/user.png";
 import userMailNoti from "../../assets/envelope.png";
 import userNoti from "../../assets/active.png";
-import DrugInteractionChecker from "../DrugInteractionChecker/DrugInteractionChecker.tsx";
-import DrugListScene from "../DrugBank/DrugListScene.tsx";
-import PatientsList from "../PatientsList/PatientsList.tsx";
-import VisitInfor from "../Visit/VisitInfor.tsx";
-import dayjs from "dayjs";
-import DoctorHistoryScene from "../DoctorHistory/DoctorHistoryScene.tsx";
 import Logo from "../../assets/AIDrugCare.png";
 import backgroundImage from "../../assets/background.png";
-import DoctorInformationScene from "../DoctorInformationScene/DoctorInformationScene.tsx";
-import DoctorDashBoard from "../DoctorDashboard/DoctorDashboard.tsx";
+
 import DashboardIconDefault from "../../assets/dashboard_blue.png";
 import DashboardIconActive from "../../assets/dashboard_white.png";
 import DrugbankIconDefault from "../../assets/drugs_blue.png";
@@ -28,42 +25,47 @@ import SettingIconDefault from "../../assets/setting_blue.png";
 import SettingIconActive from "../../assets/setting_white.png";
 import LogoutIconDefault from "../../assets/logout_blue.png";
 import LogoutIconActive from "../../assets/logout_white.png";
-import { useNavigate } from "react-router-dom";
+
+import DoctorDashBoard from "../DoctorDashboard/DoctorDashboard.tsx";
+import DrugListScene from "../DrugBank/DrugListScene.tsx";
+import DoctorHistoryScene from "../DoctorHistory/DoctorHistoryScene.tsx";
+import PatientsList from "../PatientsList/PatientsList.tsx";
+import VisitInfor from "../Visit/VisitInfor.tsx";
 import PatientOneHistory from "../PatientHistory/PatientOneHistory.tsx";
+import DrugInteractionChecker from "../DrugInteractionChecker/DrugInteractionChecker.tsx";
+import DoctorInformationScene from "../DoctorInformationScene/DoctorInformationScene.tsx";
 
 import "./DoctorScene.css";
-import DoctorDashboard from "../DoctorDashboard/DoctorDashboard.tsx";
-import axios from "axios";
 
 const { Content, Sider } = Layout;
 
 const mainItems = [
   {
-    key: "1",
+    key: "",
     label: "Dashboard",
     iconDefault: DashboardIconDefault,
     iconActive: DashboardIconActive,
   },
   {
-    key: "2",
+    key: "drugbank",
     label: "Drugbank",
     iconDefault: DrugbankIconDefault,
     iconActive: DrugbankIconActive,
   },
   {
-    key: "3",
+    key: "history",
     label: "History",
     iconDefault: HistoryIconDefault,
     iconActive: HistoryIconActive,
   },
   {
-    key: "4",
+    key: "patients",
     label: "Patients",
     iconDefault: PatientsIconDefault,
     iconActive: PatientsIconActive,
   },
   {
-    key: "5",
+    key: "ddis",
     label: "DDIs check",
     iconDefault: DDIscheckIconDefault,
     iconActive: DDIscheckIconActive,
@@ -86,54 +88,67 @@ const extraItems = [
 ];
 
 export default function DoctorScene() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [accountInfo, setAccountInfo] = useState({
     name: "",
     email: "",
     avatar: userAvatar,
   });
+  const [doctor, setDoctor] = useState<any>(null);
+  const [open, setOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState<any>(null);
+
+  // Lấy thông tin doctor từ API
   useEffect(() => {
     const fetchDoctor = async () => {
       const storedDoctorId = localStorage.getItem("doctorId");
       const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
-      if (!doctorId) return;
+      if (!doctorId) {
+        navigate("/doctor/login", { replace: true });
+        return;
+      }
 
       try {
         const res = await axios.get(
           `http://localhost:8000/doctor-profile/${doctorId}`
         );
-        console.log("Doctor API response:", res); // toàn bộ object
-        console.log("Doctor API data:", res.data); // dữ liệu trả về
         if (res.data.success) {
           const doc = res.data.data;
-
-          setDoctor({
-            ...doc,
-            dob: doc.dob ? dayjs(doc.dob) : null,
-          });
-
-          // cập nhật accountInfo từ dữ liệu doctor
+          setDoctor({ ...doc, dob: doc.dob ? dayjs(doc.dob) : null });
           setAccountInfo({
             name: doc.title + ": " + doc.name,
             email: doc.email,
-            avatar: userAvatar, // nếu API trả link avatar thì thay ở đây
+            avatar: userAvatar,
           });
         } else {
           console.error("Lỗi lấy profile:", res.data.message);
+          navigate("/doctor/login", { replace: true });
         }
       } catch (err) {
         console.error("Fetch doctor profile error:", err);
+        navigate("/doctor/login", { replace: true });
+      }
+    };
+    fetchDoctor();
+  }, [navigate]);
+
+  // Nếu back ra ngoài dashboard thì xóa doctorId
+  useEffect(() => {
+    const handleBack = () => {
+      const path = window.location.pathname;
+      if (!path.startsWith("/doctor/dashboard")) {
+        localStorage.removeItem("doctorId");
       }
     };
 
-    fetchDoctor();
+    window.addEventListener("popstate", handleBack);
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+    };
   }, []);
 
-  const [open, setOpen] = useState(false);
-  const [selectedKey, setSelectedKey] = useState("1");
-  const [selectedPatient, setSelectedPatient] = useState<any>(null);
-
-  const [doctor, setDoctor] = useState<any>(null);
   const handleUpdateDoctor = (updateDoctor: any) => {
     setDoctor(updateDoctor);
     setAccountInfo({
@@ -144,64 +159,79 @@ export default function DoctorScene() {
   };
 
   const handleMenuSelect = ({ key }: { key: string }) => {
-    if(key === "logout") {
-      console.log("clicked");
-      alert("Đăng xuất thành công");
+    if (key === "logout") {
+      message.success("Đăng xuất thành công");
       localStorage.removeItem("doctorId");
-      navigate("/");
+      window.history.replaceState(null, "", "/doctor/login");
+      navigate("/doctor/login", { replace: true });
+      return;
     }
-    setSelectedKey(key);
+    if (key === "setting") {
+      setOpen(true);
+      return;
+    }
+
+    const targetPath =
+      key === "" ? "/doctor/dashboard" : `/doctor/dashboard/${key}`;
+    navigate(targetPath, { replace: false });
     setSelectedPatient(null);
   };
 
   const renderMenuItems = (items: typeof mainItems) =>
-    items.map((item) => (
-      <Menu.Item
-        key={item.key}
-        className={`doctor-menu-item ${
-          selectedKey === item.key ? "doctor-menu-item-selected" : ""
-        }`}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: "0.8vw",
-          }}
+    items.map((item) => {
+      const fullPath = "/doctor/dashboard/" + item.key;
+      const isSelected =
+        location.pathname === fullPath ||
+        (item.key === "" && location.pathname === "/doctor/dashboard");
+
+      return (
+        <Menu.Item
+          key={item.key}
+          className={`doctor-menu-item ${
+            isSelected ? "doctor-menu-item-selected" : ""
+          }`}
         >
-          <img
-            src={selectedKey === item.key ? item.iconActive : item.iconDefault}
-            alt={item.label}
+          <div
             style={{
-              width: 20,
-              height: 20,
-              objectFit: "contain",
-              marginRight: 12,
+              display: "flex",
+              alignItems: "center",
+              paddingLeft: "0.8vw",
             }}
-          />
-          <span
-            className={`doctor-menu-label ${
-              selectedKey === item.key ? "doctor-menu-label-active" : ""
-            }`}
           >
-            {item.label}
-          </span>
-        </div>
-      </Menu.Item>
-    ));
+            <img
+              src={isSelected ? item.iconActive : item.iconDefault}
+              alt={item.label}
+              style={{
+                width: 20,
+                height: 20,
+                objectFit: "contain",
+                marginRight: 12,
+              }}
+            />
+            <span
+              className={`doctor-menu-label ${
+                isSelected ? "doctor-menu-label-active" : ""
+              }`}
+            >
+              {item.label}
+            </span>
+          </div>
+        </Menu.Item>
+      );
+    });
 
   return (
     <Layout
       className="doctor-layout"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <Sider min-width={"13.5vw"} className="doctor-sider">
+      <Sider width={"13.5vw"} className="doctor-sider">
         <div className="doctor-logo-container">
           <img src={Logo} alt="logo" className="doctor-logo" />
         </div>
         <Menu
           mode="inline"
-          selectedKeys={[selectedKey]}
+          selectedKeys={[location.pathname.replace("/doctor/dashboard/", "")]}
           onSelect={handleMenuSelect}
           className="doctor-menu"
         >
@@ -210,7 +240,7 @@ export default function DoctorScene() {
         <div className="doctor-divider">
           <Menu
             mode="inline"
-            selectedKeys={[selectedKey]}
+            selectedKeys={[location.pathname]}
             onSelect={handleMenuSelect}
             style={{ borderInlineEnd: "none", background: "transparent" }}
           >
@@ -218,13 +248,16 @@ export default function DoctorScene() {
           </Menu>
         </div>
       </Sider>
+
       <Content className="doctor-content">
         <div className="doctor-header-container">
           <h2 className="doctor-header-title">
-            {selectedKey === "1" && "Dashboard"}
-            {selectedKey === "2" && "Drugbank"}
-            {selectedKey === "3" && "History"}
-            {selectedKey === "4" && (
+            {location.pathname === "/doctor/dashboard" && "Dashboard"}
+            {location.pathname.includes("/doctor/dashboard/drugbank") &&
+              "Drugbank"}
+            {location.pathname.includes("/doctor/dashboard/history") &&
+              "History"}
+            {location.pathname.includes("/doctor/dashboard/patients") && (
               <>
                 <span
                   className={`doctor-header-patients ${
@@ -244,7 +277,8 @@ export default function DoctorScene() {
                 )}
               </>
             )}
-            {selectedKey === "5" && "DRUG-DRUG INTERACTIONS"}
+            {location.pathname.includes("/doctor/dashboard/ddis") &&
+              "DRUG-DRUG INTERACTIONS"}
           </h2>
 
           <div className="doctor-header-right">
@@ -280,25 +314,42 @@ export default function DoctorScene() {
         </div>
 
         <div className="doctor-body">
-          {selectedKey === "1" && <DoctorDashBoard />}
-          {selectedKey === "2" && <DrugListScene />}
-          {selectedKey === "3" && <DoctorHistoryScene />}
-          {selectedKey === "4" && !selectedPatient && (
-            <PatientsList onSelectPatient={(p: any) => setSelectedPatient(p)} />
-          )}
-          {selectedKey === "4" && selectedPatient && (
-            <>
-              {selectedPatient.status === "Chưa khám" ? (
-                <VisitInfor
-                  patient={selectedPatient}
-                  onBack={() => setSelectedPatient(null)}
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <DoctorDashBoard
+                  onSelectPatient={(patient: any) => {
+                    navigate("/doctor/dashboard/patients", { replace: false });
+                    setSelectedPatient(patient);
+                  }}
+                  onSeeAllPatients={() =>
+                    navigate("/doctor/dashboard/patients", { replace: false })
+                  }
                 />
-              ) : (
-                <PatientOneHistory visitId={selectedPatient.visitId} />
-              )}
-            </>
-          )}
-          {selectedKey === "5" && <DrugInteractionChecker />}
+              }
+            />
+            <Route path="drugbank" element={<DrugListScene />} />
+            <Route path="history" element={<DoctorHistoryScene />} />
+            <Route
+              path="patients"
+              element={
+                !selectedPatient ? (
+                  <PatientsList
+                    onSelectPatient={(p: any) => setSelectedPatient(p)}
+                  />
+                ) : selectedPatient.status === "Chưa khám" ? (
+                  <VisitInfor
+                    patient={selectedPatient}
+                    onBack={() => setSelectedPatient(null)}
+                  />
+                ) : (
+                  <PatientOneHistory visitId={selectedPatient.visitId} />
+                )
+              }
+            />
+            <Route path="ddis" element={<DrugInteractionChecker />} />
+          </Routes>
         </div>
       </Content>
 

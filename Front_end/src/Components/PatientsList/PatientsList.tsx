@@ -14,24 +14,26 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
 
-  const [patientList, setPatientList] = useState<any[]>([])
+  const [patientList, setPatientList] = useState<any[]>([]);
   const storedDoctorId = localStorage.getItem("doctorId");
   const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
   useEffect(() => {
-  if (!doctorId) return;
-  const fetchPatients = async () => {
-    try {
-      const res = await fetch(`http://localhost:8000/all-patients/${doctorId}`);
-      const json = await res.json();
-      if (json.success) {
-        setPatientList(json.data);
+    if (!doctorId) return;
+    const fetchPatients = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:8000/all-patients/${doctorId}`
+        );
+        const json = await res.json();
+        if (json.success) {
+          setPatientList(json.data);
+        }
+      } catch (error) {
+        console.error("Fetch patients error:", error);
       }
-    } catch (error) {
-      console.error("Fetch patients error:", error);
-    }
-  };
-  fetchPatients();
-}, [doctorId]);
+    };
+    fetchPatients();
+  }, [doctorId]);
   // Search filter
   const filteredList = patientList.filter((patient) =>
     Object.values(patient).some((field) =>
@@ -54,7 +56,7 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
     {
       key: "more",
       label: (
-        <div className="menu-item" onClick={() => handleMore(record)}>
+        <div onClick={() => handleMore(record)}>
           Khám
         </div>
       ),
@@ -62,28 +64,59 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
   ];
 
   const columns = [
-    { title: <span className="table-header">ID</span>, dataIndex: "id", key: "id", width: 80 },
-    { title: <span className="table-header">Tên bệnh nhân</span>, dataIndex: "name", key: "name", width: 200 },
-    { title: <span className="table-header">Ngày sinh</span>, dataIndex: "dob", key: "dob", width: 150, render: (dob: Date) => dob ? dayjs(dob).format("DD/MM/YYYY") : "-", },
-    { title: <span className="table-header">Giới tính</span>, dataIndex: "gender", key: "gender", width: 100 },
-    { title: <span className="table-header">Triệu chứng</span>, dataIndex: "symptoms", key: "symptoms", width: 250 },
+    {
+      title: <span className="table-header">ID</span>,
+      dataIndex: "id",
+      key: "id",
+      width: 80,
+    },
+    {
+      title: <span className="table-header">Tên bệnh nhân</span>,
+      dataIndex: "name",
+      key: "name",
+      width: 200,
+    },
+    {
+      title: <span className="table-header">Ngày sinh</span>,
+      dataIndex: "dob",
+      key: "dob",
+      width: 150,
+      render: (dob: Date) => (dob ? dayjs(dob).format("DD/MM/YYYY") : "-"),
+    },
+    {
+      title: <span className="table-header">Giới tính</span>,
+      dataIndex: "gender",
+      key: "gender",
+      width: 100,
+    },
+    {
+      title: <span className="table-header">Triệu chứng</span>,
+      dataIndex: "symptoms",
+      key: "symptoms",
+      width: 250,
+    },
     {
       title: <span className="table-header">Trạng thái</span>,
       dataIndex: "status",
       key: "status",
       width: 120,
       render: (text: string) => {
-        let color = text === "Chưa khám" ? "#043bb3" : text === "Đã khám" ? "#d12362" : "black";
+        let color =
+          text === "Chưa khám"
+            ? "#043bb3"
+            : text === "Đã khám"
+            ? "#d12362"
+            : "black";
         return <span style={{ color, fontWeight: "bold" }}>{text}</span>;
-        },
       },
+    },
     {
       title: "",
       key: "actions",
       width: 50,
       render: (_: any, record: any) => (
         <Dropdown menu={{ items: menuItems(record) }} trigger={["click"]}>
-          <MoreOutlined className="more-icon" />
+          <MoreOutlined />
         </Dropdown>
       ),
     },
@@ -107,7 +140,9 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
                 <img src={listDrug} alt="list" className="tab-icon" />
                 <b>All patients</b>
                 <Badge
-                  count={patientList.length > 1000 ? "1000+" : patientList.length}
+                  count={
+                    patientList.length > 1000 ? "1000+" : patientList.length
+                  }
                   style={{ backgroundColor: "var(--primary-color)" }}
                 />
               </span>

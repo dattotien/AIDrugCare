@@ -10,6 +10,7 @@ from entities.prescription_detail import PrescriptionDetail
 from api import drug_api, patient_api, doctor_api, authorization_api
 from database import Database
 from services.model_service import HMGRLService
+import torch
 app = FastAPI(title="AI Drug Care API")
 
 app.add_middleware(
@@ -38,12 +39,13 @@ async def startup_db():
             PrescriptionDetail
         ]
     )
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     app.state.hmgrl_service = HMGRLService(
         model_path="./assets/hmrgl_check_point.pt",
         data_path="./assets",
-        device="cpu"
+        device=device
     )
-
+    print(next(app.state.hmgrl_service.model.parameters()).device)
 @app.on_event("shutdown")
 async def shutdown_db():
     await Database.close_database_connection()

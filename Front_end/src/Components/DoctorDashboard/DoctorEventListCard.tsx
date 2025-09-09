@@ -9,7 +9,7 @@ export default function DoctorEventListCard({ highlight = "#043bb3" }) {
     <div
       style={{
         position: "relative",
-        width: "300px",
+        width: "92%",
         height: "60px",
         backgroundColor: "white",
         borderRadius: "10px",
@@ -19,10 +19,8 @@ export default function DoctorEventListCard({ highlight = "#043bb3" }) {
         padding: "6px 12px", // thêm padding thay vì margin fix cứng
         boxSizing: "border-box",
         marginBottom: 15,
-        marginLeft: 18,
+        marginLeft: '1vw',
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        
-
       }}
     >
       {/* Thanh highlight bên trái */}
@@ -47,8 +45,15 @@ export default function DoctorEventListCard({ highlight = "#043bb3" }) {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "12px", color: "#737373", margin: 0, marginTop: -10 }}>
-          Tiểu phẫu 
+        <p
+          style={{
+            fontSize: "12px",
+            color: "#737373",
+            margin: 0,
+            marginTop: -10,
+          }}
+        >
+          Tiểu phẫu
         </p>
         <img
           src={editLogo}
@@ -68,7 +73,7 @@ export default function DoctorEventListCard({ highlight = "#043bb3" }) {
           color: "#000000",
           fontWeight: "bold",
           margin: 0,
-          marginTop: -8
+          marginTop: -8,
         }}
       >
         Cắt bỏ ruột thừa
@@ -87,7 +92,7 @@ export default function DoctorEventListCard({ highlight = "#043bb3" }) {
             fontSize: "12px",
             color: "#737373",
             margin: 0,
-            marginTop: 10
+            marginTop: 10,
           }}
         >
           7:00 - 8:00 A.M
@@ -99,7 +104,7 @@ export default function DoctorEventListCard({ highlight = "#043bb3" }) {
               fontSize: "12px",
               color: "#737373",
               margin: 0,
-              marginTop: 10
+              marginTop: 10,
             }}
           >
             +10
