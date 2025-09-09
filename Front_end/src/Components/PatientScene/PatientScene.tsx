@@ -29,13 +29,19 @@ export default function PatientScene() {
     totalVisits: 0,
     latestVisitDay: null,
     nextVisitDay: null,
-    threeLatestRes: []
+    threeLatestRes: [],
   });
   const [loading, setLoading] = useState(true);
 
   const patientId = localStorage.getItem("patientId");
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (!patientId) {
+      navigate("/patient/login", { replace: true });
+    }
+  }, [patientId, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,13 +52,13 @@ export default function PatientScene() {
           totalVisitsRes,
           latestVisitRes,
           nextVisitRes,
-          threeLatestRes
+          threeLatestRes,
         ] = await Promise.all([
           axios.get(`http://127.0.0.1:8000/patient-profile/${patientId}`),
           axios.get(`http://127.0.0.1:8000/total-visits/${patientId}`),
           axios.get(`http://127.0.0.1:8000/latest-visit-day/${patientId}`),
           axios.get(`http://127.0.0.1:8000/next-visit-day/${patientId}`),
-          axios.get(`http://127.0.0.1:8000/three-latest-visits/${patientId}`)
+          axios.get(`http://127.0.0.1:8000/three-latest-visits/${patientId}`),
         ]);
 
         setData({
@@ -60,7 +66,7 @@ export default function PatientScene() {
           totalVisits: totalVisitsRes.data.data,
           latestVisitDay: latestVisitRes.data.data,
           nextVisitDay: nextVisitRes.data.data,
-          threeLatestRes: threeLatestRes.data.data
+          threeLatestRes: threeLatestRes.data.data,
         });
       } catch (error) {
         console.error("Error fetching patient data:", error);
@@ -79,7 +85,12 @@ export default function PatientScene() {
 
   const selectedKey = getKeyFromPath(location.pathname);
 
-  const makeItem = (key: string, label: string, icon: string, activeIcon: string) => ({
+  const makeItem = (
+    key: string,
+    label: string,
+    icon: string,
+    activeIcon: string
+  ) => ({
     key,
     label,
     icon: (
@@ -88,7 +99,7 @@ export default function PatientScene() {
         alt={label}
         style={{ width: 20, height: 20, marginLeft: 30 }}
       />
-    )
+    ),
   });
 
   const menuItems = [
@@ -105,14 +116,14 @@ export default function PatientScene() {
         backgroundImage: `url(${Back})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundPosition: "center"
+        backgroundPosition: "center",
       }}
     >
       <Sider
         style={{
           backgroundColor: "rgba(255,255,255,0.7)",
           borderRadius: "0px 20px 20px 20px",
-          width: "170px"
+          width: "170px",
         }}
       >
         <div style={{ textAlign: "center", padding: "20px 0" }}>
@@ -134,15 +145,14 @@ export default function PatientScene() {
             backgroundColor: "transparent",
             textAlign: "left",
             fontSize: 14,
-            fontWeight: "bold"
+            fontWeight: "bold",
           }}
         />
 
         <div
           onClick={() => {
-            alert("Đăng suất tài khoản");
             localStorage.removeItem("patientId");
-            navigate("/");
+            navigate("/patient/login", { replace: true });
           }}
           style={{
             position: "absolute",
@@ -152,10 +162,14 @@ export default function PatientScene() {
             alignItems: "center",
             cursor: "pointer",
             fontWeight: "bold",
-            color: "#043bb3"
+            color: "#043bb3",
           }}
         >
-          <img src={logLogo2} alt="Đăng xuất" style={{ width: 20, height: 20, marginRight: 10 }} />
+          <img
+            src={logLogo2}
+            alt="Đăng xuất"
+            style={{ width: 20, height: 20, marginRight: 10 }}
+          />
           Đăng xuất
         </div>
       </Sider>
@@ -167,7 +181,7 @@ export default function PatientScene() {
               margin: "26px 0",
               fontSize: 18,
               fontWeight: "bold",
-              color: "#043bb3"
+              color: "#043bb3",
             }}
             items={
               selectedKey === "1"
@@ -181,7 +195,13 @@ export default function PatientScene() {
           />
 
           {loading ? (
-            <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 100,
+              }}
+            >
               <Spin size="large" tip="Đang tải thông tin bệnh nhân..." />
             </div>
           ) : !data.profile ? (
@@ -192,7 +212,13 @@ export default function PatientScene() {
                 <Route
                   path=""
                   element={
-                    <div style={{ display: "flex", flexDirection: "row", gap: "2vw" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "2vw",
+                      }}
+                    >
                       <div style={{ flex: 3 }}>
                         <PatientCardCount
                           total={data.totalVisits}
@@ -201,13 +227,23 @@ export default function PatientScene() {
                         />
                         <PatientHistoryMost visits={data.threeLatestRes} />
                       </div>
-                      <div style={{ flex: 1, position: "absolute", top: 0, right: 0 }}>
+                      <div
+                        style={{
+                          flex: 1,
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                        }}
+                      >
                         <PatientColInfor patient={data.profile} />
                       </div>
                     </div>
                   }
                 />
-                <Route path="history" element={<PatientHistory patientId={patientId} />} />
+                <Route
+                  path="history"
+                  element={<PatientHistory patientId={patientId} />}
+                />
                 <Route path="setting" element={<p>Cài đặt</p>} />
               </Routes>
 

@@ -1,14 +1,16 @@
-import { Button, Card, Checkbox, Input, Result } from "antd";
-import { useState } from "react";
+import { Button, Card, Checkbox, Input, message } from "antd";
+import { useEffect, useState } from "react";
 import login_back from "../../assets/test.png";
 import { RightCircleOutlined, CaretRightOutlined } from "@ant-design/icons";
 import styles from "./DoctorLoginScene.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-export default function DoctorLoginScence() {
+
+export default function DoctorLoginScene() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
   const handleOnLogin = async () => {
     try {
       const result = await axios.post(
@@ -25,10 +27,14 @@ export default function DoctorLoginScence() {
         const doctorId = result.data.data._id;
         console.log("Saving doctorId to localStorage:", doctorId);
         localStorage.setItem("doctorId", String(doctorId));
-        navigate("/doctor/dashboard");
+        message.success("Đăng nhập thành công");
+        navigate("/doctor/dashboard", { replace: true });
+      } else {
+        message.error(result.data.message || "Đăng nhập thất bại");
       }
     } catch (error: any) {
       console.error("Login failed:", error.response?.data || error.message);
+      message.error("Đã có lỗi xảy ra, vui lòng thử lại");
     }
   };
 
@@ -73,7 +79,7 @@ export default function DoctorLoginScence() {
             Our hospital is a modern healthcare center committed to providing
             high-quality medical services. With advanced facilities and
             experienced doctors, we ensure safe, effective, and comprehensive
-            care for all patients.{" "}
+            care for all patients.
           </p>
           <div
             style={{
@@ -119,13 +125,13 @@ export default function DoctorLoginScence() {
             className={styles.input}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-          ></Input>
+          />
           <p className={styles.text}>Mật khẩu</p>
           <Input.Password
             className={styles.input}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          ></Input.Password>
+          />
           <div style={{ marginTop: "2vh", marginLeft: "1vw" }}>
             <Checkbox style={{ color: "#043BB3" }}>Nhớ mật khẩu</Checkbox>
           </div>

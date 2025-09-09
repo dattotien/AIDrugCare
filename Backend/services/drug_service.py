@@ -96,7 +96,7 @@ async def predict_one_drug_interaction(drug_nameA: str, drug_nameB: str, hmgrl_s
 
     if idxA is None or idxB is None:
         return {
-            "success": False,
+            "success": True,
             "message": "Không tìm thấy thuốc trong mô hình",
             "data": ""
         }

@@ -17,7 +17,7 @@ import thainguyen from "../../assets/thainguyen.jpg";
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 import { useNavigate } from "react-router-dom";
-
+import doctor from "../../assets/doctor.png";
 function IntroductionScene() {
   const navigate = useNavigate();
 
@@ -27,9 +27,9 @@ function IntroductionScene() {
         minHeight: "400vh",
         maxWidth: "100vw",
         backgroundImage: `url(${Back})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center 12.5%",
-        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover", // ảnh phủ toàn màn hình, co giãn đúng tỉ lệ
+        backgroundPosition: "center", // căn giữa
+        backgroundRepeat: "no-repeat", // không lặp lại
       }}
     >
       <Header className={styles.header}>
@@ -52,7 +52,7 @@ function IntroductionScene() {
             medical staff work tirelessly to ensure safety, trust, and the best
             possible outcomes for every patient and their family.
           </p>
-          <div style={{ marginTop: 20, display: "flex", gap: "16px" }}>
+          <div style={{ marginTop: 20, display: "flex", gap: "10vw" }}>
             <Button
               icon={<RightOutlined />}
               iconPosition="end"
@@ -73,18 +73,13 @@ function IntroductionScene() {
           </div>
           <Row className={styles.row}>
             <Col span={6}>
-              <Card
-                className={styles.card}
-                bordered={false}
-                title={
-                  <span style={{ color: "#043bb3", fontWeight: "bold" }}>
-                    <CheckCircleOutlined
-                      style={{ color: "#043bb3", marginRight: 8 }}
-                    />
-                    Compassionate & Professional Care
-                  </span>
-                }
-              >
+              <Card className={styles.card}>
+                <span style={{ color: "#043bb3", fontWeight: "bold" }}>
+                  <CheckCircleOutlined
+                    style={{ color: "#043bb3", marginRight: "0.5vw" }}
+                  />
+                  Compassionate & Professional Care
+                </span>
                 <Paragraph>
                   We provide patient-centered healthcare with empathy, respect,
                   and professionalism.
@@ -93,18 +88,13 @@ function IntroductionScene() {
             </Col>
 
             <Col span={6}>
-              <Card
-                className={styles.card}
-                bordered={false}
-                title={
-                  <span style={{ color: "#043bb3", fontWeight: "bold" }}>
-                    <CheckCircleOutlined
-                      style={{ color: "#043bb3", marginRight: 8 }}
-                    />
-                    Modern Facilities & Innovative Solutions
-                  </span>
-                }
-              >
+              <Card className={styles.card} bordered={false}>
+                <span style={{ color: "#043bb3", fontWeight: "bold" }}>
+                  <CheckCircleOutlined
+                    style={{ color: "#043bb3", marginRight: 8 }}
+                  />
+                  Modern Facilities & Innovative Solutions
+                </span>
                 <Paragraph>
                   With advanced technology and modern facilities, we deliver
                   accurate diagnoses and effective treatment.
@@ -113,18 +103,13 @@ function IntroductionScene() {
             </Col>
 
             <Col span={6}>
-              <Card
-                className={styles.card}
-                bordered={false}
-                title={
-                  <span style={{ color: "#043bb3", fontWeight: "bold" }}>
-                    <CheckCircleOutlined
-                      style={{ color: "#043bb3", marginRight: 8 }}
-                    />
-                    Your Health Journey, Our Commitment
-                  </span>
-                }
-              >
+              <Card className={styles.card}>
+                <span style={{ color: "#043bb3", fontWeight: "bold" }}>
+                  <CheckCircleOutlined
+                    style={{ color: "#043bb3", marginRight: 8 }}
+                  />
+                  Your Health Journey, Our Commitment
+                </span>
                 <Paragraph>
                   Our dedicated team supports you at every stage, from checkups
                   to specialized care.
@@ -134,12 +119,13 @@ function IntroductionScene() {
           </Row>
         </div>
         <div className={styles.content2}>
+          <img src={doctor} className={styles.doctor_img}></img>
           <div className={styles.content2_in}>
             <div className={styles.title}>
               <UserOutlined className={styles.icon} />
               <span>TOP GENERAL HOSPITAL, JUST FOR YOU</span>
             </div>
-            <div style={{ marginLeft: "40px" }}>
+            <div style={{ marginLeft: "2vw" }}>
               <h1>
                 YOUR BEST{" "}
                 <span className={styles.highlight}>HEALTHCARE EXPERIENCE</span>{" "}
@@ -228,7 +214,7 @@ function IntroductionScene() {
               <div
                 style={{
                   width: "70vw",
-                  paddingLeft: "15vw",
+                  paddingLeft: "12vw",
                   justifyContent: "center",
                   display: "flex",
                   alignItems: "center",
