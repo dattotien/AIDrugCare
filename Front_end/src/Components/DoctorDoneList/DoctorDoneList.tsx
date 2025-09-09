@@ -27,7 +27,7 @@ export default function DoctorDoneList(){
         fetchVisit();
     }, [doctorId])
     return (
-        <div>
+        <div style={{ width: "100%", height: "40%", borderRadius: "10px" }}>
             <div style = {{display : "flex", flexDirection: "row", justifyContent: "space-between"}}>
                 <p style = {{fontSize : "12px", fontWeight: "bold", color : "#000", margin: 0,  marginTop: 20, marginLeft: 18 , marginBottom: 7}}>Danh sách đã khám</p>
                 <p style = {{fontSize : "12px", color: "#737373", margin: 0, marginTop: 20, marginRight: 25 , marginBottom: 7}}>Xem tất cả</p>
