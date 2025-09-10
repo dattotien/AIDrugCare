@@ -189,7 +189,6 @@ export default function DrugListScene() {
 
   return (
     <div>
-<<<<<<< Updated upstream
       <div
         style={{
           width: "75vw",
@@ -205,72 +204,6 @@ export default function DrugListScene() {
           backgroundPosition: "center",
           padding: "1vw",
         }}
-=======
-      <Tabs
-        defaultActiveKey="1"
-        items={[
-          {
-            key: "1",
-            label: (
-              <span className="tab-label">
-                <img src={listDrug} alt="list" className="tab-icon" />
-                <b>All drugs</b>
-                <Badge
-                  count={drugList.length > 1000 ? "1000+" : drugList.length}
-                  style={{ backgroundColor: "var(--primary-color)" }}
-                />
-              </span>
-            ),
-          },
-        ]}
-      />
-      <Table
-        className="drug-table"
-        scroll={{ x: "max-content" }}
-        columns={columns}
-        dataSource={paginatedData}
-        loading={loading}
-        pagination={false}
-        title={() => (
-          <div className="table-header-bar">
-            <Button icon={<FilterOutlined />}>Filter</Button>
-
-            <div className="pagination-center">
-              <Pagination
-                current={currentPage}
-                pageSize={pageSize}
-                total={filteredList.length}
-                onChange={(page) => setCurrentPage(page)}
-                showSizeChanger={false}
-              />
-            </div>
-
-            <div className="search-add">
-              <Input.Search
-                placeholder="Tìm thuốc tại đây"
-                className="search-input"
-                allowClear
-                onSearch={handleSearch}
-                onPressEnter={(e) => handleSearch(e.currentTarget.value)}
-              />
-            </div>
-          </div>
-        )}
-      />
-
-      {/* Modal chi tiết */}
-      <Modal
-        open={showDrugInfoModal}
-        footer={null}
-        onCancel={() => {
-          setShowDrugInfoModal(false);
-          setSelectedDrug(null);
-        }}
-        width="60%"
-        style={{ top: 20 }}
-        title={null}
-        closeIcon={<div className="close-btn">X</div>}
->>>>>>> Stashed changes
       >
         <div className={styles["flex-title"]}>
           <span>Tất cả</span>
