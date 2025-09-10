@@ -48,39 +48,46 @@ export default function DoctorCardCount() {
 
   return (
     <div className={styles.cardContain}>
-      <div className={styles.card1}>
-        <div className={styles.circle}>
-          <img
-            src={waitLogo}
-            style={{
-              width: "22px",
-              height: "22px",
-            }}
-          />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "60%",
+        }}
+      >
+        <div className={styles.card1}>
+          <div className={styles.circle}>
+            <img
+              src={waitLogo}
+              style={{
+                width: "22px",
+                height: "22px",
+              }}
+            />
+          </div>
+          <div>
+            <p className={styles.cardHeader}>{notVisitedCount || "No data"}</p>
+            <p className={styles.cardText}>Tổng số chưa khám</p>
+          </div>
         </div>
-        <div>
-          <p className={styles.cardHeader}>{notVisitedCount || "No data"}</p>
-          <p className={styles.cardText}>Tổng số chưa khám</p>
+
+        <div className={styles.card1}>
+          <div className={styles.circle}>
+            <img
+              src={timeLogo}
+              alt="time"
+              style={{
+                width: "22px",
+                height: "22px",
+              }}
+            />
+          </div>
+          <div>
+            <p className={styles.cardHeader}>{visitedCount}</p>
+            <p className={styles.cardText}>Tổng số đã khám</p>
+          </div>
         </div>
       </div>
-
-      <div className={styles.card1}>
-        <div className={styles.circle}>
-          <img
-            src={timeLogo}
-            alt="time"
-            style={{
-              width: "22px",
-              height: "22px",
-            }}
-          />
-        </div>
-        <div>
-          <p className={styles.cardHeader}>{visitedCount}</p>
-          <p className={styles.cardText}>Tổng số đã khám</p>
-        </div>
-      </div>
-
       <div className={styles.cardSmall}>
         <div className={styles.circleSmall}>
           <p

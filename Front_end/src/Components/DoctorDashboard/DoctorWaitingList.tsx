@@ -14,8 +14,9 @@ interface Patient {
 }
 interface DoctorWaitingListProps {
   onSelectPatient: (patient: any) => void;
+  onSeeAll: () => void; 
 }
-export default function DoctorWaitingList() {
+export default function DoctorWaitingList({ onSelectPatient, onSeeAll }: DoctorWaitingListProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const navigate = useNavigate();
   const storedDoctorId = localStorage.getItem("doctorId");
@@ -68,7 +69,9 @@ export default function DoctorWaitingList() {
             fontSize: "12px",
             color: "#fff",
             margin: 0,
+            cursor: "pointer",
           }}
+          onClick={onSeeAll}
         >
           Xem tất cả
         </p>
@@ -79,7 +82,9 @@ export default function DoctorWaitingList() {
         </p>
       ) : (
         patients.slice(0, 3).map((p) => (
-          <div key={p.id} className={styles.row}>
+          <div key={p.id} className={styles.row}
+            onClick={() => onSelectPatient(p)}   // 👈 gọi callback
+            style={{ cursor: "pointer" }}>
             <span>
               <img
                 src={p.gender === "Nam" ? blueLogo : redLogo}

@@ -6,13 +6,19 @@ import DoctorSchedule from "./DoctorSchedule";
 import DoctorDoneList from "../DoctorDoneList/DoctorDoneList";
 
 import styles from "./DoctorDashboard.module.css";
-
-export default function DoctorDashboard() {
+interface DoctorDashboardProps {
+  onSelectPatient: (patient: any) => void; 
+  onSeeAllPatients: () => void;
+}
+export default function DoctorDashboard({ onSelectPatient, onSeeAllPatients }: DoctorDashboardProps) {
   return (
     <div className={styles.dashboard}>
       <div className={styles.leftPanel}>
         <DoctorCardCount />
-        <DoctorWaitingList />
+        <DoctorWaitingList 
+          onSelectPatient={onSelectPatient} 
+          onSeeAll={onSeeAllPatients}
+          />
         <DoctorNews />
       </div>
 
