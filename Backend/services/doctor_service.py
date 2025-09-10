@@ -135,8 +135,11 @@ async def update_diagnosis(patient_id: int, diagnosis: str):
         }
 """
 
-async def get_number_waiting():
-    count = await Visit.find(Visit.diagnosis == "Trống").count()
+async def get_number_waiting(doctor_id: int):
+    count = await Visit.find({
+        "doctor_id": doctor_id,
+        "status": "Chưa khám",
+    }).count()
     return {
         "success": True,
         "message": "Lấy số bệnh nhân đang chờ khám thành công",

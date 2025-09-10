@@ -46,9 +46,9 @@ async def update_patient_diagnosis(patient_id: int, diagnosis: str):
     return await update_diagnosis(patient_id, diagnosis)
 """
 
-@router.get("/waiting-count", response_model=ResponseModel)
-async def waiting_count():
-    return await get_number_waiting()
+@router.get("/waiting-count/{doctor_id}", response_model=ResponseModel)
+async def waiting_count(doctor_id: int):
+    return await get_number_waiting(doctor_id)
 
 @router.get("/visited-count-today/{doctor_id}", response_model=ResponseModel)
 async def visited_today(doctor_id: int):

@@ -14,7 +14,15 @@ class DrugInteraction(BaseModel):
     drugbank_id: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
+    
+class DrugOut(BaseModel):
+    id: str = Field(..., alias="_id")
+    generic_name: str
+    description: Optional[str] = None
 
+    class Config:
+        from_attributes = True 
+        
 class Drug(Document):
     id: str = Field(alias="_id")
     generic_name: str
