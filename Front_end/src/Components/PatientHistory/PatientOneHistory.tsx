@@ -58,7 +58,7 @@ export default function PatientOneHistory({ visitId }: Props) {
   return (
     <div className="patient-history-container">
       <div className="patient-history-header">
-        <p>BỆNH VIỆN ĐA KHOA A</p>
+        <p>{visit?.hospital}</p>
         <p className="small">Email: ngyen23102005@gmail.com</p>
         <p className="small">Hotline: 0978349285/0986269837</p>
       </div>

@@ -3,6 +3,10 @@ import numpy as np
 from pydantic import BaseModel, Field
 from beanie import PydanticObjectId
 import re
+from entities.visit import Visit
+from entities.prescription_detail import PrescriptionDetail
+from entities.medical_history import Medical_History
+
 class DrugOut(BaseModel):
     id: str = Field(..., alias="_id")
     generic_name: str
@@ -196,3 +200,40 @@ async def get_all_interactions(drug_list: list[str], hmgrl_service):
         "message": f"Tìm thấy {len(results)} cặp tương tác",
         "data": results
     }
+    
+async def get_previous_drugs(patient_id: int):
+    visits = await Visit.find({
+        "patient_id": patient_id,
+        "status": "Đã khám"
+    }).to_list()
+
+    drug_ids = set()
+    for visit in visits:
+        prescriptions = await PrescriptionDetail.find(
+            PrescriptionDetail.visit_id == visit.id
+        ).to_list()
+        for prescription in prescriptions:
+            for item in prescription.items:
+                drug_ids.add(item.drug_id)
+    if not drug_ids:
+        return {
+            "success": True,
+            "message": "Bệnh nhân chưa được kê thuốc nào",
+            "data": []
+        }
+    drugs = await Drug.find({"_id": {"$in": list(drug_ids)}}).to_list()
+
+    return {
+        "success": True,
+        "message": "Lấy danh sách thuốc đã kê cho bệnh nhân thành công",
+        "data": [
+            DrugOut.model_validate({
+                "id": drug.id,
+                "generic_name": drug.generic_name,
+                "description": drug.description
+            })
+            for drug in drugs
+        ]
+    }
+
+

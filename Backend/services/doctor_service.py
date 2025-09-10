@@ -135,8 +135,11 @@ async def update_diagnosis(patient_id: int, diagnosis: str):
         }
 """
 
-async def get_number_waiting():
-    count = await Visit.find(Visit.diagnosis == "Trống").count()
+async def get_number_waiting(doctor_id: int):
+    count = await Visit.find({
+        "doctor_id": doctor_id,
+        "status": "Chưa khám",
+    }).count()
     return {
         "success": True,
         "message": "Lấy số bệnh nhân đang chờ khám thành công",
@@ -337,6 +340,7 @@ async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
         "visit": {
             "diagnosis": visit.diagnosis,
             "note": visit.note,
+            "hospital" : visit.hospital
         },
         "prescription": {
             "id": str(prescription_detail.id),

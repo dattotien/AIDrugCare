@@ -6,3 +6,20 @@ Backend/assets/hmrgl_check_point.pt
 # Optional: ignore __pycache__ folders too
 __pycache__/
 Backend/assets/drug_interaction.json
+*.pyc
+*.pyc
+Backend/__pycache__/main.cpython-312.pyc
+Backend/api/__pycache__/authorization_api.cpython-312.pyc
+Backend/api/__pycache__/doctor_api.cpython-312.pyc
+Backend/api/__pycache__/drug_api.cpython-312.pyc
+Backend/entities/__pycache__/doctor.cpython-312.pyc
+Backend/entities/__pycache__/drug.cpython-312.pyc
+Backend/entities/__pycache__/patient.cpython-312.pyc
+Backend/entities/__pycache__/prescription_detail.cpython-312.pyc
+Backend/entities/__pycache__/visit.cpython-312.pyc
+Backend/services/__pycache__/doctor_service.cpython-312.pyc
+Backend/services/__pycache__/drug_service.cpython-312.pyc
+Backend/services/__pycache__/model.cpython-312.pyc
+Backend/services/__pycache__/model_service.cpython-312.pyc
+Backend/services/__pycache__/patient_service.cpython-312.pyc
+Backend/api/__pycache__/doctor_api.cpython-312.pyc
