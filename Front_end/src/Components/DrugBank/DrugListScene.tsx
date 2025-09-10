@@ -369,7 +369,7 @@ export default function DrugListScene() {
         >
           <div
             style={{
-              height: "500px",
+              height: "600px",
               overflowY: "auto",
             }}
           >

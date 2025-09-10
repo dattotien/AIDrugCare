@@ -455,3 +455,19 @@ async def get_all_patients_by_doctor(doctor_id: int):
         "message": "Lấy danh sách tất cả các bệnh nhân",
         "data": data
     }
+
+async def get_visit_by_id(visit_id: int):
+    visit = await Visit.get(visit_id)
+    if not visit:
+        return {"success": False, "message": "Visit not found", "data": None}
+    return {"success": True, "message": "Visit retrieved", "data": visit}
+
+async def get_medical_history_by_visit(visit_id: int):
+    history = await Medical_History.find_one(Medical_History.visit_id == visit_id)
+    if not history:
+        return {"success": False, "message": "Không tìm thấy medical history", "data": None}
+    return {
+        "success": True,
+        "message": "Lấy medical history thành công",
+        "data": history
+    }

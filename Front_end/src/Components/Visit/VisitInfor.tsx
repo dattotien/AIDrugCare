@@ -1,3 +1,4 @@
+// VisitInfor.tsx
 import { useMemo, useState, useEffect } from "react";
 import {
   Row,
@@ -24,12 +25,12 @@ interface VisitInforProps {
 }
 
 type DrugRow = {
-  id: string;       // id trong DB (nếu có)
-  name: string;     // generic_name
-  dose: string;     // liều dùng (chỉ để hiển thị)
-  time: string;     // tần suất (frequency)
-  duration: number; // duration_days
-  note: string;     // yêu cầu
+  id: string;
+  name: string;
+  dose: string;
+  time: string;
+  duration: number;
+  note: string;
 };
 
 export default function VisitInfor({ onBack, patient }: VisitInforProps) {
@@ -38,89 +39,192 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const [showDDIs, setShowDDIs] = useState(false);
   const [showPrescription, setShowPrescription] = useState(false);
   const [historyData, setHistoryData] = useState<any[]>([]);
-  const [labResult, setLabResult] = useState<string>("");
+  const [labResult, setLabResult] = useState<string>("Chưa có");
   const [doctorName, setDoctorName] = useState<string>("");
   const [doctorwork, setDoctorWork] = useState<string>("");
-  const [patientHistory, setPatientHistory] = useState<string>("");
+  const [patientHistory, setPatientHistory] = useState<string>("Không có");
 
-  // ---- diagnosis ----
   const [diagnosis, setDiagnosis] = useState("");
   const [diagnosisSaved, setDiagnosisSaved] = useState(false);
   const [editingDiagnosis, setEditingDiagnosis] = useState(false);
 
-  // ---- prescription state ----
+  const [visitId, setVisitId] = useState<number | null>(null);
   const [drugs, setDrugs] = useState<DrugRow[]>([]);
 
-  // ---- form thêm thuốc ----
   const [formName, setFormName] = useState("");
   const [formDose, setFormDose] = useState("");
   const [formTime, setFormTime] = useState("");
-  const [formDuration, setFormDuration] = useState<number>(2); // số ngày mặc định
+  const [formDuration, setFormDuration] = useState<number>(2);
   const [formNote, setFormNote] = useState("");
 
   const [options, setOptions] = useState<{ value: string }[]>([]);
   const [loadingDrugs, setLoadingDrugs] = useState(false);
 
-  // ---- fetch doctor ----
+  const API_BASE = "http://127.0.0.1:8000";
+
+  // ---- fetch doctor profile ----
   useEffect(() => {
     const storedDoctorId = localStorage.getItem("doctorId");
     const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
     if (!doctorId) return;
 
-    const fetchDoctor = async () => {
-      try {
-        const res = await fetch(`http://127.0.0.1:8000/doctor-profile/${doctorId}`);
-        const json = await res.json();
-        if (json.success && json.data?.name) {
-          setDoctorName(json.data.name);
-          setDoctorWork(json.data.workplace);
+    axios
+      .get(`${API_BASE}/doctor-profile/${doctorId}`)
+      .then((res) => {
+        const json = res.data;
+        if (json.success && json.data) {
+          setDoctorName(json.data.name || "");
+          setDoctorWork(json.data.workplace || "");
         }
-      } catch (err) {
-        console.error("Error fetching doctor:", err);
-      }
-    };
-    fetchDoctor();
+      })
+      .catch((err) => console.error("Error fetching doctor:", err));
   }, []);
 
-  // ---- fetch history ----
+  // ---- fetch full history ----
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/doctor-visit-history/${patient.id}`);
-        const json = await res.json();
+        const res = await axios.get(`${API_BASE}/doctor-visit-history/${patient.id}`);
+        const json = res.data;
+        console.log("👉 doctor-visit-history raw:", json);
+
         if (json.success && Array.isArray(json.data)) {
           const mapped = json.data.map((v: any) => {
             const historyParts = [v.chronic, v.surg, v.fam_hist].filter(
-              (item) =>
-                item && item.trim() !== "" && item.trim().toLowerCase() !== "không có"
+              (item: any) =>
+                item && item.trim && item.trim() !== "" && item.trim().toLowerCase() !== "không có"
             );
             return {
-              id: v.visit,
+              id: v.visit_id || v.visit,
               doctor_name: v.doctor || "Không rõ",
               result: v.conclusion || "Chưa có",
-              labResult: v.symptoms || "Chưa có",
+              labResult: v.lab_result || "Chưa có",
               date: v.visit_date,
               history: historyParts.length > 0 ? historyParts.join(", ") : "Không có",
             };
           });
+          console.log("👉 mapped historyData:", mapped);
           setHistoryData(mapped);
-          if (mapped.length > 0) {
-            setLabResult(mapped[0].labResult);
-            setPatientHistory(mapped[0].history);
-          }
         }
       } catch (err) {
         console.error("Error fetching history:", err);
       }
     };
+
     fetchHistory();
   }, [patient.id]);
 
+  // ---- Try to resolve visitId ----
+  const getVisitIdForCurrent = async (): Promise<number | null> => {
+    const tryFields = ["visit_id", "visitId", "current_visit_id", "visit", "visitId"];
+    for (const f of tryFields) {
+      // @ts-ignore
+      const val = patient[f];
+      if (val !== undefined && val !== null && val !== "") {
+        const numeric = Number(val);
+        if (!Number.isNaN(numeric)) return numeric;
+      }
+    }
+
+    // fallback recent-patients
+    try {
+      const storedDoctorId = localStorage.getItem("doctorId");
+      const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
+      if (!doctorId) return null;
+
+      const res = await axios.get(`${API_BASE}/recent-patients/${doctorId}`);
+      const json = res.data;
+      console.log("👉 recent-patients raw:", json);
+
+      if (json.success && Array.isArray(json.data)) {
+        const found = json.data.find(
+          (it: any) =>
+            (it.patient && (it.patient.id === patient.id || it.patient.patient_id === patient.id)) ||
+            it.patient_id === patient.id ||
+            it.id === patient.id
+        );
+        if (found) {
+          console.log("👉 found patient in recent-patients:", found);
+          if (found.visit_id) return Number(found.visit_id);
+          if (found.visit) return Number(found.visit);
+        }
+      }
+    } catch (err) {
+      console.warn("Không lấy được visit_id từ recent-patients:", err);
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const id = await getVisitIdForCurrent();
+        console.log("👉 Resolved visitId:", id);
+        setVisitId(id);
+      } catch (err) {
+        console.error("Lỗi khi xác định visitId:", err);
+        setVisitId(null);
+      }
+    };
+    load();
+  }, [patient]);
+
+  // ---- fetch visit ----
+  useEffect(() => {
+    const fetchVisit = async () => {
+      if (!visitId) return;
+      try {
+        const res = await axios.get(`${API_BASE}/visit/${visitId}`);
+        const json = res.data;
+        console.log("👉 visit raw:", json);
+
+        if (json.success && json.data) {
+          const visit = json.data;
+          if (visit.diagnosis && visit.diagnosis !== "Trống") {
+            setDiagnosis(visit.diagnosis);
+            setDiagnosisSaved(true);
+          }
+
+          // ✅ Gọi API medical-history cho visitId
+          try {
+            const mhRes = await axios.get(`${API_BASE}/medical-history/${visitId}`);
+            const mhJson = mhRes.data;
+            console.log("👉 medical-history raw:", mhJson);
+
+            if (mhJson.success && mhJson.data) {
+              const d = mhJson.data;
+              setLabResult(d.labResult || "Chưa có");
+
+              const historyParts = [
+                d.chronic_diseases,
+                d.surgeries,
+                d.family_history,
+                d.allergies,
+              ].filter(
+                (item: any) =>
+                  item && item.trim && item.trim() !== "" && item.trim().toLowerCase() !== "Không có"
+              );
+              setPatientHistory(historyParts.length > 0 ? historyParts.join(", ") : "Không có");
+            }
+          } catch (err) {
+            console.warn("Không thể lấy medical-history:", err);
+          }
+        } else {
+          console.warn("Visit API returned no data for id", visitId, json);
+        }
+      } catch (err) {
+        console.error("Lỗi khi gọi API /visit/:", err);
+      }
+    };
+
+    fetchVisit();
+  }, [visitId]);
+
   const historyColumns = [
-    { title: "ID", dataIndex: "id", key: "id", width: 100 },
-    { title: "Bác sĩ", dataIndex: "doctor_name", key: "doctor_name" },
+    { title: "ID", dataIndex: "id", key: "id", width: 150 },
+    { title: "Bác sĩ", dataIndex: "doctor_name", key: "doctor_name", width: 250 },
     { title: "Kết luận", dataIndex: "result", key: "result" },
-    { title: "Ngày tạo", dataIndex: "date", key: "date", width: 140 },
+    { title: "Ngày tạo", dataIndex: "date", key: "date", width: 200 },
   ];
 
   const removeDrug = (id: string) => {
@@ -162,9 +266,10 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     }
     setLoadingDrugs(true);
     try {
-      const res = await axios.get("http://localhost:8000/drugs");
-      if (res.data.success && Array.isArray(res.data.data)) {
-        const list = res.data.data as any[];
+      const res = await axios.get(`${API_BASE}/drugs`);
+      const json = res.data;
+      if (json.success && Array.isArray(json.data)) {
+        const list = json.data as any[];
         const filtered = list
           .filter((d) => d.generic_name?.toLowerCase().includes(query.toLowerCase()))
           .slice(0, 10)
@@ -185,11 +290,8 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     if (!formName.trim()) return;
 
     try {
-      const res = await fetch(
-        `http://127.0.0.1:8000/search?name=${encodeURIComponent(formName)}`
-      );
-      const json = await res.json();
-
+      const res = await axios.get(`${API_BASE}/search?name=${encodeURIComponent(formName)}`);
+      const json = res.data;
       if (json.success && json.data.length > 0) {
         const drug = json.data[0];
         const next: DrugRow = {
@@ -221,34 +323,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     return `ngày ${d.getDate()} tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
   }, []);
 
-  // Attempt to resolve visit_id:
-  const getVisitIdForCurrent = async (): Promise<number | null> => {
-    // try common fields first
-    const fields = ["visit_id", "visitId", "visitId", "current_visit_id"];
-    for (const f of fields) {
-      // @ts-ignore
-      if (patient[f]) return patient[f];
-    }
-
-    // fallback: fetch recent-patients for this doctor and find visit by patient id
-    try {
-      const storedDoctorId = localStorage.getItem("doctorId");
-      const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
-      if (!doctorId) return null;
-      const res = await fetch(`http://127.0.0.1:8000/recent-patients/${doctorId}`);
-      const json = await res.json();
-      if (json.success && Array.isArray(json.data)) {
-        const found = json.data.find((it: any) => it.patient?.id === patient.id || it.patient?.patient_id === patient.id);
-        if (found && found.visit_id) return found.visit_id;
-        if (found && found.visitDate) return found.visitDate;
-      }
-    } catch (err) {
-      console.error("Không lấy được visit_id từ recent-patients:", err);
-    }
-
-    return null;
-  };
-
   const handleSaveDiagnosis = () => {
     if (!diagnosis.trim()) {
       alert("Vui lòng nhập chẩn đoán trước khi ghi nhận!");
@@ -256,7 +330,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     }
     setDiagnosisSaved(true);
     setEditingDiagnosis(false);
-    // Mở luôn phần kê đơn ngay sau khi ghi nhận chẩn đoán (theo yêu cầu)
     setShowPrescription(true);
   };
 
@@ -267,10 +340,10 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const buildPrescriptionItems = () => {
     return drugs.map((d) => {
       return {
-        drug_name: d.name,                  // backend nhận generic_name (drug_name)
-        frequency: d.time || "1 lần/ngày",  // tần suất
-        duration_days: d.duration || 2,     // số ngày
-        note: d.note || "Không có",         // yêu cầu
+        drug_name: d.name,
+        frequency: d.time || "1 lần/ngày",
+        duration_days: d.duration || 2,
+        note: d.note || "Không có",
       };
     });
   };
@@ -282,26 +355,22 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     }
     const items = buildPrescriptionItems();
 
-    const visitId = await getVisitIdForCurrent();
-    if (!visitId) {
+    const currentVisitId = visitId || (await getVisitIdForCurrent());
+    if (!currentVisitId) {
       alert("Không tìm thấy visit_id của lần khám hiện tại. Vui lòng thử lại hoặc liên hệ admin.");
       return;
     }
 
     const payload = {
-      visit_id: visitId,
-      items,               // Đúng format API
-      diagnosis,           // chẩn đoán
-      note: "",            // backend yêu cầu có note
+      visit_id: currentVisitId,
+      items,
+      diagnosis,
+      note: "",
     };
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/create-prescription", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const json = await res.json();
+      const res = await axios.post(`${API_BASE}/create-prescription`, payload);
+      const json = res.data;
       if (json.success) {
         alert("Lưu đơn thuốc thành công!");
         setDrugs([]);
@@ -323,7 +392,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
 
   return (
     <div className="visit-panel">
-      {/* Header */}
       <div className="visit-header">
         <div className="hospital-title">
           <Title level={4}>{doctorwork}</Title>
@@ -342,7 +410,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
         KÊ ĐƠN KHÁM BỆNH
       </Title>
 
-      {/* Thông tin bệnh nhân */}
       <Card bordered className="patient-card">
         <Row gutter={[16, 8]}>
           <Col span={12}>
@@ -382,7 +449,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
         </Row>
       </Card>
 
-      {/* Lịch sử khám */}
       <div className="history-header">
         <Text style={{ fontWeight: 600 }}>Lịch sử khám bệnh :</Text>
       </div>
@@ -396,10 +462,8 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
         />
       </Card>
 
-      {/* Chẩn đoán + tiền sử */}
       <Card bordered className="bottom-card">
         <Row gutter={16}>
-          {/* Trái */}
           <Col xs={24} lg={16}>
             <div className="diagnosis-box">
               <Text style={{ fontWeight: 600 }}>Chẩn đoán:</Text>
@@ -446,7 +510,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
               )}
             </div>
 
-            {/* Đơn thuốc */}
             {showPrescription && (
               <>
                 <div className="prescription-title">
@@ -495,7 +558,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
             )}
           </Col>
 
-          {/* Phải */}
           <Col xs={24} lg={8}>
             <Card bordered className="right-panel">
               <Space direction="vertical" size={12} style={{ width: "100%" }}>
@@ -517,7 +579,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
                   </div>
                 </div>
 
-                {/* Form thêm thuốc */}
                 {showPrescription && (
                   <div>
                     <Text style={{ fontWeight: 600 }}>Thêm thuốc vào kê đơn</Text>
