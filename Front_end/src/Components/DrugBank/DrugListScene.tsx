@@ -23,7 +23,7 @@ import styles from "./DrugListScene.module.css";
 const { Text } = Typography;
 
 export default function DrugListScene() {
-  //const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showActionBar, setShowActionBar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
@@ -292,10 +292,6 @@ export default function DrugListScene() {
 
       {/* Action Bar */}
       {showActionBar && (
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         <div className={styles["doctor-fixed-footer"]}>
           <div className={styles["circle-badge"]}>{selectedRowKeys.length}</div>
           <span style={{ marginLeft: "8px" }}>
@@ -315,16 +311,6 @@ export default function DrugListScene() {
               marginLeft: 30,
             }}
           >
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-        <div className="action-bar">
-          <Button type="link" className="action-btn">
->>>>>>> Stashed changes
             Print
           </Button>
           <Button
@@ -363,6 +349,7 @@ export default function DrugListScene() {
               (e.currentTarget.style.background = "transparent")
             }
             onClick={() => {
+              setSelectedRowKeys([]);
               setShowActionBar(false);
             }}
           >
