@@ -1,32 +1,26 @@
 import { Modal, Table, Typography, Input } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import tickIcon from "../../assets/check-mark.png"; 
 import "./DDIs_visit.css";
-import DrugListScene from "../DrugBank/DrugListScene";
-import { useEffect } from "react";
 import axios from "axios";
 
 const { Title } = Typography;
 type DrugRow = { id: string; name: string; dose: string; time: string; note: string };
+
 interface DDIsVisitProps {
   open: boolean;
-  onClose: () => void
+  onClose: () => void;
   drugs: DrugRow[];
   patientId: number;
 }
 
 export default function DDIsVisit({ open, onClose, drugs, patientId }: DDIsVisitProps) {
-  const columns = [
-    { title: "Tên thuốc 1", dataIndex: "drug1", key: "drug1" },
-    { title: "Tên thuốc 2", dataIndex: "drug2", key: "drug2" },
-    { title: "Tương tác thuốc", dataIndex: "interaction", key: "interaction" },
-  ];
-
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [previousDrugs, setPreviousDrugs] = useState<{ generic_name: string }[]>([]);
-    useEffect(() => {
+
+  useEffect(() => {
     const fetchPrevious = async () => {
       try {
         const res = await axios.get(
@@ -38,38 +32,57 @@ export default function DDIsVisit({ open, onClose, drugs, patientId }: DDIsVisit
         console.error("Lỗi lấy previous drugs:", err);
       }
     };
-
     fetchPrevious();
   }, [patientId]);
-  
 
   useEffect(() => {
     const fetchInteractions = async () => {
       if (!open || drugs.length === 0) return;
       setLoading(true);
       try {
-        const drugNames = drugs.map((d) => d.name); // lấy tên thuốc từ props
-        const previousDrugNames = previousDrugs.map((d) => d.generic_name);
+        const drugNames = drugs.map((d) => ({ name: d.name, type: "new" }));
+        const previousDrugNames = previousDrugs.map((d) => ({ name: d.generic_name, type: "old" }));
         const allDrugs = [...drugNames, ...previousDrugNames];
-        console.log("Danh sách thuốc gửi đi:", allDrugs);
 
         const res = await fetch("http://127.0.0.1:8000/all-interactions", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ drugs: allDrugs }),
+          body: JSON.stringify({ drugs: allDrugs.map((d) => d.name) }),
         });
 
         const result = await res.json();
         console.log("Kết quả tương tác:", result);
 
         if (result.success && Array.isArray(result.data)) {
-          setData(
-            result.data.map((item: any, idx: number) => ({
+          const formatted = result.data.map((item: any, idx: number) => {
+            const type1 = allDrugs.find(d => d.name === item.drug1)?.type || "unknown";
+            const type2 = allDrugs.find(d => d.name === item.drug2)?.type || "unknown";
+
+            let category = "Khác";
+            if (type1 === "new" && type2 === "new") {
+              category = "Thuốc mới ↔ Thuốc mới";
+            } else if (
+              (type1 === "new" && type2 === "old") ||
+              (type1 === "old" && type2 === "new")
+            ) {
+              category = "Thuốc mới ↔ Thuốc cũ";
+            }
+
+            return {
               key: idx + 1,
-              drug1: item.drug1,
-              drug2: item.drug2,
+              drug1: { name: item.drug1, type: type1 },
+              drug2: { name: item.drug2, type: type2 },
               interaction: item.interaction || "Không có tương tác",
-            }))
+              category,
+            };
+          });
+
+          // Chỉ lấy loại cần
+          setData(
+            formatted.filter((row: any) =>
+              row.category === "Thuốc mới ↔ Thuốc mới" ||
+              row.category === "Thuốc mới ↔ Thuốc cũ"
+            )
           );
         } else {
           setData([]);
@@ -87,17 +100,50 @@ export default function DDIsVisit({ open, onClose, drugs, patientId }: DDIsVisit
 
   // lọc theo search
   const filteredData = data.filter((row) =>
-    Object.values(row).some((val) =>
-      String(val).toLowerCase().includes(searchText.toLowerCase())
-    )
+    Object.values(row).some((val) => {
+      if (typeof val === "string") {
+        return val.toLowerCase().includes(searchText.toLowerCase());
+      }
+      if (val && typeof val === "object" && "name" in val) {
+        return (val as { name: string }).name
+          .toLowerCase()
+          .includes(searchText.toLowerCase());
+      }
+      return false;
+    })
   );
+
+  const columns = [
+    {
+      title: "Tên thuốc 1",
+      dataIndex: "drug1",
+      key: "drug1",
+      render: (drug: any) => (
+        <span style={{ color: drug.type === "new" ? "#44c17eff" : "#f65baeff", fontWeight: 600 }}>
+          {drug.name}
+        </span>
+      ),
+    },
+    {
+      title: "Tên thuốc 2",
+      dataIndex: "drug2",
+      key: "drug2",
+      render: (drug: any) => (
+        <span style={{ color: drug.type === "new" ? "#44c17eff" : "#f65baeff", fontWeight: 600 }}>
+          {drug.name}
+        </span>
+      ),
+    },
+    { title: "Tương tác thuốc", dataIndex: "interaction", key: "interaction" },
+    { title: "Loại tương tác", dataIndex: "category", key: "category", width: 200 },
+  ];
 
   return (
     <Modal
       open={open}
       onCancel={onClose}
       footer={null}
-      width="50%"
+      width="80%"
       centered
       className="ddi-modal"
     >
@@ -125,10 +171,11 @@ export default function DDIsVisit({ open, onClose, drugs, patientId }: DDIsVisit
         className="ddi-table"
         columns={columns}
         dataSource={filteredData}
+        loading={loading}
         pagination={false}
-        size="middle"
+        size="large"
         bordered
-        scroll={{ y: 400 }}
+        scroll={filteredData.length > 8 ? { y: 500 } : undefined}
       />
     </Modal>
   );
