@@ -46,9 +46,9 @@ async def update_patient_diagnosis(patient_id: int, diagnosis: str):
     return await update_diagnosis(patient_id, diagnosis)
 """
 
-@router.get("/waiting-count", response_model=ResponseModel)
-async def waiting_count():
-    return await get_number_waiting()
+@router.get("/waiting-count/{doctor_id}", response_model=ResponseModel)
+async def waiting_count(doctor_id: int):
+    return await get_number_waiting(doctor_id)
 
 @router.get("/visited-count-today/{doctor_id}", response_model=ResponseModel)
 async def visited_today(doctor_id: int):
@@ -58,6 +58,7 @@ class PrescriptionItemRequest(BaseModel):
     drug_name: str
     frequency: str
     duration_days: int
+    dosage: Optional[str] = "Không xác định"
     note: Optional[str] = None
 
 class PrescriptionRequest(BaseModel):
@@ -65,10 +66,14 @@ class PrescriptionRequest(BaseModel):
     items: List[PrescriptionItemRequest]
     diagnosis: str
     note: str
-@router.post("/create-prescription", response_model=ResponseModel)
+@router.post("/create-prescription")
 async def create_prescription_endpoint(request: PrescriptionRequest):
-    items = [item.dict() for item in request.items]
-    return await create_prescription(request.visit_id, items, request.diagnosis)
+    return await create_prescription(
+        visit_id=request.visit_id,
+        items=request.items,
+        diagnosis=request.diagnosis,
+        note=request.note
+    )
 @router.get("/prescription/{visit_id}", response_model=ResponseModel)
 async def get_prescription(visit_id: int):
     return await get_prescription_by_visit(visit_id)
