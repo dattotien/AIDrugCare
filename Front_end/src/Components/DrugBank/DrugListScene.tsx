@@ -361,6 +361,7 @@ export default function DrugListScene() {
       {showActionBar && (
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <div className={styles["doctor-fixed-footer"]}>
           <div className={styles["circle-badge"]}>{selectedRowKeys.length}</div>
           <span style={{ marginLeft: "8px" }}>
@@ -381,6 +382,8 @@ export default function DrugListScene() {
             }}
           >
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         <div className="action-bar">
