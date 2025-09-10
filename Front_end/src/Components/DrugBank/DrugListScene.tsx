@@ -360,6 +360,7 @@ export default function DrugListScene() {
       {/* Action Bar */}
       {showActionBar && (
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <div className={styles["doctor-fixed-footer"]}>
           <div className={styles["circle-badge"]}>{selectedRowKeys.length}</div>
           <span style={{ marginLeft: "8px" }}>
@@ -380,6 +381,8 @@ export default function DrugListScene() {
             }}
           >
 =======
+=======
+>>>>>>> Stashed changes
         <div className="action-bar">
           <Button type="link" className="action-btn">
 >>>>>>> Stashed changes
