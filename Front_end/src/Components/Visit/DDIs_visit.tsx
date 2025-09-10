@@ -4,16 +4,18 @@ import tickIcon from "../../assets/check-mark.png";
 import "./DDIs_visit.css";
 import DrugListScene from "../DrugBank/DrugListScene";
 import { useEffect } from "react";
+import axios from "axios";
 
 const { Title } = Typography;
 type DrugRow = { id: string; name: string; dose: string; time: string; note: string };
 interface DDIsVisitProps {
   open: boolean;
-  onClose: () => void;
+  onClose: () => void
   drugs: DrugRow[];
+  patientId: number;
 }
 
-export default function DDIsVisit({ open, onClose, drugs }: DDIsVisitProps) {
+export default function DDIsVisit({ open, onClose, drugs, patientId }: DDIsVisitProps) {
   const columns = [
     { title: "Tên thuốc 1", dataIndex: "drug1", key: "drug1" },
     { title: "Tên thuốc 2", dataIndex: "drug2", key: "drug2" },
@@ -23,6 +25,23 @@ export default function DDIsVisit({ open, onClose, drugs }: DDIsVisitProps) {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [previousDrugs, setPreviousDrugs] = useState<{ generic_name: string }[]>([]);
+    useEffect(() => {
+    const fetchPrevious = async () => {
+      try {
+        const res = await axios.get(
+          `http://127.0.0.1:8000/previous-drugs/${patientId}`
+        );
+        setPreviousDrugs(res.data.data);
+        console.log("Previous drugs:", res.data.data);
+      } catch (err) {
+        console.error("Lỗi lấy previous drugs:", err);
+      }
+    };
+
+    fetchPrevious();
+  }, [patientId]);
+  
 
   useEffect(() => {
     const fetchInteractions = async () => {
@@ -30,12 +49,14 @@ export default function DDIsVisit({ open, onClose, drugs }: DDIsVisitProps) {
       setLoading(true);
       try {
         const drugNames = drugs.map((d) => d.name); // lấy tên thuốc từ props
-        console.log("Danh sách thuốc gửi đi:", drugNames);
+        const previousDrugNames = previousDrugs.map((d) => d.generic_name);
+        const allDrugs = [...drugNames, ...previousDrugNames];
+        console.log("Danh sách thuốc gửi đi:", allDrugs);
 
         const res = await fetch("http://127.0.0.1:8000/all-interactions", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ drugs: drugNames }),
+          body: JSON.stringify({ drugs: allDrugs }),
         });
 
         const result = await res.json();
@@ -62,7 +83,7 @@ export default function DDIsVisit({ open, onClose, drugs }: DDIsVisitProps) {
     };
 
     fetchInteractions();
-  }, [open, drugs]);
+  }, [open, drugs, previousDrugs]);
 
   // lọc theo search
   const filteredData = data.filter((row) =>
