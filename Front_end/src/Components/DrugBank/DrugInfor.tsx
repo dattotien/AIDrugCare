@@ -102,9 +102,11 @@ export default function DrugInfor({ drug }: DrugInforProps) {
           className="desc-card"
         >
           <p>
-            {drug.categories && drug.categories.length > 0
-              ? drug.categories.join(", ")
-              : "Chưa có dữ liệu"}
+            {drug.categories && drug.categories.length > 0 ? (
+              drug.categories.map((cat, idx) => <div key={idx}>{cat}</div>)
+            ) : (
+              "Chưa có dữ liệu"
+            )}
           </p>
         </Card>
       ),
@@ -132,17 +134,17 @@ export default function DrugInfor({ drug }: DrugInforProps) {
               {
                 title: <span className="table-header">ID</span>,
                 dataIndex: "drugbank_id",
-                width: "20%",
+                width: "15%",
               },
               {
                 title: <span className="table-header">Tên thuốc</span>,
                 dataIndex: "name",
-                width: "40%",
+                width: "25%",
               },
               {
                 title: <span className="table-header">Loại tương tác</span>,
                 dataIndex: "description",
-                width: "40%",
+                width: "60%",
                 render: (text: string) => text || "-",
               },
             ]}

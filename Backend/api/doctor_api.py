@@ -58,6 +58,7 @@ class PrescriptionItemRequest(BaseModel):
     drug_name: str
     frequency: str
     duration_days: int
+    dosage: Optional[str] = "Không xác định"
     note: Optional[str] = None
 
 class PrescriptionRequest(BaseModel):
@@ -65,10 +66,14 @@ class PrescriptionRequest(BaseModel):
     items: List[PrescriptionItemRequest]
     diagnosis: str
     note: str
-@router.post("/create-prescription", response_model=ResponseModel)
+@router.post("/create-prescription")
 async def create_prescription_endpoint(request: PrescriptionRequest):
-    items = [item.dict() for item in request.items]
-    return await create_prescription(request.visit_id, items, request.diagnosis)
+    return await create_prescription(
+        visit_id=request.visit_id,
+        items=request.items,
+        diagnosis=request.diagnosis,
+        note=request.note
+    )
 @router.get("/prescription/{visit_id}", response_model=ResponseModel)
 async def get_prescription(visit_id: int):
     return await get_prescription_by_visit(visit_id)

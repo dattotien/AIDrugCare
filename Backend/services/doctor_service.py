@@ -40,6 +40,7 @@ async def get_patient_history(patient_id: int):
             "doctor": doctor.name,
             "conclusion": v.diagnosis,
             "lab_result": medical_history.labResult,
+            "symptoms": v.symptoms,
             "fam_hist": medical_history.family_history,
             "surg": medical_history.surgeries,
             "chronic": medical_history.chronic_diseases,
@@ -161,55 +162,49 @@ async def get_number_visited_today(doctor_id: int):
         "data": count
     }
 
-async def create_prescription(visit_id: int, items: List[Dict[str, Any]], diagnosis: str):
+async def create_prescription(visit_id: int, items: List[Dict[str, Any]], diagnosis: str, note: str = ""):
     visit = await Visit.get(visit_id)
     if not visit:
-        return {
-            "success": False,
-            "message": "Không tìm thấy lần khám",
-            "data": None
-        }
+        return {"success": False, "message": "Không tìm thấy lần khám", "data": None}
+    
+    # Cập nhật visit
     visit.diagnosis = diagnosis
+    visit.note = note
+    visit.status = "Đã khám"
     await visit.save()
 
     patient = await Patient.get(visit.patient_id)
     medical_history = await Medical_History.find_one(Medical_History.patient_id == patient.id)
 
-    existing_prescription = await PrescriptionDetail.find_one(
-        PrescriptionDetail.visit_id == visit_id
-    )
+    # Kiểm tra đã có prescription chưa
+    existing_prescription = await PrescriptionDetail.find_one(PrescriptionDetail.visit_id == visit_id)
     if existing_prescription:
-        return {
-            "success": False,
-            "message": "Đã tồn tại đơn thuốc cho lần khám này",
-            "data": None
-        }
+        return {"success": False, "message": "Đã tồn tại đơn thuốc cho lần khám này", "data": None}
 
-    prescription_items = []
+        # Tạo danh sách items chuẩn PrescriptionItem
+    prescription_items: List[PrescriptionItem] = []
     for item in items:
-        drug = await Drug.find_one(Drug.generic_name == item["drug_name"])
-        
+        # item là PrescriptionItemRequest, nên phải dùng item.drug_name chứ không phải item["drug_name"]
+        drug = await Drug.find_one(Drug.generic_name == item.drug_name)
         if not drug:
             return {
                 "success": False,
-                "message": f"Thuốc '{item['drug_name']}' không tồn tại trong cơ sở dữ liệu",
+                "message": f"Thuốc '{item.drug_name}' không tồn tại",
                 "data": None
             }
+        
+        prescription_items.append(PrescriptionItem(
+            drug_id=str(drug.id),
+            dosage=getattr(item, "dosage", "Không xác định"),  # nếu bạn chưa có field dosage thì mặc định
+            frequency=item.frequency,
+            duration_days=item.duration_days,
+            start_time=datetime.utcnow(),
+            end_time=datetime.utcnow() + timedelta(days=item.duration_days or 0),
+            note=item.note or "Không có"
+        ))
 
-        prescription_items.append({
-            "drug_name": item["drug_name"],   
-            "drug_id": str(drug.id) if drug else None,
-            "frequency": item.get("frequency"),
-            "duration_days": item.get("duration_days"),
-            "note": item.get("note", "Không có"),
-            "dosage": item.get("dosage", "Liều dùng không xác định"),
-            "start_time": datetime.utcnow(),
-            "end_time": datetime.utcnow() + timedelta(days=item.get("duration_days", 0) or 0)
-        })
-
-    new_id = max(
-        (prescription_detail.id for prescription_detail in await PrescriptionDetail.find_all().to_list()), 
-        default=0) + 1
+    # Sinh id mới
+    new_id = max((pres.id for pres in await PrescriptionDetail.find_all().to_list()), default=0) + 1
 
     new_prescription = PrescriptionDetail(
         id=new_id,
@@ -233,20 +228,16 @@ async def create_prescription(visit_id: int, items: List[Dict[str, Any]], diagno
         "visit": {
             "visit": visit.id,
             "diagnosis": visit.diagnosis,
+            "note": visit.note,
         },
         "prescription": {
             "id": str(new_prescription.id),
             "created_at": new_prescription.start_time,
             "doctor_name": (await Doctor.get(visit.doctor_id)).name if await Doctor.get(visit.doctor_id) else None,
-            "items": prescription_items
+            "items": [i.dict() for i in prescription_items]
         }
     }
-
-    return {
-        "success": True,
-        "message": "Tạo đơn thuốc thành công",
-        "data": data
-    }
+    return {"success": True, "message": "Tạo đơn thuốc thành công", "data": data}
        
 async def get_waiting_patients(doctor_id: int):
     waiting_visits = await Visit.find({
@@ -312,35 +303,23 @@ async def get_three_previous_visits(doctor_id: int):
 async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
     visit = await Visit.get(visit_id)
     if not visit:
-        return {
-            "success": False,
-            "message": "Không tìm thấy thông tin lần khám",
-            "data": None
-            }
+        return {"success": False, "message": "Không tìm thấy thông tin lần khám", "data": None}
+
     patient = await Patient.get(visit.patient_id)
-
-    medical_history = await Medical_History.find_one(
-        Medical_History.visit_id == visit_id
-    )
-
-    prescription_detail = await PrescriptionDetail.find_one(
-        PrescriptionDetail.visit_id == visit_id
-    )
+    medical_history = await Medical_History.find_one(Medical_History.visit_id == visit_id)
+    prescription_detail = await PrescriptionDetail.find_one(PrescriptionDetail.visit_id == visit_id)
 
     if not prescription_detail or not prescription_detail.items:
-        return {
-            "success": False,
-            "message": "Không tìm thấy đơn thuốc",
-            "data": None
-        }
+        return {"success": False, "message": "Không tìm thấy đơn thuốc", "data": None}
+
     prescription_items = []
     for item in prescription_detail.items:
-        drug = await Drug.get(item.drug_id)  # join bảng Drug
+        drug = await Drug.get(item.drug_id)
         prescription_items.append({
             "drug_id": item.drug_id,
             "drug_name": drug.generic_name if drug else None,
             "frequency": item.frequency,
-            "time": item.duration_days,
+            "time": f"{item.duration_days} ngày",
             "requirement": item.note if item.note else "Không có"
         })
 
@@ -364,12 +343,7 @@ async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
             "items": prescription_items
         }
     }
-
-    return {
-        "success": True,
-        "message": "Lấy đơn thuốc thành công",
-        "data": data
-    }
+    return {"success": True, "message": "Lấy đơn thuốc thành công", "data": data}
 
 async def get_visited_history_by_doctor(doctor_id: int):
     visits = await Visit.find(
