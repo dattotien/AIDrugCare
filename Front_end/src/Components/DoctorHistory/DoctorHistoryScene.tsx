@@ -5,18 +5,21 @@ import {
   Input,
   Modal,
   Pagination,
-  Tabs,
+  message,
+  Typography,
+  Spin,
   Badge,
 } from "antd";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MoreOutlined, FilterOutlined } from "@ant-design/icons";
-import styles from "./DoctorHistoryScene.module.css";
-import binLogo from "../../assets/bin.png";
-import backPic from "../../assets/Group3.png";
 import axios from "axios";
-import PatientOneHistory from "../PatientHistory/PatientOneHistory";
 import type { ColumnsType } from "antd/es/table";
-import listDrug from "../../assets/list (1).png";
+import PatientOneHistory from "../PatientHistory/PatientOneHistory";
+import backPic from "../../assets/Group 68.png";
+import "./DoctorHistoryScene.css";
+
+const { Text } = Typography;
+
 interface History {
   id: string;
   patientId: string;
@@ -33,82 +36,103 @@ export default function DoctorHistory() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [showHistoryInfoModal, setShowHistoryInfoModal] = useState(false);
-  const [selectedHistory, setSelectedHistory] = useState<any | null>(null);
-  const [historyList, setHistoryList] = useState<any[]>([]);
+  const [selectedHistory, setSelectedHistory] = useState<History | null>(null);
+
+  const [historyList, setHistoryList] = useState<History[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingDetail, setLoadingDetail] = useState(false);
+
   const storedDoctorId = localStorage.getItem("doctorId");
   const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      if (!doctorId) return;
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/visited-by-doctor/${doctorId}`
-        );
-        const mappedData = response.data.data.map((item: any) => {
-          const utcDate = new Date(item.date);
-          const vnDate = new Date(utcDate.getTime() + 7 * 60 * 60 * 1000);
+  // fetch danh sách lịch sử khám
+  const fetchHistory = async () => {
+    if (!doctorId) return;
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/visited-by-doctor/${doctorId}`
+      );
+      const mappedData = response.data.data.map((item: any) => {
+        const utcDate = new Date(item.date);
+        const vnDate = new Date(utcDate.getTime() + 7 * 60 * 60 * 1000);
 
-          const formattedDate = vnDate.toLocaleString("vi-VN", {
-            timeZone: "Asia/Ho_Chi_Minh",
-            hour12: false,
-          });
-
-          return {
-            id: item.visit_id,
-            patientId: item.patient_id,
-            name: item.patient_name,
-            date: formattedDate,
-            gender: item.gender,
-            trieuchung: item.diagnosis,
-            trangthai: item.status,
-          };
+        const formattedDate = vnDate.toLocaleString("vi-VN", {
+          timeZone: "Asia/Ho_Chi_Minh",
+          hour12: false,
         });
 
-        setHistoryList(mappedData);
-      } catch (error) {
-        console.error("Lấy lịch sử khám thất bại:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        return {
+          id: item.visit_id,
+          patientId: item.patient_id,
+          name: item.patient_name,
+          date: formattedDate,
+          gender: item.gender,
+          trieuchung: item.diagnosis,
+          trangthai: item.status,
+        };
+      });
 
+      setHistoryList(mappedData);
+    } catch (error) {
+      console.error("Lấy lịch sử khám thất bại:", error);
+      message.error("Không lấy được danh sách lịch sử khám");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchHistory();
   }, [doctorId]);
 
-  const filteredList = historyList.filter((history) =>
-    Object.values(history).some((field) =>
-      String(field).toLowerCase().includes(searchText.toLowerCase())
-    )
-  );
+  // Search
+  const filteredList = historyList.filter((history) => {
+    const search = searchText.toLowerCase();
+    return (
+      history.id?.toLowerCase().includes(search) ||
+      history.patientId?.toLowerCase().includes(search) ||
+      history.name?.toLowerCase().includes(search) ||
+      history.gender?.toLowerCase().includes(search) ||
+      history.trieuchung?.toLowerCase().includes(search) ||
+      history.date?.toLowerCase().includes(search) ||
+      history.trangthai?.toLowerCase().includes(search)
+    );
+  });
 
   const handleSearch = (value: string) => {
     setSearchText(value);
     setCurrentPage(1);
   };
 
-  const handleMore = (record: any) => {
-    setSelectedHistory(record);
-    setShowHistoryInfoModal(true);
+  const handleMore = (record: History) => {
+    setLoadingDetail(true);
+    try {
+      setSelectedHistory(record);
+      setShowHistoryInfoModal(true);
+    } finally {
+      setLoadingDetail(false);
+    }
   };
 
-  const menuItems = (record: any) => [
+  const menuItems = (record: History) => [
     {
       key: "more",
       label: (
         <div
           style={{
-            color: "#000000",
+            color: "#043bb3",
+            fontWeight: "bold",
             textAlign: "center",
+            whiteSpace: "nowrap",
+            padding: "1px 1px",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "#043bb3";
+            (e.currentTarget as HTMLElement).style.backgroundColor = "#043bb3";
             (e.currentTarget as HTMLElement).style.color = "white";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "white";
+            (e.currentTarget as HTMLElement).style.backgroundColor = "white";
             (e.currentTarget as HTMLElement).style.color = "#000000";
           }}
           onClick={() => handleMore(record)}
@@ -119,23 +143,31 @@ export default function DoctorHistory() {
     },
   ];
 
+  const renderEllipsis = (value?: string, maxWidth?: number) => {
+    if (!value) return <Text>-</Text>;
+    return (
+      <Text
+        ellipsis={{ tooltip: value }}
+        style={{
+          display: "inline-block",
+          maxWidth: maxWidth || "100%",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {value}
+      </Text>
+    );
+  };
+
   const columns: ColumnsType<History> = [
-    { title: "ID", dataIndex: "id", key: "id", align: "center" },
-    {
-      title: "ID bệnh nhân",
-      dataIndex: "patientId",
-      key: "patientId",
-      align: "center",
-    },
-    { title: "Tên bệnh nhân", dataIndex: "name", key: "name", align: "left" },
-    { title: "Giới tính", dataIndex: "gender", key: "gender", align: "center" },
-    {
-      title: "Triệu chứng",
-      dataIndex: "trieuchung",
-      key: "trieuchung",
-      align: "center",
-    },
-    { title: "Ngày khám", dataIndex: "date", key: "date", align: "center" },
+    { title: "ID", dataIndex: "id", key: "id", align: "center", render: (t) => renderEllipsis(t, 120) },
+    { title: "ID bệnh nhân", dataIndex: "patientId", key: "patientId", align: "center", render: (t) => renderEllipsis(t, 120) },
+    { title: "Tên bệnh nhân", dataIndex: "name", key: "name", align: "left", render: (t) => renderEllipsis(t, 200) },
+    { title: "Giới tính", dataIndex: "gender", key: "gender", align: "center", render: (t) => renderEllipsis(t, 80) },
+    { title: "Triệu chứng", dataIndex: "trieuchung", key: "trieuchung", align: "center", render: (t) => renderEllipsis(t, 300) },
+    { title: "Ngày khám", dataIndex: "date", key: "date", align: "center", render: (t) => renderEllipsis(t, 200) },
     {
       title: "",
       key: "actions",
@@ -148,98 +180,152 @@ export default function DoctorHistory() {
     },
   ];
 
-  const filterList = filteredList;
   const pageSize = 8;
-  const paginatedData = filterList.slice(
+  const paginatedData = filteredList.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
 
   return (
-    <div className={styles.container}>
-      <Tabs
-        defaultActiveKey="1"
-        items={[
-          {
-            key: "1",
-            label: (
-              <span className="tab-label">
-                <img src={listDrug} alt="list" className="tab-icon" />
-                <b>Đã khám</b>
-                <Badge
-                  count={
-                    filteredList.length > 1000 ? "1000+" : filteredList.length
-                  }
-                  style={{ backgroundColor: "var(--primary-color)" }}
-                />
-              </span>
-            ),
-          },
-        ]}
-      />
+    <div>
+      <div
+        style={{
+          width: "75vw",
+          height: "70vh",
+          backgroundColor: "transparent",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 10,
+          backgroundImage: `url(${backPic})`,
+          backgroundSize: "cover",
+          marginTop: "4vh",
+          marginLeft: "3vw",
+          backgroundPosition: "center",
+          padding: "1vw",
+        }}
+      >
+        <div className="flex-title">
+          <span>Đã khám</span>
+          <div className="doctor-circle-badge">{historyList.length}</div>
+        </div>
 
-      <div className={styles.background}>
-        <Table
-          size="small"
-          className={styles.table}
-          rowKey="id"
-          columns={columns}
-          dataSource={paginatedData}
-          rowSelection={{
-            selectedRowKeys,
-            onChange: (newSelectedRowKeys) => {
-              setSelectedRowKeys(newSelectedRowKeys);
-              setShowActionBar(newSelectedRowKeys.length > 0);
-            },
-            preserveSelectedRowKeys: true,
-          }}
-          pagination={false}
-          title={() => (
-            <div className={styles.tableTitle}>
-              <Button icon={<FilterOutlined />}>Filter</Button>
+        {/* Table */}
+        <div style={{ flex: 1, width: "100%" }}>
+          <Table
+            size="small"
+            style={{ overflow: "hidden" }}
+            rowKey="id"
+            columns={columns}
+            dataSource={paginatedData}
+            loading={loading}
+            rowSelection={{
+              selectedRowKeys,
+              onChange: (newSelectedRowKeys) => {
+                setSelectedRowKeys(newSelectedRowKeys);
+                setShowActionBar(newSelectedRowKeys.length > 0);
+              },
+              preserveSelectedRowKeys: true,
+            }}
+            rowClassName={(_, index) =>
+              index % 2 === 0 ? "row-even" : "row-odd"
+            }
+            pagination={false}
+            title={() => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Button icon={<FilterOutlined />}>Filter</Button>
 
-              <Pagination
-                current={currentPage}
-                pageSize={pageSize}
-                total={filteredList.length}
-                onChange={(page) => setCurrentPage(page)}
-                showSizeChanger={false}
-              />
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={filteredList.length}
+                    onChange={(page) => setCurrentPage(page)}
+                    showSizeChanger={false}
+                  />
+                </div>
 
-              <div className={styles.searchBox}>
-                <Input.Search
-                  placeholder="Tìm lịch sử khám tại đây"
-                  style={{ width: 250 }}
-                  allowClear
-                  onSearch={handleSearch}
-                  onPressEnter={(e) => handleSearch(e.currentTarget.value)}
-                />
+                <div
+                  className="custom-search"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "250px",
+                    borderColor: "#737373",
+                    borderRadius: "20px",
+                  }}
+                >
+                  <Input.Search
+                    placeholder="Tìm lịch sử khám tại đây"
+                    style={{ width: 250 }}
+                    allowClear
+                    onSearch={handleSearch}
+                    onPressEnter={(e) => handleSearch(e.currentTarget.value)}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-        />
+            )}
+          />
+        </div>
       </div>
 
       {/* Action Bar */}
       {showActionBar && (
-        <div className={styles.actionBar}>
-          <div className={styles.actionCount}>{selectedRowKeys.length}</div>
-          <span>
+        <div className="doctor-fixed-footer">
+          <div className="circle-badge">{selectedRowKeys.length}</div>
+          <span style={{ marginLeft: "8px" }}>
             {selectedRowKeys.length > 1 ? "items selected" : "item selected"}
           </span>
-
-          <Button className={styles.actionBtn} type="link">
+          <Button disabled className="btn" type="link" 
+          style={{
+              width: "4vw",
+              height: "4vh",
+              fontSize: "12px",
+              color: "#ffffff",
+              backgroundColor: "#737373",
+              borderRadius: "20px",
+              marginLeft: 30,
+            }}>
             Print
           </Button>
-          <Button className={styles.actionBtn} type="link">
+          <Button disabled className="btn" type="link" 
+          style={{
+              width: "4vw",
+              height: "4vh",
+              fontSize: "12px",
+              color: "#ffffff",
+              backgroundColor: "#d12326",
+              borderRadius: "20px",
+              marginRight: 5,
+            }}
+          >
             Send
           </Button>
-          <Button className={styles.actionBtnDelete} type="link">
-            <img src={binLogo} alt="bin" style={{ width: 15, height: 15 }} />
-            Delete
-          </Button>
-          <div
-            className={styles.closeBtn}
+          <Button
+            className="btn"
+            type="link"
+            style={{
+              color: "#fff",
+              borderRadius: "50%",
+              width: 30,
+              height: 30,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.background = "rgba(255,255,255,0.2)")
             }
@@ -252,10 +338,11 @@ export default function DoctorHistory() {
             }}
           >
             X
-          </div>
+          </Button>
         </div>
       )}
 
+      {/* Modal chi tiết */}
       {showHistoryInfoModal && selectedHistory && (
         <Modal
           open={showHistoryInfoModal}
@@ -270,7 +357,7 @@ export default function DoctorHistory() {
               overflowY: "auto",
             }}
           >
-            <PatientOneHistory visitId={selectedHistory.id} />
+            {loadingDetail ? <Spin /> : <PatientOneHistory visitId={selectedHistory.id} />}
           </div>
         </Modal>
       )}

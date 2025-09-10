@@ -1,5 +1,5 @@
 .visit-panel {
-  background: #f5f8fbff;
+  background: rgba(255,255,255,0.7);
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
   padding: 24px;
@@ -71,7 +71,7 @@
   margin-bottom: 8px;
 }
 .prescription-title h4 {
-  color: #1c5cb6ff;
+  color: #043bb3;
   font-weight: 700;
 }
 .prescription-meta {
@@ -79,7 +79,8 @@
 }
 .drug-table-wrapper {
   border-radius: 12px;
-  background: #e8f1ff;
+  background: #ffffff;
+  border-color: transparent;
 }
 .drug-table-card {
   border-radius: 10px;

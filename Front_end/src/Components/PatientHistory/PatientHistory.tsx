@@ -165,7 +165,8 @@ export default function PatientHistory({ patientId }: His) {
           borderRadius: 10,
           backgroundImage: `url(${backPic})`,
           backgroundSize: "cover",
-          marginTop: "10vh",
+          marginTop: "5vh",
+          marginLeft : "1vw",
           backgroundPosition: "center",
           padding: "1vw",
         }}
