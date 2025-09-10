@@ -101,7 +101,7 @@ export default function PatientOneHistory({ visitId }: Props) {
 
       <div className="patient-history-section">
         <p>
-          <strong>Kiết quả thăm khám:</strong>
+          <strong>Kết quả thăm khám:</strong>
           <span className="patient-info-field">{history?.labResult}</span>
         </p>
       </div>

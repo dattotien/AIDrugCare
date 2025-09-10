@@ -5,3 +5,4 @@ Backend/assets/hmrgl_check_point.pt
 
 # Optional: ignore __pycache__ folders too
 __pycache__/
+Backend/assets/drug_interaction.json

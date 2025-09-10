@@ -2,7 +2,6 @@ import { Button, Card, Checkbox, Input, message } from "antd";
 import login_back from "../../assets/test.png";
 import { RightCircleOutlined, CaretRightOutlined } from "@ant-design/icons";
 import styles from "./PatientLoginScene.module.css";
-import PatientScene from "../PatientScene/PatientScene";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +9,6 @@ export default function PatientLoginScene() {
   const [cccd, setCccd] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -30,16 +28,14 @@ export default function PatientLoginScene() {
         },
         body: new URLSearchParams({ cccd, password }).toString(),
       });
+
       const data = await res.json();
       console.log("Login response:", data);
 
       if (data.success && data.data) {
-        console.log("data.data:", data.data._id);
-
         localStorage.setItem("patientId", data.data._id);
-        console.log("Saved patientId:", localStorage.getItem("patientId"));
-
-        navigate("/patient/dashboard");
+        message.success("Đăng nhập thành công!");
+        navigate("/patient/dashboard", { replace: true }); // ✅ replace
       } else {
         message.error("CCCD hoặc mật khẩu không đúng");
       }
@@ -50,8 +46,9 @@ export default function PatientLoginScene() {
       setLoading(false);
     }
   };
+
   return (
-    <div 
+    <div
       style={{
         display: "flex",
         minHeight: "100vh",
@@ -91,7 +88,7 @@ export default function PatientLoginScene() {
             Our hospital is a modern healthcare center committed to providing
             high-quality medical services. With advanced facilities and
             experienced doctors, we ensure safe, effective, and comprehensive
-            care for all patients.{" "}
+            care for all patients.
           </p>
           <div
             style={{
@@ -131,7 +128,6 @@ export default function PatientLoginScene() {
       <div style={{ width: "50vw", height: "100vh" }}>
         <Card className={styles.card}>
           <h2 className={styles.title}>TRY TO SIGN IN</h2>
-          <p></p>
           <p className={styles.text}>Tên đăng nhập</p>
           <Input
             className={styles.input}

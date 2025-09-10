@@ -4,8 +4,8 @@ export default function DoctorSchedule() {
   return (
     <div
       style={{
-        width: "340px",
-        height: "110px",
+        width: "100%",
+        height: "20%",
         backgroundColor: "transparent",
         display: "flex",
         flexDirection: "column",
