@@ -340,6 +340,7 @@ async def get_prescription_by_visit(visit_id: int) -> Dict[str, Any]:
         "visit": {
             "diagnosis": visit.diagnosis,
             "note": visit.note,
+            "hospital" : visit.hospital
         },
         "prescription": {
             "id": str(prescription_detail.id),
