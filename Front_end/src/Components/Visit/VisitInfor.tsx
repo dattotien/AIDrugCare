@@ -43,6 +43,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const [doctorName, setDoctorName] = useState<string>("");
   const [doctorwork, setDoctorWork] = useState<string>("");
   const [patientHistory, setPatientHistory] = useState<string>("Không có");
+  const [prescriptionNote, setPrescriptionNote] = useState("");
 
   const [diagnosis, setDiagnosis] = useState("");
   const [diagnosisSaved, setDiagnosisSaved] = useState(false);
@@ -54,7 +55,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const [formName, setFormName] = useState("");
   const [formDose, setFormDose] = useState("");
   const [formTime, setFormTime] = useState("");
-  const [formDuration, setFormDuration] = useState<number>(2);
+  const [formDuration, setFormDuration] = useState<number | undefined>(undefined);
   const [formNote, setFormNote] = useState("");
 
   const [options, setOptions] = useState<{ value: string }[]>([]);
@@ -270,11 +271,26 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
       const json = res.data;
       if (json.success && Array.isArray(json.data)) {
         const list = json.data as any[];
-        const filtered = list
-          .filter((d) => d.generic_name?.toLowerCase().includes(query.toLowerCase()))
+        const lowerQuery = query.toLowerCase();
+
+        // nhóm 1: tên bắt đầu bằng query
+        const startsWith = list.filter((d) =>
+          d.generic_name?.toLowerCase().startsWith(lowerQuery)
+        );
+
+        // nhóm 2: tên có chứa query nhưng không bắt đầu
+        const contains = list.filter(
+          (d) =>
+            d.generic_name?.toLowerCase().includes(lowerQuery) &&
+            !d.generic_name?.toLowerCase().startsWith(lowerQuery)
+        );
+
+        // ghép 2 nhóm lại
+        const finalList = [...startsWith, ...contains]
           .slice(0, 10)
           .map((d) => ({ value: d.generic_name }));
-        setOptions(filtered);
+
+        setOptions(finalList);
       } else {
         setOptions([]);
       }
@@ -299,7 +315,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
           name: drug.generic_name,
           dose: formDose.trim() || "1 viên / ngày",
           time: formTime.trim() || "Sáng",
-          duration: formDuration || 2,
+          duration: formDuration ?? 7,
           note: formNote.trim() || "Không có",
         };
 
@@ -307,7 +323,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
         setFormName("");
         setFormDose("");
         setFormTime("");
-        setFormDuration(2);
+        setFormDuration(undefined);
         setFormNote("");
       } else {
         alert("Không tìm thấy thuốc trong cơ sở dữ liệu!");
@@ -365,7 +381,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
       visit_id: currentVisitId,
       items,
       diagnosis,
-      note: "",
+      note: prescriptionNote || "Không có",
     };
 
     try {
@@ -546,6 +562,16 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
                   </Card>
                 </Card>
 
+                <div style={{ marginTop: 12 }}>
+                  <Text style={{ fontWeight: 600 }}>Ghi chú:</Text>
+                  <Input.TextArea
+                    rows={3}
+                    placeholder="Nhập ghi chú cho bệnh nhân"
+                    value={prescriptionNote}
+                    onChange={(e) => setPrescriptionNote(e.target.value)}
+                  />
+                </div>
+
                 <div className="btn-row">
                   <Button type="primary" onClick={handleSavePrescription}>
                     Ghi nhận
@@ -593,19 +619,22 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
                         notFoundContent={loadingDrugs ? "Đang tải..." : "Không có kết quả"}
                       />
                       <Input
-                        placeholder="Liều dùng"
+                        placeholder="Liều dùng (vd: 1 lần / ngày)"
                         value={formDose}
                         onChange={(e) => setFormDose(e.target.value)}
                       />
                       <Input
-                        placeholder="Tần suất / Thời gian (vd: Sáng / 2 lần/ngày)"
+                        placeholder="Thời gian (vd: Sáng)"
                         value={formTime}
                         onChange={(e) => setFormTime(e.target.value)}
                       />
                       <Input
-                        placeholder="Số ngày (duration)"
-                        value={String(formDuration)}
-                        onChange={(e) => setFormDuration(Number(e.target.value || 0))}
+                        placeholder="Số ngày (vd: 7)"
+                        value={formDuration !== undefined ? String(formDuration) : ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormDuration(val ? Number(val) : undefined);
+                        }}
                       />
                       <Input.TextArea
                         rows={3}

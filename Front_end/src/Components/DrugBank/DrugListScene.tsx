@@ -60,19 +60,7 @@ export default function DrugListScene() {
   // Search
   const filteredList = drugList.filter((drug) => {
     const search = searchText.toLowerCase();
-    return (
-      drug.generic_name?.toLowerCase().includes(search) ||
-      drug.description?.toLowerCase().includes(search) ||
-      drug.synonyms?.some((s) => s.toLowerCase().includes(search)) ||
-      drug.categories?.some((c) => c.toLowerCase().includes(search)) ||
-      drug.atc_code?.some((a) => a.toLowerCase().includes(search)) ||
-      drug.brand_names?.some((b) =>
-        b.name?.toLowerCase().includes(search)
-      ) ||
-      drug.manufacturers?.some((m) =>
-        m.toLowerCase().includes(search)
-      )
-    );
+    return drug.generic_name?.toLowerCase().includes(search);
   });
 
   const handleSearch = (value: string) => {
