@@ -23,7 +23,7 @@ import styles from "./DrugListScene.module.css";
 const { Text } = Typography;
 
 export default function DrugListScene() {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  //const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showActionBar, setShowActionBar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
@@ -189,6 +189,7 @@ export default function DrugListScene() {
 
   return (
     <div>
+<<<<<<< Updated upstream
       <div
         style={{
           width: "75vw",
@@ -204,6 +205,72 @@ export default function DrugListScene() {
           backgroundPosition: "center",
           padding: "1vw",
         }}
+=======
+      <Tabs
+        defaultActiveKey="1"
+        items={[
+          {
+            key: "1",
+            label: (
+              <span className="tab-label">
+                <img src={listDrug} alt="list" className="tab-icon" />
+                <b>All drugs</b>
+                <Badge
+                  count={drugList.length > 1000 ? "1000+" : drugList.length}
+                  style={{ backgroundColor: "var(--primary-color)" }}
+                />
+              </span>
+            ),
+          },
+        ]}
+      />
+      <Table
+        className="drug-table"
+        scroll={{ x: "max-content" }}
+        columns={columns}
+        dataSource={paginatedData}
+        loading={loading}
+        pagination={false}
+        title={() => (
+          <div className="table-header-bar">
+            <Button icon={<FilterOutlined />}>Filter</Button>
+
+            <div className="pagination-center">
+              <Pagination
+                current={currentPage}
+                pageSize={pageSize}
+                total={filteredList.length}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger={false}
+              />
+            </div>
+
+            <div className="search-add">
+              <Input.Search
+                placeholder="Tìm thuốc tại đây"
+                className="search-input"
+                allowClear
+                onSearch={handleSearch}
+                onPressEnter={(e) => handleSearch(e.currentTarget.value)}
+              />
+            </div>
+          </div>
+        )}
+      />
+
+      {/* Modal chi tiết */}
+      <Modal
+        open={showDrugInfoModal}
+        footer={null}
+        onCancel={() => {
+          setShowDrugInfoModal(false);
+          setSelectedDrug(null);
+        }}
+        width="60%"
+        style={{ top: 20 }}
+        title={null}
+        closeIcon={<div className="close-btn">X</div>}
+>>>>>>> Stashed changes
       >
         <div className={styles["flex-title"]}>
           <span>Tất cả</span>
@@ -292,6 +359,7 @@ export default function DrugListScene() {
 
       {/* Action Bar */}
       {showActionBar && (
+<<<<<<< Updated upstream
         <div className={styles["doctor-fixed-footer"]}>
           <div className={styles["circle-badge"]}>{selectedRowKeys.length}</div>
           <span style={{ marginLeft: "8px" }}>
@@ -311,6 +379,10 @@ export default function DrugListScene() {
               marginLeft: 30,
             }}
           >
+=======
+        <div className="action-bar">
+          <Button type="link" className="action-btn">
+>>>>>>> Stashed changes
             Print
           </Button>
           <Button
@@ -349,7 +421,6 @@ export default function DrugListScene() {
               (e.currentTarget.style.background = "transparent")
             }
             onClick={() => {
-              setSelectedRowKeys([]);
               setShowActionBar(false);
             }}
           >

@@ -23,7 +23,14 @@ interface VisitInforProps {
   patient: any;
 }
 
-type DrugRow = { id: string; name: string; dose: string; time: string; note: string };
+type DrugRow = {
+  id: string;       // id trong DB (nếu có)
+  name: string;     // generic_name
+  dose: string;     // liều dùng (chỉ để hiển thị)
+  time: string;     // tần suất (frequency)
+  duration: number; // duration_days
+  note: string;     // yêu cầu
+};
 
 export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   if (!patient) return null;
@@ -41,18 +48,18 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const [diagnosisSaved, setDiagnosisSaved] = useState(false);
   const [editingDiagnosis, setEditingDiagnosis] = useState(false);
 
-  const handleSaveDiagnosis = () => {
-    if (!diagnosis.trim()) {
-      alert("Vui lòng nhập chẩn đoán trước khi ghi nhận!");
-      return;
-    }
-    setDiagnosisSaved(true);
-    setEditingDiagnosis(false);
-  };
+  // ---- prescription state ----
+  const [drugs, setDrugs] = useState<DrugRow[]>([]);
 
-  const handleEditDiagnosis = () => {
-    setEditingDiagnosis(true);
-  };
+  // ---- form thêm thuốc ----
+  const [formName, setFormName] = useState("");
+  const [formDose, setFormDose] = useState("");
+  const [formTime, setFormTime] = useState("");
+  const [formDuration, setFormDuration] = useState<number>(2); // số ngày mặc định
+  const [formNote, setFormNote] = useState("");
+
+  const [options, setOptions] = useState<{ value: string }[]>([]);
+  const [loadingDrugs, setLoadingDrugs] = useState(false);
 
   // ---- fetch doctor ----
   useEffect(() => {
@@ -91,7 +98,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
               id: v.visit,
               doctor_name: v.doctor || "Không rõ",
               result: v.conclusion || "Chưa có",
-              labResult: v.lab_result || "Chưa có",
+              labResult: v.symptoms || "Chưa có",
               date: v.visit_date,
               history: historyParts.length > 0 ? historyParts.join(", ") : "Không có",
             };
@@ -116,9 +123,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     { title: "Ngày tạo", dataIndex: "date", key: "date", width: 140 },
   ];
 
-  // ---- prescription ----
-  const [drugs, setDrugs] = useState<DrugRow[]>([]);
-
   const removeDrug = (id: string) => {
     setDrugs((prev) => prev.filter((d) => d.id !== id));
   };
@@ -127,7 +131,8 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     { title: "ID", dataIndex: "id", key: "id", width: 110 },
     { title: "Tên thuốc", dataIndex: "name", key: "name" },
     { title: "Liều dùng", dataIndex: "dose", key: "dose", width: 150 },
-    { title: "Thời gian", dataIndex: "time", key: "time", width: 140 },
+    { title: "Thời gian", dataIndex: "time", key: "time", width: 120 },
+    { title: "Số ngày", dataIndex: "duration", key: "duration", width: 100 },
     { title: "Yêu cầu", dataIndex: "note", key: "note" },
     {
       title: "",
@@ -149,15 +154,6 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
       },
     },
   ];
-
-  // ---- form thêm thuốc ----
-  const [formName, setFormName] = useState("");
-  const [formDose, setFormDose] = useState("");
-  const [formTime, setFormTime] = useState("");
-  const [formNote, setFormNote] = useState("");
-
-  const [options, setOptions] = useState<{ value: string }[]>([]);
-  const [loadingDrugs, setLoadingDrugs] = useState(false);
 
   const fetchDrugSuggestions = async (query: string) => {
     if (!query) {
@@ -197,10 +193,11 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
       if (json.success && json.data.length > 0) {
         const drug = json.data[0];
         const next: DrugRow = {
-          id: drug._id,
+          id: drug._id || String(Math.random()).slice(2),
           name: drug.generic_name,
           dose: formDose.trim() || "1 viên / ngày",
           time: formTime.trim() || "Sáng",
+          duration: formDuration || 2,
           note: formNote.trim() || "Không có",
         };
 
@@ -208,6 +205,7 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
         setFormName("");
         setFormDose("");
         setFormTime("");
+        setFormDuration(2);
         setFormNote("");
       } else {
         alert("Không tìm thấy thuốc trong cơ sở dữ liệu!");
@@ -222,6 +220,106 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
     const d = new Date();
     return `ngày ${d.getDate()} tháng ${d.getMonth() + 1} năm ${d.getFullYear()}`;
   }, []);
+
+  // Attempt to resolve visit_id:
+  const getVisitIdForCurrent = async (): Promise<number | null> => {
+    // try common fields first
+    const fields = ["visit_id", "visitId", "visitId", "current_visit_id"];
+    for (const f of fields) {
+      // @ts-ignore
+      if (patient[f]) return patient[f];
+    }
+
+    // fallback: fetch recent-patients for this doctor and find visit by patient id
+    try {
+      const storedDoctorId = localStorage.getItem("doctorId");
+      const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
+      if (!doctorId) return null;
+      const res = await fetch(`http://127.0.0.1:8000/recent-patients/${doctorId}`);
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data)) {
+        const found = json.data.find((it: any) => it.patient?.id === patient.id || it.patient?.patient_id === patient.id);
+        if (found && found.visit_id) return found.visit_id;
+        if (found && found.visitDate) return found.visitDate;
+      }
+    } catch (err) {
+      console.error("Không lấy được visit_id từ recent-patients:", err);
+    }
+
+    return null;
+  };
+
+  const handleSaveDiagnosis = () => {
+    if (!diagnosis.trim()) {
+      alert("Vui lòng nhập chẩn đoán trước khi ghi nhận!");
+      return;
+    }
+    setDiagnosisSaved(true);
+    setEditingDiagnosis(false);
+    // Mở luôn phần kê đơn ngay sau khi ghi nhận chẩn đoán (theo yêu cầu)
+    setShowPrescription(true);
+  };
+
+  const handleEditDiagnosis = () => {
+    setEditingDiagnosis(true);
+  };
+
+  const buildPrescriptionItems = () => {
+    return drugs.map((d) => {
+      return {
+        drug_name: d.name,                  // backend nhận generic_name (drug_name)
+        frequency: d.time || "1 lần/ngày",  // tần suất
+        duration_days: d.duration || 2,     // số ngày
+        note: d.note || "Không có",         // yêu cầu
+      };
+    });
+  };
+
+  const handleSavePrescription = async () => {
+    if (drugs.length === 0) {
+      alert("Đơn thuốc rỗng. Vui lòng thêm thuốc trước khi ghi nhận.");
+      return;
+    }
+    const items = buildPrescriptionItems();
+
+    const visitId = await getVisitIdForCurrent();
+    if (!visitId) {
+      alert("Không tìm thấy visit_id của lần khám hiện tại. Vui lòng thử lại hoặc liên hệ admin.");
+      return;
+    }
+
+    const payload = {
+      visit_id: visitId,
+      items,               // Đúng format API
+      diagnosis,           // chẩn đoán
+      note: "",            // backend yêu cầu có note
+    };
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/create-prescription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("Lưu đơn thuốc thành công!");
+        setDrugs([]);
+        setShowPrescription(false);
+        setDiagnosisSaved(true);
+        try {
+          onBack();
+        } catch (err) {
+          console.warn("onBack callback failed or not provided:", err);
+        }
+      } else {
+        alert("Lưu đơn thất bại: " + (json.message || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Lỗi khi gọi API create-prescription:", err);
+      alert("Lỗi mạng khi lưu đơn thuốc.");
+    }
+  };
 
   return (
     <div className="visit-panel">
@@ -386,7 +484,9 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
                 </Card>
 
                 <div className="btn-row">
-                  <Button type="primary">Ghi nhận</Button>
+                  <Button type="primary" onClick={handleSavePrescription}>
+                    Ghi nhận
+                  </Button>
                   <Button type="primary" danger onClick={() => setShowDDIs(true)}>
                     Tương tác thuốc
                   </Button>
@@ -437,9 +537,14 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
                         onChange={(e) => setFormDose(e.target.value)}
                       />
                       <Input
-                        placeholder="Thời gian dùng thuốc"
+                        placeholder="Tần suất / Thời gian (vd: Sáng / 2 lần/ngày)"
                         value={formTime}
                         onChange={(e) => setFormTime(e.target.value)}
+                      />
+                      <Input
+                        placeholder="Số ngày (duration)"
+                        value={String(formDuration)}
+                        onChange={(e) => setFormDuration(Number(e.target.value || 0))}
                       />
                       <Input.TextArea
                         rows={3}

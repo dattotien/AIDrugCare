@@ -27,7 +27,7 @@ export default function DoctorWaitingList({ onSelectPatient, onSeeAll }: DoctorW
         const res = await axios.get(
           `http://localhost:8000/waiting-patients/${doctorId}`
         );
-        setPatients(res.data.data || res.data || []);
+        setPatients(Array.isArray(res.data.data) ? res.data.data : []);
       } catch (err: any) {
         console.error(
           "Error fetching waiting list:",
