@@ -57,11 +57,11 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const [formTime, setFormTime] = useState("");
   const [formDuration, setFormDuration] = useState<number | undefined>(undefined);
   const [formNote, setFormNote] = useState("");
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const [options, setOptions] = useState<{ value: string }[]>([]);
   const [loadingDrugs, setLoadingDrugs] = useState(false);
 
-  const API_BASE = "http://127.0.0.1:8000";
+  const API_BASE = `${API_URL}`;
 
   // ---- fetch doctor profile ----
   useEffect(() => {

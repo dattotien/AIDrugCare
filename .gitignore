@@ -23,3 +23,5 @@ Backend/services/__pycache__/model.cpython-312.pyc
 Backend/services/__pycache__/model_service.cpython-312.pyc
 Backend/services/__pycache__/patient_service.cpython-312.pyc
 Backend/api/__pycache__/doctor_api.cpython-312.pyc
+Backend/assets/hmgrl_check_point.pt
+Backend/assets/drug_interaction.json

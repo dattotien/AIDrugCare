@@ -90,7 +90,7 @@ const extraItems = [
 export default function DoctorScene() {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const [accountInfo, setAccountInfo] = useState({
     name: "",
     email: "",
@@ -112,7 +112,7 @@ export default function DoctorScene() {
 
       try {
         const res = await axios.get(
-          `http://localhost:8000/doctor-profile/${doctorId}`
+          `${API_URL}/doctor-profile/${doctorId}`
         );
         if (res.data.success) {
           const doc = res.data.data;

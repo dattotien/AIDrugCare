@@ -9,7 +9,7 @@ export default function PatientLoginScene() {
   const [cccd, setCccd] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -21,7 +21,7 @@ export default function PatientLoginScene() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/login-patient", {
+      const res = await fetch(`${API_URL}/login-patient`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

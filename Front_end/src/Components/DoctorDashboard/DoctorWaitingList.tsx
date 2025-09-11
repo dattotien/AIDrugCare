@@ -28,7 +28,7 @@ export default function DoctorWaitingList({
 }: DoctorWaitingListProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
   const navigate = useNavigate();
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const storedDoctorId = localStorage.getItem("doctorId");
   const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
 
@@ -36,7 +36,7 @@ export default function DoctorWaitingList({
     const fetchWaitingList = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8000/waiting-patients/${doctorId}`
+          `${API_URL}/waiting-patients/${doctorId}`
         );
 
         if (Array.isArray(res.data?.data)) {

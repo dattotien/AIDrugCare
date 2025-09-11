@@ -45,13 +45,14 @@ export default function DoctorHistory() {
   const storedDoctorId = localStorage.getItem("doctorId");
   const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
 
+  const API_URL = import.meta.env.VITE_API_URL;
   // fetch danh sách lịch sử khám
   const fetchHistory = async () => {
     if (!doctorId) return;
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/visited-by-doctor/${doctorId}`
+        `${API_URL}/visited-by-doctor/${doctorId}`
       );
       const mappedData = response.data.data.map((item: any) => {
         const utcDate = new Date(item.date);

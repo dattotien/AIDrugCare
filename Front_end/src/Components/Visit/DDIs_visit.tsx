@@ -19,12 +19,12 @@ export default function DDIsVisit({ open, onClose, drugs, patientId }: DDIsVisit
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [previousDrugs, setPreviousDrugs] = useState<{ generic_name: string }[]>([]);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchPrevious = async () => {
       try {
         const res = await axios.get(
-          `http://127.0.0.1:8000/previous-drugs/${patientId}`
+          `${API_URL}/previous-drugs/${patientId}`
         );
         setPreviousDrugs(res.data.data);
         console.log("Previous drugs:", res.data.data);
@@ -44,7 +44,7 @@ export default function DDIsVisit({ open, onClose, drugs, patientId }: DDIsVisit
         const previousDrugNames = previousDrugs.map((d) => ({ name: d.generic_name, type: "old" }));
         const allDrugs = [...drugNames, ...previousDrugNames];
 
-        const res = await fetch("http://127.0.0.1:8000/all-interactions", {
+        const res = await fetch(`${API_URL}/all-interactions`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ drugs: allDrugs.map((d) => d.name) }),

@@ -29,7 +29,7 @@ export default function DrugListScene() {
   const [searchText, setSearchText] = useState("");
   const [showDrugInfoModal, setShowDrugInfoModal] = useState(false);
   const [selectedDrug, setSelectedDrug] = useState<Drug | null>(null);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const [drugList, setDrugList] = useState<Drug[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
@@ -38,7 +38,7 @@ export default function DrugListScene() {
   const fetchDrugs = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8000/drugs");
+      const res = await axios.get(`${API_URL}/drugs`);
       if (res.data.success && Array.isArray(res.data.data)) {
         setDrugList(res.data.data);
       } else {
@@ -71,7 +71,7 @@ export default function DrugListScene() {
   const handleMore = async (record: Drug) => {
     setLoadingDetail(true);
     try {
-      const res = await axios.get(`http://localhost:8000/drugs/${record._id}`);
+      const res = await axios.get(`${API_URL}/drugs/${record._id}`);
       const data = res.data.data || res.data;
       if (data) {
         setSelectedDrug(data);

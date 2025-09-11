@@ -12,12 +12,12 @@ export interface Visit {
 export default function DoctorDoneList(){
     const [visits, setVisits] = useState<Visit[]>([])
     const doctorId = localStorage.getItem("doctorId");
-
+    const API_URL = import.meta.env.VITE_API_URL;
     useEffect (() => {
         const fetchVisit = async () => {
             if (!doctorId) return;
             try {
-                const res = await axios.get(`http://127.0.0.1:8000/previous-patients/${doctorId}`)
+                const res = await axios.get(`${API_URL}/previous-patients/${doctorId}`)
                 setVisits(res.data.data);
                 console.log(res.data.data);
             }catch (error){

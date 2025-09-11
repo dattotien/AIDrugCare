@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://host.docker.internal:27017/Hospital  # nếu dùng local mongodb
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - S3_BUCKET=${S3_BUCKET}
+      - MODEL_S3_KEY=${MODEL_S3_KEY}
+      - JSON_S3_KEY=${JSON_S3_KEY}
+    volumes:
+      - ./backend/assets:/app/assets
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://host.docker.internal:8000

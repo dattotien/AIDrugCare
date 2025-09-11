@@ -30,12 +30,12 @@ export default function PatientHistory({ patientId }: His) {
   const [selectedHistory, setSelectedHistory] = useState<any | null>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [selectVisitId, setSelectVisitId] = useState<string | null>(null);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         const res = await axios.get(
-          `http://127.0.0.1:8000/visit-history/${patientId}`
+          `${API_URL}/visit-history/${patientId}`
         );
         if (res.data && Array.isArray(res.data)) {
           setHistory(res.data);

@@ -11,11 +11,13 @@ export default function DoctorCardCount() {
   const storedDoctorId = localStorage.getItem("doctorId");
   const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchVisitedCount = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8000/visited-count-today/${doctorId}`
+          `${API_URL}/visited-count-today/${doctorId}`
         );
         setVisitedCount(Number(res.data.data));
       } catch (err: any) {
@@ -34,7 +36,7 @@ export default function DoctorCardCount() {
   useEffect(() => {
     const fetchNotVisitedCount = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/waiting-count/${doctorId}`);
+        const res = await axios.get(`${API_URL}/waiting-count/${doctorId}`);
         setNotVisitedCount(Number(res.data.data));
       } catch (err: any) {
         console.error(

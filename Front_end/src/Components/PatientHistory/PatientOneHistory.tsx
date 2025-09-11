@@ -16,13 +16,13 @@ export default function PatientOneHistory({ visitId }: Props) {
   const [pres, setPres] = useState<any>(null);
   const [history, setHistory] = useState<any>(null);
   const [showActions, setShowActions] = useState(false);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchPre = async () => {
       if (!visitId) return;
       try {
         const res = await axios.get(
-          `http://127.0.0.1:8000/prescription/${visitId}`
+          `${API_URL}/prescription/${visitId}`
         );
         console.log("📌 API response:", res.data);
         if (res.data.success) {

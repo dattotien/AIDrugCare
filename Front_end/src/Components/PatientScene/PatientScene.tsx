@@ -32,7 +32,7 @@ export default function PatientScene() {
     threeLatestRes: [],
   });
   const [loading, setLoading] = useState(true);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const patientId = localStorage.getItem("patientId");
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,11 +54,11 @@ export default function PatientScene() {
           nextVisitRes,
           threeLatestRes,
         ] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/patient-profile/${patientId}`),
-          axios.get(`http://127.0.0.1:8000/total-visits/${patientId}`),
-          axios.get(`http://127.0.0.1:8000/latest-visit-day/${patientId}`),
-          axios.get(`http://127.0.0.1:8000/next-visit-day/${patientId}`),
-          axios.get(`http://127.0.0.1:8000/three-latest-visits/${patientId}`),
+          axios.get(`${API_URL}/patient-profile/${patientId}`),
+          axios.get(`${API_URL}/total-visits/${patientId}`),
+          axios.get(`${API_URL}/latest-visit-day/${patientId}`),
+          axios.get(`${API_URL}/next-visit-day/${patientId}`),
+          axios.get(`${API_URL}/three-latest-visits/${patientId}`),
         ]);
 
         setData({

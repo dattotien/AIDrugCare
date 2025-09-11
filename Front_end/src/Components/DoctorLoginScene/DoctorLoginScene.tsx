@@ -10,11 +10,11 @@ export default function DoctorLoginScene() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const handleOnLogin = async () => {
     try {
       const result = await axios.post(
-        "http://localhost:8000/login-doctor",
+        `${API_URL}/login-doctor`,
         null,
         {
           params: {

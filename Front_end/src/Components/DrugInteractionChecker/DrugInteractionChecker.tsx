@@ -24,6 +24,7 @@ export default function DrugInteractionChecker() {
   const [optionsB, setOptionsB] = useState<{ value: string }[]>([]);
   const [result, setResult] = useState<{ description: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
   const fetchDrugOptions = async (query: string, setOptions: Function) => {
     if (!query) {
       setOptions([]);
@@ -31,7 +32,7 @@ export default function DrugInteractionChecker() {
     }
     try {
       const res = await fetch(
-        `http://localhost:8000/search?name=${encodeURIComponent(query)}`
+        `${API_URL}/search?name=${encodeURIComponent(query)}`
       );
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
@@ -52,7 +53,7 @@ export default function DrugInteractionChecker() {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/drugs/predict${drugA}/${drugB}`
+        `${API_URL}/drugs/predict${drugA}/${drugB}`
       );
       const data = await res.json();
 

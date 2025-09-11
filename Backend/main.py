@@ -10,6 +10,7 @@ from entities.prescription_detail import PrescriptionDetail
 from api import drug_api, patient_api, doctor_api, authorization_api
 from database import Database
 from services.model_service import HMGRLService
+from services.download_assets import ensure_assets
 import torch
 app = FastAPI(title="AI Drug Care API")
 
@@ -26,6 +27,7 @@ app.include_router(doctor_api.router, tags=["Doctor"])
 app.include_router(authorization_api.router, tags=["Authorization"])
 @app.on_event("startup")
 async def startup_db():
+    ensure_assets()
     await Database.connect_to_database()
     client = Database.client
     await init_beanie(
