@@ -45,20 +45,20 @@ export default function DoctorSchedule() {
         <div className={styles.calendar_weekdays}>
           <div>Mon</div>
           <div>Tue</div>
-          <div className={styles.day_name}>Wed</div>
+          <div>Wed</div>
           <div>Thu</div>
-          <div>Fri</div>
+          <div className={styles.day_name}>Fri</div>
           <div>Sat</div>
           <div>Sun</div>
         </div>
         <div className={styles.calendar_days}>
-          <div>18</div>
-          <div>19</div>
-          <div className={styles.active}>20</div>
-          <div>21</div>
-          <div>22</div>
-          <div>23</div>
           <div>24</div>
+          <div>25</div>
+          <div>26</div>
+          <div>27</div>
+          <div  className={styles.active}>28</div>
+          <div>29</div>
+          <div>30</div>
         </div>
       </div>
     </div>
