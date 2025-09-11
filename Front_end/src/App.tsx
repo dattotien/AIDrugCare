@@ -15,7 +15,6 @@ export default function App() {
         <Route path="/patient/dashboard/*" element={<PatientScene />} />
         <Route path="/doctor/login" element={<DoctorLoginScene />} />
         <Route path="/doctor/dashboard/*" element={<DoctorScene />} />
-
         <Route path="*" element={<IntroductionScene />} />
       </Routes>
     </Router>

@@ -27,30 +27,33 @@ function IntroductionScene() {
         minHeight: "400vh",
         maxWidth: "100vw",
         backgroundImage: `url(${Back})`,
-        backgroundSize: "cover", // ảnh phủ toàn màn hình, co giãn đúng tỉ lệ
-        backgroundPosition: "center", // căn giữa
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         backgroundRepeat: "no-repeat", // không lặp lại
       }}
     >
       <Header className={styles.header}>
         <p style={{ margin: 0 }}>
-          <span style={{ color: "black", fontWeight: "bold" }}>AI</span>{" "}
-          <span style={{ color: "#043bb3", fontWeight: "bold" }}>
-            - Drug Care
-          </span>
+          <span style={{ color: "black", fontWeight: "bold" }}>AI</span>
+          <span style={{ color: "#043bb3", fontWeight: "bold" }}>DrugCare</span>
         </p>
       </Header>
 
       <Content>
         <div className={styles.content1}>
-          <p className={styles.care}>Caring for Life,</p>
-          <p className={styles.care}>Every Step of the Way.</p>
+          <p className={styles.care}>Đồng hành trên mọi chặng đường, </p>
+          <p className={styles.care}>
+            khởi nguồn tương lai y tế số tại Việt Nam.
+          </p>
           <p className={styles.text}>
-            At UETSpark-AI Hospital, we are committed to providing comprehensive
-            healthcare services with the perfect balance of advanced medical
-            technology and compassionate care. Our dedicated team of doctors and
-            medical staff work tirelessly to ensure safety, trust, and the best
-            possible outcomes for every patient and their family.
+            Với AIDrugCare, chúng tôi cam kết mang đến một giải pháp y tế số
+            toàn diện, kết hợp hài hòa giữa công nghệ trí tuệ nhân tạo tiên tiến
+            và sự tận tâm trong chăm sóc sức khỏe. Với nền tảng hỗ trợ ra quyết
+            định lâm sàng thông minh, chúng tôi đồng hành cùng đội ngũ bác sĩ và
+            nhân viên y tế trong việc đảm bảo an toàn, tin cậy và hiệu quả tối
+            ưu cho mỗi bệnh nhân. AIDrugCare không chỉ giúp phát hiện và phòng
+            ngừa tương tác thuốc mà còn góp phần xây dựng một nền y tế thông
+            minh, nhân văn và bền vững cho cộng đồng.
           </p>
           <div style={{ marginTop: 20, display: "flex", gap: "10vw" }}>
             <Button
@@ -59,7 +62,7 @@ function IntroductionScene() {
               className={styles.login_doctor}
               onClick={() => navigate("/doctor/login")}
             >
-              Login as a Doctor
+              Bạn là bác sĩ
             </Button>
 
             <Button
@@ -68,7 +71,7 @@ function IntroductionScene() {
               className={styles.login_patient}
               onClick={() => navigate("/patient/login")}
             >
-              Login as a Patient
+              Bạn là người dùng
             </Button>
           </div>
           <Row className={styles.row}>
@@ -78,11 +81,11 @@ function IntroductionScene() {
                   <CheckCircleOutlined
                     style={{ color: "#043bb3", marginRight: "0.5vw" }}
                   />
-                  Compassionate & Professional Care
+                  Quy trình thăm khám chuyên nghiệp
                 </span>
                 <Paragraph>
-                  We provide patient-centered healthcare with empathy, respect,
-                  and professionalism.
+                  Chúng tôi cung cấp cho các bác sĩ một hệ thống toàn diện, đồng
+                  bộ về thông tin y tế của bệnh nhân.
                 </Paragraph>
               </Card>
             </Col>
@@ -93,11 +96,11 @@ function IntroductionScene() {
                   <CheckCircleOutlined
                     style={{ color: "#043bb3", marginRight: 8 }}
                   />
-                  Modern Facilities & Innovative Solutions
+                  Giải pháp đột phá đồng bộ
                 </span>
                 <Paragraph>
-                  With advanced technology and modern facilities, we deliver
-                  accurate diagnoses and effective treatment.
+                  Trong thời đại công nghệ số, chúng tôi cung cấp thượng tầng
+                  cho các bệnh viện đồng bộ quy trình quản lý.
                 </Paragraph>
               </Card>
             </Col>
@@ -108,12 +111,9 @@ function IntroductionScene() {
                   <CheckCircleOutlined
                     style={{ color: "#043bb3", marginRight: 8 }}
                   />
-                  Your Health Journey, Our Commitment
+                  Cam kết đồng hành cùng hành trình sức khỏe
                 </span>
-                <Paragraph>
-                  Our dedicated team supports you at every stage, from checkups
-                  to specialized care.
-                </Paragraph>
+                <Paragraph>Dõi theo từng lịch sử sức khỏe của bạn</Paragraph>
               </Card>
             </Col>
           </Row>
@@ -127,16 +127,17 @@ function IntroductionScene() {
             </div>
             <div style={{ marginLeft: "2vw" }}>
               <h1>
-                YOUR BEST{" "}
-                <span className={styles.highlight}>HEALTHCARE EXPERIENCE</span>{" "}
-                AWAITS
+                NHỮNG BỆNH VIỆN HÀNG ĐẦU DÀNH CHO BẠN{" "}
+                <span className={styles.highlight}>
+                  TRẢI NGHIỆM CHĂM SÓC SỨC KHỎE TỐT NHẤT
+                </span>{" "}
               </h1>
               <p>
-                At our hospital, we combine modern facilities with a team of
-                dedicated professionals to deliver safe, accurate, and
-                compassionate care. From preventive checkups to advanced
-                treatments, we are here to support your health every step of the
-                way.
+                AIDrugCare, chúng tôi kết hợp với các bệnh viện hàng đầu tại
+                Việt Nam cùng với đội ngũ bác sĩ chuyên nghiệp và nhiệt huyết.
+                Từ việc phòng ngừa bệnh đến các phác đồ điều trị nâng cao, chúng
+                tôi ở đây để đồng hành với bạn trên mọi chặng đường của cuộc
+                sống.
               </p>
             </div>
             <div style={{ display: "flex", gap: "16px", marginTop: "30px" }}>
@@ -175,18 +176,18 @@ function IntroductionScene() {
           <div className={styles.content3_in}>
             <CardCustom
               title="500+"
-              title2="Doctors & Medical Professionals"
-              content="A highly qualified team of specialists and healthcare staff committed to excellence in patient care."
+              title2="Bác sĩ & các chuyên gia y tế"
+              content="Được sự tin dùng, phục vụ quá trình khám chữa bệnh của bác sĩ tại các bệnh viện lớn"
             />
             <CardCustom
               title="90%"
-              title2="Treatment Success Rate"
-              content="Consistently achieving positive outcomes through advanced medical techniques and personalized treatment plans."
+              title2="Độ hài lòng của người dùng"
+              content="Hệ thống thuận tiện, dễ sử dụng cho đa dạng các đối tượng, đạt được sự hài lòng cao"
             />
             <CardCustom
-              title="4"
-              title2="Healthcare Facilities"
-              content="Expanding our reach with modern, well-equipped centers to provide care closer to your community."
+              title="8"
+              title2="Bệnh viện thí điểm sử dụng"
+              content="Ứng dụng trong quá trình khám chữa bệnh ở các bệnh viện lớn, chứng minh được tính tiện ích."
             />
           </div>
         </div>
