@@ -7,6 +7,7 @@ from services.drug_service import predict_one_drug_interaction
 from services.model_service import get_hmgrl_service
 from services.drug_service import search_drugs_by_name
 from services.drug_service import get_all_interactions
+from services.drug_service import get_previous_drugs
 from fastapi import Query
 router = APIRouter()
 
@@ -55,3 +56,6 @@ async def get_all_ddi(
 
     results = await get_all_interactions(req.drugs, hmgrl_service)
     return results
+@router.get("/previous-drugs/{patient_id}", response_model=ResponseModel)
+async def fetch_previous_drugs(patient_id: int):
+    return await get_previous_drugs(patient_id)

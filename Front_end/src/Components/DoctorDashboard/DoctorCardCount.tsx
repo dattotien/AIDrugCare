@@ -34,7 +34,7 @@ export default function DoctorCardCount() {
   useEffect(() => {
     const fetchNotVisitedCount = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/waiting-count");
+        const res = await axios.get(`http://localhost:8000/waiting-count/${doctorId}`);
         setNotVisitedCount(Number(res.data.data));
       } catch (err: any) {
         console.error(

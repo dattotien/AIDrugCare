@@ -103,8 +103,10 @@
   color: #fff !important;
   font-weight: bold;
   text-align: center;
+
 }
 
 .ant-table-tbody > tr > td {
-  text-align: center;
+  text-align: left !important;
+  padding-left: 8px !important;
 }
