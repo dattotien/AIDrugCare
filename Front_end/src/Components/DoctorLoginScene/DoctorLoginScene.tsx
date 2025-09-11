@@ -72,14 +72,15 @@ export default function DoctorLoginScene() {
         </div>
         <div style={{ marginLeft: "10.5vw", marginRight: "10.5vw" }}>
           <p className={styles.t1}>
-            WELCOME <span style={{ color: "#043BB3" }}>TO OUR</span>
+            CHÀO MỪNG ĐẾN VỚI{" "}
+            <span style={{ color: "#043BB3" }}>AIDRUGCARE</span>
           </p>
-          <p className={styles.t1}>SERVICES</p>
+
           <p className={styles.intro}>
-            Our hospital is a modern healthcare center committed to providing
-            high-quality medical services. With advanced facilities and
-            experienced doctors, we ensure safe, effective, and comprehensive
-            care for all patients.
+            Hệ thống quản lý khám chữa bệnh, phục vụ bác sĩ, bệnh nhân trong quá
+            trình khám chữa bệnh an toàn, kê đơn thuốc, kiểm tra tương tác
+            thuốc, góp phần xây dựng một nền y tế thông minh, an toàn, tiện ích
+            cho cộng đồng.
           </p>
           <div
             style={{
@@ -90,7 +91,7 @@ export default function DoctorLoginScene() {
             }}
           >
             <p style={{ fontWeight: "bold", fontStyle: "italic" }}>
-              "Care for life, every step of the way"
+              "Chăm sóc sức khỏe, trên mỗi bước đường"
             </p>
           </div>
         </div>
@@ -118,7 +119,7 @@ export default function DoctorLoginScene() {
 
       <div style={{ width: "50vw", height: "100vh" }}>
         <Card className={styles.card}>
-          <h2 className={styles.title}>TRY TO SIGN IN</h2>
+          <h2 className={styles.title}>ĐĂNG NHẬP</h2>
           <p></p>
           <p className={styles.text}>Tên đăng nhập</p>
           <Input

@@ -42,7 +42,7 @@ const { Content, Sider } = Layout;
 const mainItems = [
   {
     key: "",
-    label: "Dashboard",
+    label: "Trang chủ",
     iconDefault: DashboardIconDefault,
     iconActive: DashboardIconActive,
   },
@@ -54,19 +54,19 @@ const mainItems = [
   },
   {
     key: "history",
-    label: "History",
+    label: "Lịch sử khám",
     iconDefault: HistoryIconDefault,
     iconActive: HistoryIconActive,
   },
   {
     key: "patients",
-    label: "Patients",
+    label: "Khám chữa bệnh",
     iconDefault: PatientsIconDefault,
     iconActive: PatientsIconActive,
   },
   {
     key: "ddis",
-    label: "DDIs check",
+    label: "Kiểm tra tương tác thuốc",
     iconDefault: DDIscheckIconDefault,
     iconActive: DDIscheckIconActive,
   },
@@ -75,13 +75,13 @@ const mainItems = [
 const extraItems = [
   {
     key: "setting",
-    label: "Setting",
+    label: "Cài đặt",
     iconDefault: SettingIconDefault,
     iconActive: SettingIconActive,
   },
   {
     key: "logout",
-    label: "Log out",
+    label: "Đăng xuất",
     iconDefault: LogoutIconDefault,
     iconActive: LogoutIconActive,
   },
@@ -134,7 +134,7 @@ export default function DoctorScene() {
     fetchDoctor();
   }, [navigate]);
 
-  // Nếu back ra ngoài dashboard thì xóa doctorId
+
   useEffect(() => {
     const handleBack = () => {
       const path = window.location.pathname;
@@ -195,7 +195,6 @@ export default function DoctorScene() {
             style={{
               display: "flex",
               alignItems: "center",
-              paddingLeft: "0.8vw",
             }}
           >
             <img
@@ -205,7 +204,7 @@ export default function DoctorScene() {
                 width: 20,
                 height: 20,
                 objectFit: "contain",
-                marginRight: 12,
+                marginRight: 10,
               }}
             />
             <span
@@ -225,7 +224,7 @@ export default function DoctorScene() {
       className="doctor-layout"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <Sider width={"13.5vw"} className="doctor-sider">
+      <Sider width={"15vw"} className="doctor-sider">
         <div className="doctor-logo-container">
           <img src={Logo} alt="logo" className="doctor-logo" />
         </div>
