@@ -43,8 +43,8 @@ async def startup_db():
     )
     device = "cuda" if torch.cuda.is_available() else "cpu"
     app.state.hmgrl_service = HMGRLService(
-        model_path="./assets/hmrgl_check_point.pt",
-        data_path="./assets",
+        model_path="/app/hmrgl_check_point.pt",
+        data_path="/app",
         device=device
     )
     print(next(app.state.hmgrl_service.model.parameters()).device)
