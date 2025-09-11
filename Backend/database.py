@@ -1,3 +1,4 @@
+import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from typing import Optional
 
@@ -8,8 +9,12 @@ class Database:
     @classmethod
     async def connect_to_database(cls):
         if cls.client is None:
-            cls.client = AsyncIOMotorClient('mongodb://localhost:27017/')
-            cls.db = cls.client["Hospital"]
+            mongo_uri = os.getenv("MONGO_URI")  # Lấy từ biến môi trường
+            if not mongo_uri:
+                raise Exception("MONGO_URI environment variable not set")
+            
+            cls.client = AsyncIOMotorClient(mongo_uri)
+            cls.db = cls.client["Hospital"]  # database name trong Atlas
     
     @classmethod
     async def close_database_connection(cls):
