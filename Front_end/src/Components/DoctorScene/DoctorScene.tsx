@@ -48,7 +48,7 @@ const mainItems = [
   },
   {
     key: "drugbank",
-    label: "Drugbank",
+    label: "DrugBank",
     iconDefault: DrugbankIconDefault,
     iconActive: DrugbankIconActive,
   },
@@ -254,7 +254,7 @@ export default function DoctorScene() {
           <h2 className="doctor-header-title">
             {location.pathname === "/doctor/dashboard" && "Dashboard"}
             {location.pathname.includes("/doctor/dashboard/drugbank") &&
-              "Drugbank"}
+              "DrugBank"}
             {location.pathname.includes("/doctor/dashboard/history") &&
               "History"}
             {location.pathname.includes("/doctor/dashboard/patients") && (

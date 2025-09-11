@@ -246,7 +246,7 @@ async def get_waiting_patients(doctor_id: int):
     waiting_visits = await Visit.find({
         "doctor_id": doctor_id,
         "diagnosis": "Trống"
-        }).sort(Visit.visit_date).to_list()
+    }).sort(Visit.visit_date).to_list()
 
     if not waiting_visits:
         return {
@@ -258,14 +258,19 @@ async def get_waiting_patients(doctor_id: int):
     data = []
     for visit in waiting_visits:
         patient = await Patient.get(visit.patient_id)
-        data.append({
-            "id": patient.id if patient else None,
-            "name": patient.name if patient else None,
-            "age": patient.dob if patient else None,
-            "gender": patient.gender if patient else None,
-            "symptoms": visit.symptoms,
-            "status": visit.status,
-        })
+        if patient:
+            data.append({
+                "id": str(patient.id),
+                "visit_id": visit.id,
+                "name": patient.name,
+                "gender": patient.gender,
+                "dob": patient.dob,       # ngày sinh đúng
+                "cccd": patient.cccd,     # thêm CCCD
+                "phone": patient.phone,   # thêm số điện thoại nếu cần
+                "symptoms": visit.symptoms,
+                "status": visit.status,
+            })
+
     return {
         "success": True,
         "message": "Lấy bệnh nhân đang chờ khám thành công",
@@ -454,4 +459,20 @@ async def get_all_patients_by_doctor(doctor_id: int):
         "success": True,
         "message": "Lấy danh sách tất cả các bệnh nhân",
         "data": data
+    }
+
+async def get_visit_by_id(visit_id: int):
+    visit = await Visit.get(visit_id)
+    if not visit:
+        return {"success": False, "message": "Visit not found", "data": None}
+    return {"success": True, "message": "Visit retrieved", "data": visit}
+
+async def get_medical_history_by_visit(visit_id: int):
+    history = await Medical_History.find_one(Medical_History.visit_id == visit_id)
+    if not history:
+        return {"success": False, "message": "Không tìm thấy medical history", "data": None}
+    return {
+        "success": True,
+        "message": "Lấy medical history thành công",
+        "data": history
     }
