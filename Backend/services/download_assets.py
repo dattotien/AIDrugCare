@@ -12,16 +12,12 @@ def download_file_from_google_drive(file_id, dest_path):
 def ensure_assets():
     os.makedirs("./assets", exist_ok=True)
 
-    # File model
-    if not os.path.exists("./assets/hmgrl_check_point.pt"):
-        download_file_from_google_drive(
-            "YOUR_MODEL_FILE_ID",
-            "./assets/hmgrl_check_point.pt"
-        )
+    model_id = os.getenv("MODEL_FILE_ID")
+    json_id = os.getenv("JSON_FILE_ID")
 
-    # File drug interaction
+    if not os.path.exists("./assets/hmgrl_check_point.pt"):
+        download_file_from_google_drive(model_id, "./assets/hmgrl_check_point.pt")
+
     if not os.path.exists("./assets/drug_interaction.json"):
-        download_file_from_google_drive(
-            "YOUR_JSON_FILE_ID",
-            "./assets/drug_interaction.json"
-        )
+        download_file_from_google_drive(json_id, "./assets/drug_interaction.json")
+
