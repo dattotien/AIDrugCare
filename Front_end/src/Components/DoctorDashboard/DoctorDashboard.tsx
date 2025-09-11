@@ -25,7 +25,7 @@ export default function DoctorDashboard({ onSelectPatient, onSeeAllPatients }: D
       <div className={styles.rightPanel}>
         <DoctorSchedule />
         <DoctorDoneList />
-
+      <div style={{marginTop: "5vh"}}>
         <div className={styles.eventHeader}>
           <p className={styles.eventTitle}>Sự kiện</p>
           <p className={styles.eventSeeAll}>Xem tất cả</p>
@@ -33,6 +33,7 @@ export default function DoctorDashboard({ onSelectPatient, onSeeAllPatients }: D
 
         <DoctorEventListCard highlight="#043bb3" />
         <DoctorEventListCard highlight="#d12362" />
+        </div>
       </div>
     </div>
   );

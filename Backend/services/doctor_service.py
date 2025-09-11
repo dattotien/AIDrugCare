@@ -150,15 +150,8 @@ async def get_number_visited_today(doctor_id: int):
 
     count = await Visit.find({
     "doctor_id": doctor_id,
-    "diagnosis": {"$ne": "Trống"},
-    "visit_date": {
-        "$gte": datetime.combine(today, datetime.min.time()),
-        "$lte": datetime.combine(today, datetime.max.time())
-        }
+    "status" : "Đã khám",
     }).count()
-
-
-
     return {
         "success": True,
         "message": "Lấy số bệnh nhân đã khám hôm nay thành công",
