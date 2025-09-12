@@ -14,10 +14,14 @@ class HMGRLService:
             self.id2drugbankid = json.load(f)
         with open(os.path.join(data_path, "name_to_drugbank_id.json")) as f:
             self.name_to_dbid = json.load(f)
-        with open(os.path.join(data_path, "drug_interaction.json")) as f:
-            self.inter_dict = json.load(f)
-        with open(os.path.join(data_path, "label_mapping.json")) as f:
-            self.label_mapping = json.load(f)
+
+        self.inter_dict = None
+        self.label_mapping = None
+        self.model = None
+        self.X_vector = None
+        self.drug_coding = None
+        self.adj = None
+        self.tensor_tempvec_multi = None
 
         self.N_three_attribute = torch.tensor([2033, 1589, 285], dtype=torch.long, device=self.device)
 
@@ -31,6 +35,20 @@ class HMGRLService:
         self.model = HMGRL(6000, 99, 1000, self.N_three_attribute, args).to(self.device)
         self.model.load_state_dict(state_dict)
         self.model.eval()
+
+    def load_heavy_assets(self):
+        if self.inter_dict is None:
+            with open(os.path.join(self.data_path, "drug_interaction.json")) as f:
+                self.inter_dict = json.load(f)
+        if self.label_mapping is None:
+            with open(os.path.join(self.data_path, "label_mapping.json")) as f:
+                self.label_mapping = json.load(f)
+
+        if self.model is None:
+            self.load_model(self.model_path)
+            self.load_data(self.data_path)
+            self.prepare_adj()
+
 
     def load_data(self, path):
         self.new_label = np.load(os.path.join(path, "new_label.npy"))
@@ -52,6 +70,7 @@ class HMGRLService:
         self.adj = self.adj.to(self.device)
 
     def predict(self, drug_indices):
+        self.load_heavy_assets()
         self.model.eval()
         if not torch.is_tensor(drug_indices):
             drug_indices = torch.tensor(drug_indices, dtype=torch.long)

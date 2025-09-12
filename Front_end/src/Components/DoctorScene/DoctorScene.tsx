@@ -65,7 +65,7 @@ const mainItems = [
   },
   {
     key: "ddis",
-    label: "Kiểm tra tương tác thuốc",
+    label: "Tương tác thuốc",
     iconDefault: DDIscheckIconDefault,
     iconActive: DDIscheckIconActive,
   },
