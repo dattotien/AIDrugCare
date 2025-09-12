@@ -32,7 +32,7 @@ export default function DoctorSchedule() {
             marginLeft: 120,
           }}
         >
-          Tháng 8 năm 2025
+          Tháng 09 năm 2025
         </p>
         <img
           src={eventLogo}
@@ -52,13 +52,13 @@ export default function DoctorSchedule() {
           <div>Sun</div>
         </div>
         <div className={styles.calendar_days}>
-          <div>24</div>
-          <div>25</div>
-          <div>26</div>
-          <div>27</div>
-          <div  className={styles.active}>28</div>
-          <div>29</div>
-          <div>30</div>
+          <div>08</div>
+          <div>09</div>
+          <div>10</div>
+          <div>11</div>
+          <div className={styles.active}>12</div>
+          <div>13</div>
+          <div>14</div>
         </div>
       </div>
     </div>
