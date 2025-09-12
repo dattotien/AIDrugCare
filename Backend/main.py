@@ -10,8 +10,19 @@ from entities.prescription_detail import PrescriptionDetail
 from api import drug_api, patient_api, doctor_api, authorization_api
 from database import Database
 from services.model_service import HMGRLService
-from services.download_assets import ensure_assets
+from services.download_assets import ensure_assets, MODEL_PATH, ASSETS_DIR
 import torch
+
+def get_model_service(request: Request) -> HMGRLService:
+    if request.app.state.hmgrl_service is None:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        request.app.state.hmgrl_service = HMGRLService(
+            model_path=MODEL_PATH,
+            data_path=ASSETS_DIR,
+            device=device,
+        )
+        print("✅ Model loaded lazily")
+    return request.app.state.hmgrl_service
 
 app = FastAPI(title="AI Drug Care API")
 
@@ -59,8 +70,8 @@ async def predict(request: Request, input: str):
     if request.app.state.hmgrl_service is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
         request.app.state.hmgrl_service = HMGRLService(
-            model_path="/app/hmrgl_check_point.pt",
-            data_path="./assets",
+            model_path=MODEL_PATH,
+            data_path=ASSETS_DIR,
             device=device
         )
         print("✅ Model loaded lazily on first request")

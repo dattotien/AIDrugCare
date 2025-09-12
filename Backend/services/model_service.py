@@ -4,13 +4,8 @@ import numpy as np
 import json
 import torch.nn.functional as F
 from .model import HMGRL, gcnnormalization, adj_Heter_gene, args
-from fastapi import Request
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-
-def get_hmgrl_service(request: Request):
-    return request.app.state.hmgrl_service
 
 
 class HMGRLService:

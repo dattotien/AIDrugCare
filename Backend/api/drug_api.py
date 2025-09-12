@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, Request
 from pydantic import BaseModel
 from typing import Optional, Any, List
 
@@ -10,7 +10,8 @@ from services.drug_service import (
     get_all_interactions,
     get_previous_drugs,
 )
-from services.model_service import get_hmgrl_service
+
+from main import get_model_service  
 
 router = APIRouter()
 
@@ -34,7 +35,7 @@ async def fetch_drug_by_id(drug_id: str):
 async def predict_drug_interaction(
     drug_nameA: str,
     drug_nameB: str,
-    hmgrl_service=Depends(get_hmgrl_service),
+    hmgrl_service=Depends(get_model_service), 
 ):
     if hmgrl_service is None:
         raise HTTPException(status_code=503, detail="Model service is not available")
@@ -55,7 +56,7 @@ class InteractionRequest(BaseModel):
 @router.post("/all-interactions", response_model=ResponseModel)
 async def get_all_ddi(
     req: InteractionRequest,
-    hmgrl_service=Depends(get_hmgrl_service),
+    hmgrl_service=Depends(get_model_service),  
 ):
     if hmgrl_service is None:
         raise HTTPException(status_code=503, detail="Model service is not available")
