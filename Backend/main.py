@@ -1,7 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie
-from entities import Doctor, Drug, Medical_History, Patient, Visit, PrescriptionDetail
+from entities.doctor import Doctor
+from entities.drug import Drug
+from entities.medical_history import Medical_History
+from entities.patient import Patient
+from entities.visit import Visit
+from entities.prescription_detail import PrescriptionDetail
 from api import drug_api, patient_api, doctor_api, authorization_api
 from database import Database
 from services.model_service import get_model_service
