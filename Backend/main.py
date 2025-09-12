@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie
 from entities.doctor import Doctor
@@ -12,6 +12,7 @@ from database import Database
 from services.model_service import HMGRLService
 from services.download_assets import ensure_assets
 import torch
+
 app = FastAPI(title="AI Drug Care API")
 
 app.add_middleware(
@@ -21,12 +22,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 app.include_router(drug_api.router, tags=["Drug"])
 app.include_router(patient_api.router, tags=["Patient"])
 app.include_router(doctor_api.router, tags=["Doctor"])
 app.include_router(authorization_api.router, tags=["Authorization"])
+
 @app.on_event("startup")
 async def startup_db():
+    # tải assets JSON/model file thôi, chưa load vào RAM
     ensure_assets()
     await Database.connect_to_database()
     client = Database.client
@@ -41,14 +45,25 @@ async def startup_db():
             PrescriptionDetail
         ]
     )
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    app.state.hmgrl_service = HMGRLService(
-        model_path="/app/hmrgl_check_point.pt",
-        data_path="./assets",
-        device=device
-    )
-    print(next(app.state.hmgrl_service.model.parameters()).device)
+    # chưa load model, chỉ để None
+    app.state.hmgrl_service = None
+    print("✅ Startup done, model sẽ load khi cần.")
+
 @app.on_event("shutdown")
 async def shutdown_db():
     await Database.close_database_connection()
 
+# API test lazy load
+@app.get("/predict")
+async def predict(request: Request, input: str):
+    if request.app.state.hmgrl_service is None:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        request.app.state.hmgrl_service = HMGRLService(
+            model_path="/app/hmrgl_check_point.pt",
+            data_path="./assets",
+            device=device
+        )
+        print("✅ Model loaded lazily on first request")
+    model_service = request.app.state.hmgrl_service
+    # gọi predict ở đây
+    return {"result": "ok"}
