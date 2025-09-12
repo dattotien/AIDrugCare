@@ -56,9 +56,12 @@ export default function DrugInteractionChecker() {
       );
       const data = await res.json();
 
+      console.log("API Response:", data);
+
       if (data.success) {
         setResult({ description: data.data });
       } else {
+        console.log("API returned failure:", data.message);
         message.error(data.message || "Không lấy được kết quả");
       }
     } catch (err) {
