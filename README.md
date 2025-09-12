@@ -24,7 +24,7 @@ Our goal is to empower healthcare professionals with **safer, more accurate, and
   
 ---
 ## System Architecture  
-- **Frontend**: React + TypeScript  
+- **Frontend**: Css + TypeScript + Ant Design 
 - **Backend**: Python (FastAPI) 
 - **AI Model**: Graph-based Deep Learning (Hierarchical Multi-Relational Learning)  
 - **Database**: MongoDB  
