@@ -49,7 +49,7 @@ Our goal is to empower healthcare professionals with **safer, more accurate, and
 
 ```bash
 # Clone repo
-git clone https://github.com/your-org/AIDrugCare.git
+git clone https://github.com/dattotien/AIDrugCare.git
 cd AIDrugCare
 
 # Backend setup
