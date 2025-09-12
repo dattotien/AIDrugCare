@@ -43,10 +43,11 @@ Our goal is to empower healthcare professionals with **safer, more accurate, and
 
 ---
 ## Installation (Development Setup)  
-```bash
-# Preparation: add 2 files into assets 
-- Checkpoint model:https://www.kaggle.com/models/nguynhonghanh/hmgrl
+**Preparation: add 2 files into assets**
+- Checkpoint model: https://www.kaggle.com/models/nguynhonghanh/hmgrl
 - Drug interations from DrugBank: https://drive.google.com/file/d/17zE7zob4TQc6hekAsjDBhGq6YYmg3uCz/view?usp=sharing
+
+```bash
 # Clone repo
 git clone https://github.com/your-org/AIDrugCare.git
 cd AIDrugCare
