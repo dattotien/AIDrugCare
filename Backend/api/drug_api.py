@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Query, Request
+from fastapi import APIRouter, HTTPException, Query, Depends
 from pydantic import BaseModel
 from typing import Optional, Any, List
 
@@ -11,6 +11,7 @@ from services.drug_service import (
     get_previous_drugs,
 )
 
+# import lazy load model
 from services.model_service import get_model_service  
 
 router = APIRouter()
@@ -35,11 +36,16 @@ async def fetch_drug_by_id(drug_id: str):
 async def predict_drug_interaction(
     drug_nameA: str,
     drug_nameB: str,
-    hmgrl_service=Depends(get_model_service), 
+    hmgrl_service=Depends(get_model_service),  # model sẽ load lần đầu ở đây
 ):
     if hmgrl_service is None:
         raise HTTPException(status_code=503, detail="Model service is not available")
-    return await predict_one_drug_interaction(drug_nameA, drug_nameB, hmgrl_service)
+
+    try:
+        result = await predict_one_drug_interaction(drug_nameA, drug_nameB, hmgrl_service)
+        return ResponseModel(success=True, message="Predict thành công", data=result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/search")
@@ -60,7 +66,12 @@ async def get_all_ddi(
 ):
     if hmgrl_service is None:
         raise HTTPException(status_code=503, detail="Model service is not available")
-    return await get_all_interactions(req.drugs, hmgrl_service)
+
+    try:
+        result = await get_all_interactions(req.drugs, hmgrl_service)
+        return ResponseModel(success=True, message="Lấy tương tác thành công", data=result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/previous-drugs/{patient_id}", response_model=ResponseModel)

@@ -6,15 +6,18 @@ from services.download_assets import MODEL_PATH, ASSETS_DIR
 class HMGRLService:
     def __init__(self, model_path, data_path, device="cpu"):
         self.device = device
-        data_path = os.path.abspath(data_path)
-        # load mapping files
-        with open(os.path.join(data_path, "drugbankid2id.json")) as f:
+        self.model_path = model_path
+        self.data_path = os.path.abspath(data_path)
+
+        # load mapping files nhẹ (ok để load ngay)
+        with open(os.path.join(self.data_path, "drugbankid2id.json")) as f:
             self.drugbankid2id = json.load(f)
-        with open(os.path.join(data_path, "id2drugbankid.json")) as f:
+        with open(os.path.join(self.data_path, "id2drugbankid.json")) as f:
             self.id2drugbankid = json.load(f)
-        with open(os.path.join(data_path, "name_to_drugbank_id.json")) as f:
+        with open(os.path.join(self.data_path, "name_to_drugbank_id.json")) as f:
             self.name_to_dbid = json.load(f)
 
+        # heavy assets chưa load
         self.inter_dict = None
         self.label_mapping = None
         self.model = None
@@ -22,13 +25,14 @@ class HMGRLService:
         self.drug_coding = None
         self.adj = None
         self.tensor_tempvec_multi = None
+        self.X_three_vector = None
+        self.new_label = None
+        self.drugA = None
+        self.drugB = None
+        self.DDI_edge = None
+        self.event_num = None
 
         self.N_three_attribute = torch.tensor([2033, 1589, 285], dtype=torch.long, device=self.device)
-
-        # load model + data
-        self.load_model(model_path)
-        self.load_data(data_path)
-        self.prepare_adj()
 
     def load_model(self, path):
         state_dict = torch.load(path, map_location=self.device)
@@ -43,11 +47,11 @@ class HMGRLService:
         if self.label_mapping is None:
             with open(os.path.join(self.data_path, "label_mapping.json")) as f:
                 self.label_mapping = json.load(f)
-
         if self.model is None:
             self.load_model(self.model_path)
             self.load_data(self.data_path)
             self.prepare_adj()
+
 
 
     def load_data(self, path):
@@ -99,5 +103,5 @@ def get_model_service(request: Request) -> HMGRLService:
             data_path=ASSETS_DIR,
             device=device
         )
-        print("✅ Model loaded lazily")
+        print("✅ Model service created (lazy)")
     return request.app.state.hmgrl_service
