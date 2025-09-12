@@ -58,11 +58,11 @@ export default function DrugInteractionChecker() {
 
       console.log("API Response:", data);
 
-      if (data.success) {
+      if (data.success && data.data) {
         setResult({ description: data.data });
       } else {
-        console.log("API returned failure:", data.message);
-        message.error(data.message || "Không lấy được kết quả");
+        setResult({ description: "" });
+        message.warning(data.message || "Không có dữ liệu dự đoán");
       }
     } catch (err) {
       console.error(err);
