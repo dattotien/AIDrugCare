@@ -3,7 +3,6 @@ import blueLogo from "../../assets/blue.png"; // icon nam
 import redLogo from "../../assets/red.png";   // icon nữ
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 interface Patient {
   id: number;
@@ -27,7 +26,6 @@ export default function DoctorWaitingList({
   onSeeAll,
 }: DoctorWaitingListProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
   const storedDoctorId = localStorage.getItem("doctorId");
   const doctorId = storedDoctorId ? Number(storedDoctorId) : null;

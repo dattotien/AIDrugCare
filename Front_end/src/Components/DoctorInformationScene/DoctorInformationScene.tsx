@@ -10,7 +10,7 @@ interface DoctorInforProps {
   onClose : () =>void;
 }
 
-export default function DoctorInforScene({doctor, onSave, onClose} : DoctorInforProps) {
+export default function DoctorInforScene({doctor, onSave} : DoctorInforProps) {
   
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);

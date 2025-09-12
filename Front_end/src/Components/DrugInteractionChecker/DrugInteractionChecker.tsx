@@ -4,7 +4,6 @@ import {
   Card,
   Space,
   Typography,
-  Input,
   message,
   AutoComplete,
 } from "antd";
@@ -15,7 +14,6 @@ import check from "../../assets/checked.png";
 import no_entry from "../../assets/no-entry.png";
 
 const { Title, Text, Paragraph } = Typography;
-const { Search } = Input;
 
 export default function DrugInteractionChecker() {
   const [drugA, setDrugA] = useState<string>("");

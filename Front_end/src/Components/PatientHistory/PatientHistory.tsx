@@ -139,14 +139,6 @@ export default function PatientHistory({ patientId }: His) {
     },
   ];
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (newSelectedRowKeys: React.Key[]) => {
-      setSelectedRowKeys(newSelectedRowKeys);
-      setShowActionBar(newSelectedRowKeys.length > 0);
-    },
-  };
-
   const pageSize = 7;
   const paginatedData = filteredList.slice(
     (currentPage - 1) * pageSize,
