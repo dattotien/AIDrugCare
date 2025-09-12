@@ -30,7 +30,8 @@ export default function PatientHistory({ patientId }: His) {
   const [selectedHistory, setSelectedHistory] = useState<any | null>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [selectVisitId, setSelectVisitId] = useState<string | null>(null);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
   useEffect(() => {
     const fetchHistory = async () => {
       try {

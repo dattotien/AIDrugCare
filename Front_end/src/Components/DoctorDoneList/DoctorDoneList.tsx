@@ -12,7 +12,8 @@ export interface Visit {
 export default function DoctorDoneList(){
     const [visits, setVisits] = useState<Visit[]>([])
     const doctorId = localStorage.getItem("doctorId");
-    const API_URL = import.meta.env.VITE_API_URL;
+    const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
     useEffect (() => {
         const fetchVisit = async () => {
             if (!doctorId) return;

@@ -57,7 +57,8 @@ export default function VisitInfor({ onBack, patient }: VisitInforProps) {
   const [formTime, setFormTime] = useState("");
   const [formDuration, setFormDuration] = useState<number | undefined>(undefined);
   const [formNote, setFormNote] = useState("");
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
   const [options, setOptions] = useState<{ value: string }[]>([]);
   const [loadingDrugs, setLoadingDrugs] = useState(false);
 

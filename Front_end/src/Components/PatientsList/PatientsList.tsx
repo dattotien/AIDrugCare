@@ -33,7 +33,8 @@ export default function PatientsList({ onSelectPatient }: PatientsListProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [patientList, setPatientList] = useState<Patient[]>([]);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
   const storedDoctorId = localStorage.getItem("doctorId");
   const doctorId = storedDoctorId ? Number(storedDoctorId) : null;
 

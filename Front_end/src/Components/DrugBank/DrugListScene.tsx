@@ -28,7 +28,8 @@ export default function DrugListScene() {
   const [searchText, setSearchText] = useState("");
   const [showDrugInfoModal, setShowDrugInfoModal] = useState(false);
   const [selectedDrug, setSelectedDrug] = useState<Drug | null>(null);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
   const [drugList, setDrugList] = useState<Drug[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);

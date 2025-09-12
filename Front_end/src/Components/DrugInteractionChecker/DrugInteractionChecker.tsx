@@ -22,7 +22,8 @@ export default function DrugInteractionChecker() {
   const [optionsB, setOptionsB] = useState<{ value: string }[]>([]);
   const [result, setResult] = useState<{ description: string } | null>(null);
   const [loading, setLoading] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
   const fetchDrugOptions = async (query: string, setOptions: Function) => {
     if (!query) {
       setOptions([]);

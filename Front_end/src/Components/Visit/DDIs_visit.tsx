@@ -19,7 +19,8 @@ export default function DDIsVisit({ open, onClose, drugs, patientId }: DDIsVisit
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [previousDrugs, setPreviousDrugs] = useState<{ generic_name: string }[]>([]);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
   useEffect(() => {
     const fetchPrevious = async () => {
       try {

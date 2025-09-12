@@ -89,7 +89,8 @@ const extraItems = [
 export default function DoctorScene() {
   const navigate = useNavigate();
   const location = useLocation();
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
   const [accountInfo, setAccountInfo] = useState({
     name: "",
     email: "",

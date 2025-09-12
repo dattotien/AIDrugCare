@@ -15,7 +15,8 @@ export default function PatientOneHistory({ visitId }: Props) {
   const [pres, setPres] = useState<any>(null);
   const [history, setHistory] = useState<any>(null);
   const [showActions, setShowActions] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
   useEffect(() => {
     const fetchPre = async () => {
       if (!visitId) return;
