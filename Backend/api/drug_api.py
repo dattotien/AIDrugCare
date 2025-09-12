@@ -48,7 +48,7 @@ async def fetch_all_drugs():
 @router.get("/drugs/{drug_id}", response_model=ResponseModel)
 async def fetch_drug_by_id(drug_id: str):
     return await get_drug_by_id(drug_id)
-@router.get("/drugs/predict{drug_nameA}/{drug_nameB}", response_model=ResponseModel)
+@router.get("/drugs/predict", response_model=ResponseModel)
 async def predict_drug_interaction(
     drug_nameA: str,
     drug_nameB: str,
