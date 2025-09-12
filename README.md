@@ -24,7 +24,7 @@ Our goal is to empower healthcare professionals with **safer, more accurate, and
   
 ---
 ## System Architecture  
-- **Frontend**: React + TypeScript  
+- **Frontend**: Css + TypeScript + Ant Design 
 - **Backend**: Python (FastAPI) 
 - **AI Model**: Graph-based Deep Learning (Hierarchical Multi-Relational Learning)  
 - **Database**: MongoDB  
@@ -32,7 +32,7 @@ Our goal is to empower healthcare professionals with **safer, more accurate, and
 ---
 
 ## Model Highlights 
-- Source: We use pretrained model from https://github.com/mengyingjiang/HMGRL then add the negative label
+- Source: We use pretrained model from https://github.com/mengyingjiang/HMGRL
 - Learns **explicit and implicit relations** via *multi-view differentiable spectral clustering (MVDSC)*  
 - Integrates **multi-source features**: SMILES, enzymes, targets, substructures, graph embeddings  
 - Supports **new/unseen drugs** through RaGSE propagation  
