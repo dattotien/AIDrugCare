@@ -52,7 +52,7 @@ export default function DrugInteractionChecker() {
 
     try {
       const res = await fetch(
-        `${API_URL}/drugs/predict${drugA}/${drugB}`
+        `${API_URL}/drugs/predict?drug_nameA=${encodeURIComponent(drugA)}&drug_nameB=${encodeURIComponent(drugB)}`
       );
       const data = await res.json();
 
