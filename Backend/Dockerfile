@@ -1,18 +1,12 @@
 FROM python:3.10-slim
 
-# Cài đặt thư viện hệ thống cần thiết cho torch, pillow, pygame...
-RUN apt-get update && apt-get install -y \
-    libgl1 \
-    libglib2.0-0 \
-    gcc \
-    g++ \
-    libopenblas-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Cài đặt thư viện hệ thống + wget
+RUN apt-get update && apt-get install -y libgl1 libglib2.0-0 wget && rm -rf /var/lib/apt/lists/*
 
 # Tạo thư mục làm việc
 WORKDIR /app
 
-# Copy file requirements trước để tận dụng cache
+# Copy file requirements
 COPY requirements.txt .
 
 # Cài đặt dependencies
@@ -28,5 +22,5 @@ COPY . .
 # Expose port
 EXPOSE 8000
 
-# Lệnh chạy uvicorn (có thể tăng workers nếu cần)
+# Lệnh chạy
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
