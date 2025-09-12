@@ -57,6 +57,7 @@ export default function DrugInteractionChecker() {
       const data = await res.json();
 
       console.log("API Response:", data);
+      console.log("description set:", data.data);
 
       if (data.success && data.data) {
         setResult({ description: data.data });
