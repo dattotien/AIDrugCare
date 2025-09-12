@@ -1,4 +1,4 @@
-import { Layout, Menu, Button, Card, Row, Col, Typography } from "antd";
+import { Layout, Button, Card, Row, Col, Typography } from "antd";
 import {
   RightOutlined,
   CaretRightOutlined,
@@ -15,7 +15,7 @@ import danang from "../../assets/danang.jpg";
 import tphcm from "../../assets/tphcm.jpg";
 import thainguyen from "../../assets/thainguyen.jpg";
 const { Header, Content } = Layout;
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 import { useNavigate } from "react-router-dom";
 import doctor from "../../assets/doctor.png";
 function IntroductionScene() {

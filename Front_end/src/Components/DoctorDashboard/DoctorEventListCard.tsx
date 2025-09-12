@@ -1,8 +1,5 @@
-import { useState } from "react";
 import moreLogo from "../../assets/Group 133.png";
 import editLogo from "../../assets/edit (2).png";
-import PatientOneHistory from "../PatientHistory/PatientOneHistory";
-import { Modal } from "antd";
 
 export default function DoctorEventListCard({ highlight = "#043bb3" }) {
   return (

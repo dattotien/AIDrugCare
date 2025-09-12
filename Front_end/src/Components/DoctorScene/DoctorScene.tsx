@@ -1,4 +1,3 @@
-import type React from "react";
 import { useEffect, useState } from "react";
 import { Layout, Menu, Avatar, Badge, Modal, message } from "antd";
 import { useNavigate, Routes, Route, useLocation } from "react-router-dom";

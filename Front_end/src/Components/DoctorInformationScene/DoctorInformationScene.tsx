@@ -2,10 +2,7 @@ import  { useState, useEffect } from "react";
 import {Form,Input,Button,message,Row,Col, Card} from "antd";
 import { EditOutlined, SaveOutlined, CloseOutlined, UserOutlined} from "@ant-design/icons";
 import { DatePicker } from "antd";
-import dayjs from "dayjs";
 import "./DoctorInformationScene.css";
-import Password from "antd/es/input/Password";
-import axios from "axios";
 
 interface DoctorInforProps {
   doctor: any;

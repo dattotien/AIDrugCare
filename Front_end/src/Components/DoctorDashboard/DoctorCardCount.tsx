@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import waitLogo from "../../assets/waiting.png";
 import timeLogo from "../../assets/time-left.png";
-import eventLogo from "../../assets/event.png";
 import styles from "./DoctorDashboard.module.css";
 import axios from "axios";
 

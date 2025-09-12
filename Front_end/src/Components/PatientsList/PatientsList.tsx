@@ -2,9 +2,7 @@ import {
   Button,
   Dropdown,
   Table,
-  Badge,
   Input,
-  Tabs,
   Pagination,
   Typography,
 } from "antd";

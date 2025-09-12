@@ -1,5 +1,5 @@
 import { Button, Card, Checkbox, Input, message } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import login_back from "../../assets/test.png";
 import { RightCircleOutlined, CaretRightOutlined } from "@ant-design/icons";
 import styles from "./DoctorLoginScene.module.css";

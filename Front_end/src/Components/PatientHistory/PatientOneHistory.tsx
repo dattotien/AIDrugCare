@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { Table, Button } from "antd";
 import "./PatientHistory.css";
-import logo from "../../assets/AIDrugCare.png";
 import more from "../../assets/more (2).png";
 import axios from "axios";
 

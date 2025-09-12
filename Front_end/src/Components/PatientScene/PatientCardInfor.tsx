@@ -1,10 +1,8 @@
 import {Avatar} from "antd";
 import activeLogo from "../../assets/active.png";
 import envelopeLogo from "../../assets/envelope.png";
-import {useState} from "react";
 import {UserOutlined} from "@ant-design/icons";
 import "./PatientScene.css";
-import dayjs from "dayjs";
 
 interface PatientProps {
   patient: any; 

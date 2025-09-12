@@ -1,7 +1,6 @@
-import  { useState, useEffect } from "react";
-import {Form,Input,Button,message,Row,Col, Card} from "antd";
-import { EditOutlined, SaveOutlined, CloseOutlined, UserOutlined} from "@ant-design/icons";
-import { DatePicker } from "antd";
+import  { useEffect } from "react";
+import {Form,Input,Row,Col, Card} from "antd";
+import { UserOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
 import "./PatientProfile.css";
 
