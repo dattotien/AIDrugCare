@@ -11,7 +11,7 @@ from services.drug_service import (
     get_previous_drugs,
 )
 
-from main import get_model_service  
+from services.model_service import get_model_service  
 
 router = APIRouter()
 
