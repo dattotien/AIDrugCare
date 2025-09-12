@@ -8,7 +8,8 @@ class Database:
     @classmethod
     async def connect_to_database(cls):
         if cls.client is None:
-            cls.client = AsyncIOMotorClient('mongodb://localhost:27017/')
+            cls.client = AsyncIOMotorClient(
+    "mongodb+srv://ngyen23102005:ntnynguqua4%2A%21@hospital.tu2dajb.mongodb.net/Hospital?retryWrites=true&w=majority")
             cls.db = cls.client["Hospital"]
     
     @classmethod
